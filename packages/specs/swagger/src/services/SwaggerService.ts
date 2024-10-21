@@ -6,6 +6,7 @@ import {generateSpec} from "@tsed/schema";
 
 import {SwaggerOS2Settings, SwaggerOS3Settings, SwaggerSettings} from "../interfaces/SwaggerSettings.js";
 import {includeRoute} from "../utils/includeRoute.js";
+import {readSpec} from "../utils/readSpec.js";
 
 @Injectable()
 export class SwaggerService {
@@ -31,10 +32,10 @@ export class SwaggerService {
         .filter(({routes, provider}) => [...routes.values()].some((route) => includeRoute(route, provider, conf)))
         .map(({route, provider}) => ({token: provider.token as Type, rootPath: route}));
 
-      const spec = await generateSpec({
+      const spec = generateSpec({
         tokens,
         ...conf,
-        specPath,
+        fileSpec: specPath ? await readSpec(specPath) : {},
         version,
         acceptMimes
       });
