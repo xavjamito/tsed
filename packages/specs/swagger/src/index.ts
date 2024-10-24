@@ -14,3 +14,4 @@ export * from "./services/SwaggerService.js";
 export * from "./SwaggerModule.js";
 export * from "./utils/includeRoute.js";
 export * from "./utils/matchPath.js";
+export * from "./utils/readSpec.js";
