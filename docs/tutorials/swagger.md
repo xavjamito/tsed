@@ -51,10 +51,6 @@ Ts.ED will print the swagger-ui url in the console.
 :::
 
 ::: warning
-OpenSpec 2 support will be removed in v7.
-:::
-
-::: warning
 When using helmet, there may be a problem with CSP, to solve this collision, configure the CSP as shown below:
 
 ```typescript
@@ -92,7 +88,7 @@ export class Server {}
 Some options are available to configure Swagger-ui, Ts.ED and the default spec information.
 
 | Key                  | Example                                                       | Description                                                                                              |
-| -------------------- | ------------------------------------------------------------- | -------------------------------------------------------------------------------------------------------- |
+|----------------------|---------------------------------------------------------------|----------------------------------------------------------------------------------------------------------|
 | path                 | `/api-doc`                                                    | The url subpath to access to the documentation.                                                          |
 | specVersion          | `2.0`, `3.0.1`                                                | The OpenSpec version.                                                                                    |
 | fileName             | `swagger.json`                                                | Swagger file name. By default swagger.json.                                                              |
@@ -110,6 +106,7 @@ Some options are available to configure Swagger-ui, Ts.ED and the default spec i
 | operationIdFormatter | `(name: string, propertyKey: string, path: string) => string` | A function to generate the operationId.                                                                  |
 | operationIdPattern   | `%c_%m`                                                       | A pattern to generate the operationId. Format of operationId field (%c: class name, %m: method name).    |
 | pathPatterns         | `[]`                                                          | Include only controllers whose paths match the pattern list provided.                                    |
+| sortPaths            | `true`                                                        | Sort paths by alphabetical order.                                                                        |
 
 ### Multi documentations
 
