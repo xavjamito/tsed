@@ -1,4 +1,5 @@
 import {BodyParams} from "@tsed/platform-params";
+import fs from "fs-extra";
 import {join} from "path";
 
 import {validateSpec} from "../../test/helpers/validateSpec.js";
@@ -22,7 +23,7 @@ const rootDir = import.meta.dirname; // automatically replaced by import.meta.di
 
 describe("generateSpec()", () => {
   describe("OS 3.0.1", () => {
-    it("should generate spec with options", async () => {
+    it("should generate spec with options", () => {
       // WHEN
       @Path("/controller1")
       class Controller1 {
@@ -36,13 +37,13 @@ describe("generateSpec()", () => {
         method(@In("path") @Name("id") id: string) {}
       }
 
-      const result = await generateSpec({
+      const result = generateSpec({
         tokens: [
           {token: Controller1, rootPath: "/rest"},
           {token: Controller2, rootPath: "/rest"}
         ],
         specVersion: "3.0.1",
-        specPath: join(rootDir, "__mock__", "spec.json")
+        fileSpec: fs.readJSONSync(join(rootDir, "__mock__", "spec.json"))
       });
 
       expect(result).toEqual({
@@ -139,8 +140,7 @@ describe("generateSpec()", () => {
         ]
       });
     });
-
-    it("should generate spec and correctly merge shared model with custom schema", async () => {
+    it("should generate spec and correctly merge shared model with custom schema", () => {
       class Model {
         @AnyOf(Number, Boolean, String, {type: "array", items: {type: "number"}}, {type: "array", items: {type: "string"}})
         test: number | boolean | string | number[] | string[];
@@ -158,13 +158,13 @@ describe("generateSpec()", () => {
         method(@BodyParams() body: Model) {}
       }
 
-      const result = await generateSpec({
+      const result = generateSpec({
         tokens: [
           {token: Controller1, rootPath: "/rest"},
           {token: Controller2, rootPath: "/rest"}
         ],
         specVersion: "3.0.1",
-        specPath: join(rootDir, "__mock__", "spec.json")
+        fileSpec: fs.readJSONSync(join(rootDir, "__mock__", "spec.json"))
       });
 
       expect(result).toEqual({
@@ -257,9 +257,41 @@ describe("generateSpec()", () => {
         }
       });
     });
+    it("should generate spec with sorted paths", () => {
+      // WHEN
+      @Path("/controller2")
+      class Controller2 {
+        @OperationPath("GET", "/:id?")
+        method(@In("path") @Name("id") id: string) {}
+      }
+
+      @Path("/controller1")
+      class Controller1 {
+        @OperationPath("GET", "/")
+        method2() {}
+
+        @OperationPath("GET", "/:id?")
+        method(@In("path") @Name("id") id: string) {}
+
+        @OperationPath("POST", "/test")
+        method5() {}
+      }
+
+      const result = generateSpec({
+        sortPaths: true,
+        tokens: [
+          {token: Controller2, rootPath: "/rest"},
+          {token: Controller1, rootPath: "/rest"}
+        ],
+        specVersion: "3.0.1",
+        specPath: join(rootDir, "__mock__", "spec.json")
+      });
+
+      expect(result).toMatchSnapshot();
+    });
   });
   describe("Swagger 2", () => {
-    it("should generate spec with options", async () => {
+    it("should generate spec with options", () => {
       // WHEN
       @Path("/controller1")
       class Controller1 {
@@ -273,12 +305,12 @@ describe("generateSpec()", () => {
         method(@In("path") @Name("id") id: string) {}
       }
 
-      const result = await generateSpec({
+      const result = generateSpec({
         tokens: [
           {token: Controller1, rootPath: "/rest"},
           {token: Controller2, rootPath: "/rest"}
         ],
-        specPath: join(rootDir, "__mock__", "spec.json")
+        fileSpec: fs.readJSONSync(join(rootDir, "__mock__", "spec.json"))
       });
 
       expect(result).toEqual({
@@ -393,8 +425,8 @@ describe("generateSpec()", () => {
         ]
       });
     });
-    it("should generate spec with given data", async () => {
-      const result = await generateSpec({
+    it("should generate spec with given data", () => {
+      const result = generateSpec({
         tokens: [],
         spec: {
           produces: ["application/json", "application/octet-stream", "application/xml"]
@@ -411,9 +443,9 @@ describe("generateSpec()", () => {
         consumes: ["application/json"]
       });
     });
-    it("should generated default spec", async () => {
+    it("should generated default spec", () => {
       // @ts-ignore
-      const result = await generateSpec({tokens: []});
+      const result = generateSpec({tokens: []});
       expect(result).toEqual({
         consumes: ["application/json"],
         info: {
@@ -432,7 +464,7 @@ describe("generateSpec()", () => {
       }
 
       // THEN
-      const spec = await generateSpec({
+      const spec = generateSpec({
         tokens: [{token: Controller}],
         specType: SpecTypes.SWAGGER
       });
@@ -447,7 +479,7 @@ describe("generateSpec()", () => {
       }
 
       // THEN
-      const spec = await generateSpec({
+      const spec = generateSpec({
         tokens: [{token: Controller}],
         specType: SpecTypes.SWAGGER
       });
@@ -501,7 +533,7 @@ describe("generateSpec()", () => {
         ]
       });
     });
-    it("QUERY - should declare all schema correctly (query)", async () => {
+    it("QUERY - should declare all schema correctly (query)", () => {
       // WHEN
       class Controller {
         @OperationPath("GET", "/:id")
@@ -509,7 +541,7 @@ describe("generateSpec()", () => {
       }
 
       // THEN
-      const spec = await generateSpec({tokens: [{token: Controller}], specType: SpecTypes.SWAGGER});
+      const spec = generateSpec({tokens: [{token: Controller}], specType: SpecTypes.SWAGGER});
 
       expect(spec).toEqual({
         consumes: ["application/json"],
@@ -553,7 +585,7 @@ describe("generateSpec()", () => {
         ]
       });
     });
-    it("QUERY - should declare all schema correctly (query - model)", async () => {
+    it("QUERY - should declare all schema correctly (query - model)", () => {
       // WHEN
       class QueryModel {
         @Property()
@@ -569,7 +601,7 @@ describe("generateSpec()", () => {
       }
 
       // THEN
-      const spec = await generateSpec({
+      const spec = generateSpec({
         tokens: [{token: Controller}],
         specType: SpecTypes.SWAGGER
       });
@@ -622,7 +654,7 @@ describe("generateSpec()", () => {
         ]
       });
     });
-    it("QUERY - should declare all schema correctly (query - array string)", async () => {
+    it("QUERY - should declare all schema correctly (query - array string)", () => {
       // WHEN
       class Controller {
         @OperationPath("GET", "/:id")
@@ -630,7 +662,7 @@ describe("generateSpec()", () => {
       }
 
       // THEN
-      const spec = await generateSpec({
+      const spec = generateSpec({
         tokens: [{token: Controller}],
         specType: SpecTypes.SWAGGER
       });
@@ -681,7 +713,7 @@ describe("generateSpec()", () => {
         ]
       });
     });
-    it("QUERY - should declare all schema correctly (query - Map)", async () => {
+    it("QUERY - should declare all schema correctly (query - Map)", () => {
       // WHEN
       class Controller {
         @OperationPath("GET", "/:id")
@@ -689,7 +721,7 @@ describe("generateSpec()", () => {
       }
 
       // THEN
-      const spec = await generateSpec({
+      const spec = generateSpec({
         tokens: [{token: Controller}],
         specType: SpecTypes.SWAGGER
       });
@@ -739,7 +771,7 @@ describe("generateSpec()", () => {
         ]
       });
     });
-    it("BODY - should declare all schema correctly (model)", async () => {
+    it("BODY - should declare all schema correctly (model)", () => {
       class MyModel {
         @Property()
         prop: string;
@@ -752,7 +784,7 @@ describe("generateSpec()", () => {
       }
 
       // THEN
-      const spec = await generateSpec({tokens: [{token: Controller}], specType: SpecTypes.SWAGGER});
+      const spec = generateSpec({tokens: [{token: Controller}], specType: SpecTypes.SWAGGER});
 
       expect(spec).toEqual({
         consumes: ["application/json"],
@@ -803,7 +835,7 @@ describe("generateSpec()", () => {
         ]
       });
     });
-    it("BODY - should declare all schema correctly (Array - model)", async () => {
+    it("BODY - should declare all schema correctly (Array - model)", () => {
       // WHEN
       class Product {
         @Property()
@@ -818,7 +850,7 @@ describe("generateSpec()", () => {
       }
 
       // THEN
-      const spec = await generateSpec({tokens: [{token: Controller}], specType: SpecTypes.SWAGGER});
+      const spec = generateSpec({tokens: [{token: Controller}], specType: SpecTypes.SWAGGER});
 
       expect(spec).toEqual({
         consumes: ["application/json"],
@@ -872,7 +904,7 @@ describe("generateSpec()", () => {
         ]
       });
     });
-    it("BODY - should declare all schema correctly (Map - model)", async () => {
+    it("BODY - should declare all schema correctly (Map - model)", () => {
       // WHEN
       class Product {
         @Property()
@@ -887,7 +919,7 @@ describe("generateSpec()", () => {
       }
 
       // THEN
-      const spec = await generateSpec({tokens: [{token: Controller}], specType: SpecTypes.SWAGGER});
+      const spec = generateSpec({tokens: [{token: Controller}], specType: SpecTypes.SWAGGER});
 
       expect(spec).toEqual({
         consumes: ["application/json"],
@@ -941,7 +973,7 @@ describe("generateSpec()", () => {
         ]
       });
     });
-    it("BODY - should declare all schema correctly (inline)", async () => {
+    it("BODY - should declare all schema correctly (inline)", () => {
       class Controller {
         @Consumes("application/json")
         @OperationPath("POST", "/")
@@ -949,7 +981,7 @@ describe("generateSpec()", () => {
       }
 
       // THEN
-      const spec = await generateSpec({tokens: [{token: Controller}], specType: SpecTypes.SWAGGER});
+      const spec = generateSpec({tokens: [{token: Controller}], specType: SpecTypes.SWAGGER});
 
       expect(spec).toEqual({
         consumes: ["application/json"],
@@ -1012,7 +1044,7 @@ describe("generateSpec()", () => {
       }
 
       // THEN
-      const spec = await generateSpec({tokens: [{token: Controller}], specType: SpecTypes.SWAGGER});
+      const spec = generateSpec({tokens: [{token: Controller}], specType: SpecTypes.SWAGGER});
       expect(await validateSpec(spec)).toBe(true);
       expect(spec).toEqual({
         consumes: ["application/json"],
@@ -1067,7 +1099,7 @@ describe("generateSpec()", () => {
         ]
       });
     });
-    it("RESPONSE - should declare all schema correctly", async () => {
+    it("RESPONSE - should declare all schema correctly", () => {
       // WHEN
       @Name("AliasController")
       @Description("Class description")
@@ -1078,7 +1110,7 @@ describe("generateSpec()", () => {
       }
 
       // THEN
-      const spec = await generateSpec({tokens: [{token: Controller}], specType: SpecTypes.SWAGGER});
+      const spec = generateSpec({tokens: [{token: Controller}], specType: SpecTypes.SWAGGER});
 
       expect(spec).toEqual({
         consumes: ["application/json"],
@@ -1114,7 +1146,7 @@ describe("generateSpec()", () => {
         ]
       });
     });
-    it("RESPONSE - should declare an Array of string", async () => {
+    it("RESPONSE - should declare an Array of string", () => {
       // WHEN
       class Controller {
         @OperationPath("POST", "/")
@@ -1123,7 +1155,7 @@ describe("generateSpec()", () => {
       }
 
       // THEN
-      const spec = await generateSpec({tokens: [{token: Controller}], specType: SpecTypes.SWAGGER});
+      const spec = generateSpec({tokens: [{token: Controller}], specType: SpecTypes.SWAGGER});
 
       expect(spec).toEqual({
         consumes: ["application/json"],
@@ -1162,7 +1194,7 @@ describe("generateSpec()", () => {
       });
     });
 
-    it("HEADERS - should declare a return type with headers", async () => {
+    it("HEADERS - should declare a return type with headers", () => {
       // WHEN
       class Controller {
         @OperationPath("POST", "/")
@@ -1180,7 +1212,7 @@ describe("generateSpec()", () => {
       }
 
       // THEN
-      const spec = await generateSpec({tokens: [{token: Controller}], specType: SpecTypes.SWAGGER});
+      const spec = generateSpec({tokens: [{token: Controller}], specType: SpecTypes.SWAGGER});
 
       expect(spec).toEqual({
         consumes: ["application/json"],
