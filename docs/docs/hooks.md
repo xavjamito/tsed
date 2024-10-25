@@ -1,8 +1,3 @@
----
-prev: true
-next: true
----
-
 # Hooks
 
 ## Introduction
@@ -13,7 +8,7 @@ when they occur.
 
 This schema resume the order of hooks regard to the providers:
 
-<figure><img src="./../assets/hooks-in-sequence.png" style="max-height: 600px; padding: 20px; background: white;"></figure>
+![hook in sequence](./assets/hooks-in-sequence.png)
 
 Here is the related code described by the previous schema:
 
@@ -74,7 +69,7 @@ export class MyModule implements OnInit {
 ```
 
 ::: tip Note
-Database connection can be performed with Asynchronous Provider. See [custom providers](/docs/custom-providers.md)
+Database connection can be performed with Asynchronous Provider. See [custom providers](/docs/custom-providers)
 :::
 
 ### $onRequest/$onResponse
@@ -99,7 +94,7 @@ class CustomContextModule {
 
 ### Custom provider <Badge text="v6.110.0+" />
 
-Since `v6.110.0`, it's also possible to subscribe to a hook in a [custom provider](/docs/custom-providers.md):
+Since `v6.110.0`, it's also possible to subscribe to a hook in a [custom provider](/docs/custom-providers):
 
 ```typescript
 import {Configuration, registerProvider} from "@tsed/di";

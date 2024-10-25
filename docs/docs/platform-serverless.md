@@ -105,7 +105,7 @@ With v8 `@tsed/common` are replaced by `@tsed/platform-http`, the same conventio
 
 ## Installation
 
-The best option is to checkout the full terraform project available
+The best option is to check out the full terraform project available
 on [GitHub](https://github.com/tsedio/tsed-aws-lambda).
 This quick start project provides:
 
@@ -135,40 +135,27 @@ tsed init .
 
 Or you can install the package manually:
 
-<Tabs class="-code">
-  <Tab label="npm">
-
-```bash
+```sh [npm]
 npm install --save @tsed/platform-serverless serverless serverless-offline
 npm install --save-dev @types/aws-lambda
 ```
 
-  </Tab>
-  <Tab label="yarn">
-
-```bash
+```sh [yarn]
 yarn add @tsed/platform-serverless serverless serverless-offline
 yarn add -D @types/aws-lambda
 ```
 
-  </Tab>
-  <Tab label="pnpm">
-
-```bash
+```sh [pnpm]
 pnpm add @tsed/platform-serverless serverless serverless-offline
 pnpm add -D @types/aws-lambda
 ```
 
-  </Tab>
-  <Tab label="bun.js">
-
-```bash
+```sh [bun]
 bun add @tsed/platform-serverless serverless serverless-offline
 bun add -D @types/aws-lambda
 ```
 
-  </Tab>
-</Tabs>
+:::
 
 ## Create your first Lambda
 
@@ -216,7 +203,7 @@ That's it! You can now deploy your lambda on AWS.
 
 ::: tip
 If you want to have mode details on how to deploy your lambda
-using the Serverless framework, please read the dedicated tutorial [here](/docs/tutorials/serverless.md).
+using the Serverless framework, please read the dedicated tutorial [here](/tutorials/serverless).
 :::
 
 ::: tip

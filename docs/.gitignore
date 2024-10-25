@@ -1,5 +1,7 @@
 api
-.vuepress/public/api.json
+.vitepress/public/api.json
+.vitepress/cache
+.vitepress/dist
 
 # Yarn
 .pnp.*
@@ -10,3 +12,4 @@ api
 !.yarn/cache
 !.yarn/sdks
 !.yarn/versions
+

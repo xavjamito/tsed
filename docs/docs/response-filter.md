@@ -20,10 +20,9 @@ Response Filter according to the `Accept` HTTP header on the request object, whe
 
 By using the appropriate `Content-Type`, you can define a Xml serializer as following:
 
-<Tabs class="-code">
-<Tab label="XmlResponseFilter.ts" icon="bx-code-alt">
+::: code-group
 
-```typescript
+```typescript [XmlResponseFilter.ts]
 import {ResponseFilter, ResponseFilterMethods} from "@tsed/platform-response-filter";
 import {Context} from "@tsed/platform-params";
 
@@ -35,10 +34,7 @@ export class XmlResponseFilter implements ResponseFilterMethods {
 }
 ```
 
-</Tab>
-<Tab label="UserCtrl.ts" icon="bx-code-alt">
-
-```typescript
+```typescript [UserCtrl.ts]
 import {Configuration} from "@tsed/di";
 import {Returns} from "@tsed/schema";
 
@@ -53,12 +49,9 @@ export class UsersCtrl {
 }
 ```
 
-</Tab>
-<Tab label="Server.ts" icon="bxs-server">
-
-```typescript
+```typescript [Server.ts]
 import {Configuration} from "@tsed/di";
-import {XmlResponseFilter} from "./filters/XmlResponseFilter";
+import {XmlResponseFilter} from "./filters/XmlResponseFilter.js";
 
 @Configuration({
   responseFilters: [
@@ -67,14 +60,11 @@ import {XmlResponseFilter} from "./filters/XmlResponseFilter";
 })
 ```
 
-</Tab>
-<Tab label="UsersCtrl.spec.ts" icon="bx-test-tube">
-
-```typescript
+```typescript [UsersCtrl.spec.ts]
 import {PlatformTest} from "@tsed/platform-http/testing";
 import * as SuperTest from "supertest";
-import {UsersCtrl} from "./UsersCtrl";
-import {Server} from "../../Server";
+import {UsersCtrl} from "./UsersCtrl.js";
+import {Server} from "../../Server.js";
 
 describe("UserCtrl", () => {
   let request: SuperTest.Agent;
@@ -109,8 +99,7 @@ describe("UserCtrl", () => {
 });
 ```
 
-</Tab>
-</Tabs>
+:::
 
 ::: warning
 Don't forget to register your Response Filter by adding your class to `responseFilters` field on the server configuration.
@@ -122,10 +111,9 @@ One of the usage of the Response Filter could be to wrap all returned data into 
 To doing that, use the `application/json` Content-Type with the @@ResponseFilter@@ decorator
 to wrap data to the expected result:
 
-<Tabs class="-code">
-<Tab label="WrapperResponseFilter.ts" icon="bx-code-alt">
+::: code-group
 
-```typescript
+```typescript [WrapperResponseFilter.ts]
 import {ResponseFilter, ResponseFilterMethods} from "@tsed/platform-response-filter";
 import {Context} from "@tsed/platform-params";
 
@@ -137,10 +125,7 @@ export class WrapperResponseFilter implements ResponseFilterMethods {
 }
 ```
 
-</Tab>
-<Tab label="UserCtrl.ts" icon="bx-code-alt">
-
-```typescript
+```typescript [UserCtrl.ts]
 import {Configuration} from "@tsed/di";
 import {Returns} from "@tsed/schema";
 
@@ -155,10 +140,7 @@ export class UsersCtrl {
 }
 ```
 
-</Tab>
-<Tab label="Server.ts" icon="bxs-server">
-
-```typescript
+```typescript [Server.ts]
 import {Configuration} from "@tsed/di";
 import {WrapperResponseFilter} from "./filters/WrapperResponseFilter";
 
@@ -169,14 +151,11 @@ import {WrapperResponseFilter} from "./filters/WrapperResponseFilter";
 })
 ```
 
-</Tab>
-<Tab label="UsersCtrl.spec.ts" icon="bx-test-tube">
-
-```typescript
+```typescript [UsersCtrl.spec.ts]
 import {PlatformTest} from "@tsed/platform-http/testing";
 import * as SuperTest from "supertest";
-import {UsersCtrl} from "./UsersCtrl";
-import {Server} from "../../Server";
+import {UsersCtrl} from "./UsersCtrl.js";
+import {Server} from "../../Server.js";
 
 describe("UserCtrl", () => {
   let request: SuperTest.Agent;
@@ -200,9 +179,6 @@ describe("UserCtrl", () => {
   });
 });
 ```
-
-</Tab>
-</Tabs>
 
 ::: warning
 The wrapper won't be documented in your generated `swagger.json`!
@@ -230,40 +206,18 @@ export class AnyResponseFilter implements ResponseFilterMethods {
 The following advanced example will show you how you can combine the different Ts.ED features to describe Pagination.
 The used features are the following:
 
-- [Generics](/docs/models.html#generics)
-- [Function programming to declare models](/docs/models.html#using-functions)
+- [Generics](/docs/model#generics)
+- [Function programming to declare models](/docs/model#using-functions)
 - @@For@@ decorator to declare a custom model for JsonSchema, OS2 or OS3.
-- [Response Filter](/docs/response-filter.md) to manage paginated response.
+- Response Filter to manage paginated response.
 
-<Tabs class="-code">
-  <Tab label="ProductsCtrl.ts">
+::: code-group
 
-<<< @/docs/snippets/model/pagination-ctrl.ts
+<<< @/docs/snippets/model/pagination-ctrl.ts [ProductsCtrl.ts]
+<<< @/docs/snippets/model/pageable-model.ts [Pageable.ts]
+<<< @/docs/snippets/model/pagination-model.ts [Pagination.ts]
+<<< @/docs/snippets/model/pageable-product-model.ts [Product.ts]
+<<< @/docs/snippets/model/pagination-filter.ts [PaginationFilter.ts]
+<<< @/docs/snippets/model/pageable-product-model.ts [ProductsCtrl.spec.ts]
 
-  </Tab>  
-  <Tab label="Pageable.ts">
-  
-<<< @/docs/snippets/model/pageable-model.ts
-
-  </Tab>  
-  <Tab label="Pagination.ts">
-  
-<<< @/docs/snippets/model/pagination-model.ts
-
-  </Tab>
-  <Tab label="Product.ts">
-  
-<<< @/docs/snippets/model/pageable-product-model.ts
-  
-  </Tab>
-  <Tab label="PaginationFilter.ts">
-  
-<<< @/docs/snippets/model/pagination-filter.ts
-  
-  </Tab>
-  <Tab label="ProductsCtrl.spec.ts">
-  
-<<< @/docs/snippets/model/pageable-product-model.ts
-  
-  </Tab>
-</Tabs>
+:::

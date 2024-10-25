@@ -56,7 +56,7 @@ Then edit your `Server.ts`:
 ```ts
 import {join} from "path";
 import {Configuration, Inject} from "@tsed/di";
-import {PlatformApplication} from "@tsed/platform-http";
+import {PlatformApplication} from "@tsed/common";
 import "@tsed/platform-express"; // /!\ keep this import
 import "@tsed/vike"; // add this
 import "@tsed/ajv";
@@ -85,172 +85,13 @@ The starter project is a monorepo (Nx) with 2 projects:
   - `packages/app/pages`: the pages directory
   - `packages/app/renderer`: the app shell directory (header, footer, layout, etc...)
 
-## Usage
+<figure><img src="/vike-tsed.png" style="max-height: 300px; background: white" alt="Vike Ts.ED result"></figure>
 
-```ts
-import {Constant, Controller} from "@tsed/di";
-import {HeaderParams} from "@tsed/platform-params";
-import {Vite} from "@tsed/vike";
-import {SwaggerSettings} from "@tsed/swagger";
-import {Get, Hidden, Returns} from "@tsed/schema";
+- `packages/server/controllers/pages`: the controllers pages directory
+- `packages/server/controllers/rest`: the controllers REST directory
+- `packages/app/pages`: the pages directory
+- `packages/app/renderer`: the app shell directory (header, footer, layout, etc...)
 
-@Hidden()
-@Controller("/")
-export class IndexController {
-  @Constant("swagger")
-  private swagger: SwaggerSettings[];
-
-  @Get("/")
-  @Vite()
-  @(Returns(200, String).ContentType("text/html"))
-  get(@HeaderParams("x-forwarded-proto") protocol: string, @HeaderParams("host") host: string) {
-    const hostUrl = `${protocol || "http"}://${host}`;
-
-    return {
-      docs: this.swagger.map((conf) => {
-        return {
-          url: hostUrl + conf.path,
-          ...conf
-        };
-      })
-    };
-  }
-}
-```
-
-And its React component:
-
-```tsx
-import React from "react";
-import {PageContext} from "../../renderer/types";
-import type {SwaggerSettings} from "@tsed/swagger"; // ! keep type import
-
-export interface HomePageProps {
-  docs: ({url: string} & SwaggerSettings)[];
-}
-
-export function Page({docs}: PageContext & HomePageProps) {
-  return (
-    <>
-      <h1>Welcome,</h1>
-
-      <p>This page is built with Ts.ED and vike.</p>
-
-      <br />
-      <br />
-
-      <ul>
-        {docs.map((doc) => {
-          return (
-            <li>
-              <a href={doc.path}>
-                <span>OpenSpec {doc.specVersion}</span>
-              </a>
-            </li>
-          );
-        })}
-      </ul>
-    </>
-  );
-}
-```
-
-Result:
-
-<figure><img src="/vite-tsed.png" style="max-height: 300px; background: white"></figure>
-
-## Add a controlled page
-
-By default, vike does Filesystem Routing:
-
-```
-FILESYSTEM                        URL
-pages/index.page.js               /
-pages/about.page.js               /about
-pages/faq/index.page.js           /faq
-pages/movies/@id/index.page.js    /movies/1, /movies/2, /movies/3, ...
-```
-
-So if you want to expose a movies page with the url `/movies`, create a new
-file `packages/app/pages/movies/index.page.tsx`:
-
-```tsx
-import React from "react";
-import {PageContext} from "../../renderer/types";
-
-interface Movie {
-  id: string;
-  title: string;
-}
-
-export interface MoviesPageProps {
-  movies: Movie[];
-}
-
-export function Page({movies}: PageContext & MoviesPageProps) {
-  return (
-    <>
-      <h1>Movies</h1>
-
-      <ul>
-        {movies.map((doc) => {
-          return (
-            <li>
-              <a href={"/movies/" + movies.id}>
-                <span>{movies.title}</span>
-              </a>
-            </li>
-          );
-        })}
-      </ul>
-    </>
-  );
-}
-```
-
-::: tip
-You can also define so-called "Route Strings" and "Route Functions".
-
-```tsx
-// /pages/movies.page.route.js
-
-// This file defines the route of `/pages/movies.page.js`
-
-// Route String
-export default "/movies/@movieId";
-```
-
-:::
-
-Then create a new Ts.ED controller `MoviesController` under `packages/server/src/controllers/pages` to handle all
-requests that match the "/movies" route:
-
-```ts
-import {Controller} from "@tsed/di";
-import {Property, Get, Returns} from "@tsed/schema";
-import {Vite} from "@tsed/vike";
-
-class Movie {
-  @Property()
-  id: string;
-
-  @Property()
-  title: string;
-}
-
-@Controller("/movies")
-export class MoviesController {
-  @Get("/")
-  @(Returns(200, Array).Of(Movie))
-  @Vite()
-  get() {
-    return [
-      {id: "1", title: "Movie 1"},
-      {id: "2", title: "Movie 2"},
-      {id: "3", title: "Movie 3"}
-    ];
-  }
-}
 ```
 
 ## Author
@@ -266,3 +107,4 @@ export class MoviesController {
  Become maintainer
 </Button>
 </div>
+```

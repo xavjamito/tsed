@@ -22,22 +22,17 @@ This module is based on the [graphql-ws](https://the-guild.dev/graphql/ws) packa
 
 This module need to be used with `@tsed/apollo` module. So, you must install it before (see [here](/tutorials/graphql-apollo.md)).
 
-<Tabs class="-code">
-<Tab label="Npm">
+::: code-group
 
-```bash
+```bash [Npm]
 npm install --save @tsed/graphql-ws graphql-ws
 ```
 
-</Tab>
-<Tab label="Yarn">
-
-```bash
+```bash [Yarn]
 yarn add @tsed/graphql-ws graphql-ws
 ```
 
-</Tab>
-</Tabs>
+:::
 
 ```typescript
 import {Configuration} from "@tsed/di";

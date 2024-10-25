@@ -1,9 +1,0 @@
-{
-  "definitions": {},
-  "properties": {
-    "prop": {
-      "type": "integer"
-    }
-  },
-  "type": "object"
-}

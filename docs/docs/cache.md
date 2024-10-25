@@ -9,9 +9,9 @@ meta:
 # Cache
 
 Caching is a great and simple technique that helps improve your app's performance.
-It acts as a temporary data store providing high performance data access.
+It acts as a temporary data store providing high-performance data access.
 
-Ts.ED provides a unified system caching by using the
+Ts.ED provides a unified system for caching by using the
 popular [`cache-manager`](https://www.npmjs.com/package/cache-manager) Node.js module.
 Cache-manager provides various storage to cache content like Redis, MongoDB, etc... and multi caching!
 
@@ -21,9 +21,25 @@ or the result returned by a Service.
 
 ## Installation
 
-```shell
+::: code-group
+
+```sh [npm]
 npm install @tsed/platform-cache
 ```
+
+```sh [yarn]
+yarn add @tsed/platform-cache
+```
+
+```sh [pnpm]
+pnpm add @tsed/platform-cache
+```
+
+```sh [bun]
+bun add @tsed/platform-cache
+```
+
+:::
 
 ## Configuration
 
@@ -144,7 +160,10 @@ export class Server {}
 
 This example works for a single redis connection. If you look for a complete example with Redis Cluster and Redis single
 connection, go to this example:
+
+```url
 https://gist.github.com/Romakita/432b1a8afaa726b41d0baf2456b205aa
+```
 
 :::
 
@@ -406,6 +425,7 @@ if (currentTTL < ttl - refreshThreshold) {
 }
 ```
 
+Meanwhile, the system will return the old value until expiration.
 In the meantime, the system will return the old value until expiration.
 
 ```typescript
@@ -428,7 +448,7 @@ background if current `ttl` is under 45 minutes.
 
 ## Refresh cached value <Badge text="7.9.0+" />
 
-A service method response can be cached by using the `@UseCache` decorator. Sometimes, we need to explicitly refresh the cached data,
+A service method response can be cached by using the `@UseCache` decorator. Sometimes, we need to explicitly refresh the cached data because the consumed data backend state has changed.
 because the consumed data backend state has changed. By implementing a notifications service, the backend data can trigger an event to tell your API that
 the data has changed.
 

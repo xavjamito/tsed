@@ -1,11 +1,6 @@
----
-prev: true
-next: true
----
-
 # Context
 
-Ts.ED provides an util to get request, response, to store and share data along all middlewares/endpoints during a
+Ts.ED provides an utility to get request, response, to store and share data along all middlewares/endpoints during a
 request with @@PlatformContext@@. This context is created by Ts.ED when the request is handled by the server.
 
 It contains some information as following:
@@ -14,12 +9,43 @@ It contains some information as following:
 - The request id,
 - The request container used by the Ts.ED DI. It contains all services annotated with `@Scope(ProviderScope.REQUEST)`,
 - The current @@EndpointMetadata@@ context resolved by Ts.ED during the request,
-- The data returned by the previous endpoint if you use multiple handlers on the same route. By default data is empty.
+- The data returned by the previous endpoint if you use multiple handlers on the same route. By default, data is empty.
 - The @@ContextLogger@@ to log some information related to the request and his id.
 
 Here is an example:
 
-<<< @/docs/snippets/request-context/context-example.ts
+```ts
+import {Context} from "@tsed/platform-params";
+import {Middleware, UseBefore} from "@tsed/platform-middlewares";
+import {Get} from "@tsed/schema";
+import {Controller} from "@tsed/di";
+import {Forbidden} from "@tsed/exceptions";
+import {AuthToken} from "../domain/auth/AuthToken.js";
+
+@Middleware()
+class AuthTokenMiddleware {
+  use(@Context() ctx: Context) {
+    if (!ctx.has("auth")) {
+      ctx.set("auth", new AuthToken(ctx.request));
+    }
+
+    try {
+      ctx.get("auth").claims(); // check token
+    } catch (er) {
+      throw new Forbidden("Access forbidden - Bad token");
+    }
+  }
+}
+
+@Controller("/")
+@UseBefore(AuthTokenMiddleware) // protect all routes for this controller
+class MyCtrl {
+  @Get("/")
+  get(@Context() context: Context, @Context("auth") auth: AuthToken) {
+    context.logger.info({event: "auth", auth}); // Attach log to the request
+  }
+}
+```
 
 ::: tip
 
@@ -34,7 +60,7 @@ response and then printing all logs.
 metadata when you use the middleware over a controller method. By accessing to the @@EndpointMetadata@@ you are able to:
 
 - Get endpoint information,
-- Create [custom middleware and decorator](/docs/custom-endpoint-decorators.md),
+- Create [custom middleware and decorator](/docs/custom-endpoint-decorators),
 - Get the controller class name and propertyKey.
 
 ```typescript
@@ -110,7 +136,7 @@ export class MyMiddleware {
 following:
 
 ```typescript
-class PlatformRequest<T = Req> {
+interface PlatformRequest<T = Req> {
   raw: T;
 
   get secure(): boolean;
@@ -187,7 +213,7 @@ send the response to your consumer.
 His interface is the following:
 
 ```typescript
-class PlatformResponse {
+interface PlatformResponse {
   raw: Res;
 
   get statusCode(): number;

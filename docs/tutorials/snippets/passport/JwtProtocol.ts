@@ -1,6 +1,7 @@
-import {Req} from "@tsed/platform-http";
 import {Arg, OnVerify, Protocol} from "@tsed/passport";
+import {Req} from "@tsed/platform-http";
 import {ExtractJwt, Strategy, StrategyOptions} from "passport-jwt";
+
 import {AuthService} from "../services/auth/AuthService";
 
 @Protocol<StrategyOptions>({

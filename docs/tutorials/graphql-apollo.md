@@ -27,24 +27,19 @@ Since v7.70.0, Ts.ED use Apollo Server v4. If you are using Apollo Server v3, yo
 
 ## Installation
 
-<Tabs class="-code">
-<Tab label="Express.js">
+::: code-group
 
-```bash
+```bash [Express.js]
 npm install --save @tsed/apollo graphql @apollo/server
 npm install --save-dev apollo-server-testing
 ```
 
-</Tab>
-<Tab label="Koa.js">
-
-```bash
+```bash [Koa.js]
 npm install --save @tsed/apollo graphql @apollo/server @as-integration/koa
 npm install --save-dev apollo-server-testing
 ```
 
-</Tab>
-</Tabs>
+:::
 
 ```typescript
 import {Configuration} from "@tsed/di";

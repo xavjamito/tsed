@@ -20,7 +20,7 @@ Many other decorators are implemented and can be taken as an example to build yo
 
 One of the use cases already implemented by Ts.ED is the @@PlatformAcceptMimesMiddleware@@:
 
-<<< @/../packages/platform/common/src/middlewares/PlatformAcceptMimesMiddleware.ts
+<<< @/docs/snippets/middlewares/platform-accept-mimes-middleware.ts
 
 You can see in this example the usage of `endpoint.get` from @@EndpointInfo@@. This method contains all options
 which can be passed to the decorator associated to PlatformAcceptMimesMiddleware.

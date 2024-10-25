@@ -11,7 +11,7 @@ Create a new ResourceNotFoundFilter in the filters directories and copy/paste th
 <<< @/docs/snippets/exceptions/resource-not-found-filter.ts
 
 ::: warning
-`response.render()` require to configure the template engine before. See our page over [Templating engine](/tutorials/templating.html#installation) installation for more details.
+`response.render()` require to configure the template engine before. See our page over [Templating engine](/docs/templating.md#installation) installation for more details.
 :::
 
 Then import the custom filter in your server:

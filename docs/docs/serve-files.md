@@ -107,42 +107,102 @@ import * as process from "process";
 
 Statics options depend on which platform you work (Express, Koa, etc...).
 
-<Tabs class="-code">
-  <Tab label="Express.js">
+::: code-group
 
-<<< @/../packages/platform/platform-express/src/interfaces/PlatformExpressStaticsOptions.ts
+```typescript [Express.js]
+import Express from "express";
 
-  </Tab>
-  <Tab label="Koa.js">
- 
-```typescript
-interface KoaStaticsOptions {
-    /** Browser cache max-age in milliseconds. (defaults to 0) */
-    maxage?: number;
-    maxAge?: SendOptions["maxage"];
-    /** Tell the browser the resource is immutable and can be cached indefinitely. (defaults to false) */
-    immutable?: boolean;
-    /** Allow transfer of hidden files. (defaults to false) */
-    hidden?: boolean;
-    /** Root directory to restrict file access. (defaults to '') */
-    root?: string;
-    /** Name of the index file to serve automatically when visiting the root location. (defaults to none) */
-    index?: string | false;
-    /** Try to serve the gzipped version of a file automatically when gzip is supported by a client and if the requested file with .gz extension exists. (defaults to true). */
-    gzip?: boolean;
-    /** Try to serve the brotli version of a file automatically when brotli is supported by a client and if the requested file with .br extension exists. (defaults to true). */
-    brotli?: boolean;
-    /** If not false (defaults to true), format the path to serve static file servers and not require a trailing slash for directories, so that you can do both /directory and /directory/. */
-    format?: boolean;
-    /** Function to set custom headers on response. */
-    setHeaders?: SetHeaders;
-    /** Try to match extensions from passed array to search for file when no extension is sufficed in URL. First found is served. (defaults to false) */
-    extensions?: string[] | false;
+export interface PlatformExpressStaticsOptions {
+  /**
+   * Enable or disable setting Cache-Control response header, defaults to true.
+   * Disabling this will ignore the immutable and maxAge options.
+   */
+  cacheControl?: boolean;
+  /**
+   * Set how "dotfiles" are treated when encountered. A dotfile is a file or directory that begins with a dot (".").
+   * Note this check is done on the path itself without checking if the path actually exists on the disk.
+   * If root is specified, only the dotfiles above the root are checked (i.e. the root itself can be within a dotfile when when set to "deny").
+   * The default value is 'ignore'.
+   * 'allow' No special treatment for dotfiles
+   * 'deny' Send a 403 for any request for a dotfile
+   * 'ignore' Pretend like the dotfile does not exist and call next()
+   */
+  dotfiles?: string;
+  /**
+   * Enable or disable etag generation, defaults to true.
+   */
+  etag?: boolean;
+  /**
+   * Set file extension fallbacks. When set, if a file is not found, the given extensions will be added to the file name and search for.
+   * The first that exists will be served. Example: ['html', 'htm'].
+   * The default value is false.
+   */
+  extensions?: string[] | false;
+  /**
+   * Let client errors fall-through as unhandled requests, otherwise forward a client error.
+   * The default value is true.
+   */
+  fallthrough?: boolean;
+  /**
+   * Enable or disable the immutable directive in the Cache-Control response header.
+   * If enabled, the maxAge option should also be specified to enable caching. The immutable directive will prevent supported clients from making conditional requests during the life of the maxAge option to check if the file has changed.
+   */
+  immutable?: boolean;
+  /**
+   * By default this module will send "index.html" files in response to a request on a directory.
+   * To disable this set false or to supply a new index pass a string or an array in preferred order.
+   */
+  index?: boolean | string | string[];
+  /**
+   * Enable or disable Last-Modified header, defaults to true. Uses the file system's last modified value.
+   */
+  lastModified?: boolean;
+  /**
+   * Provide a max-age in milliseconds for http caching, defaults to 0. This can also be a string accepted by the ms module.
+   */
+  maxAge?: number | string;
+  /**
+   * Redirect to trailing "/" when the pathname is a dir. Defaults to true.
+   */
+  redirect?: boolean;
+  /**
+   * Function to set custom headers on response. Alterations to the headers need to occur synchronously.
+   * The function is called as fn(res, path, stat), where the arguments are:
+   * res the response object
+   * path the file path that is being sent
+   * stat the stat object of the file that is being sent
+   */
+  setHeaders?: (res: Express.Response, path: string, stat: any) => any;
 }
 ```
-  
-  </Tab>
-</Tabs>
+
+```typescript [Koa.js]
+interface KoaStaticsOptions {
+  /** Browser cache max-age in milliseconds. (defaults to 0) */
+  maxage?: number;
+  maxAge?: SendOptions["maxage"];
+  /** Tell the browser the resource is immutable and can be cached indefinitely. (defaults to false) */
+  immutable?: boolean;
+  /** Allow transfer of hidden files. (defaults to false) */
+  hidden?: boolean;
+  /** Root directory to restrict file access. (defaults to '') */
+  root?: string;
+  /** Name of the index file to serve automatically when visiting the root location. (defaults to none) */
+  index?: string | false;
+  /** Try to serve the gzipped version of a file automatically when gzip is supported by a client and if the requested file with .gz extension exists. (defaults to true). */
+  gzip?: boolean;
+  /** Try to serve the brotli version of a file automatically when brotli is supported by a client and if the requested file with .br extension exists. (defaults to true). */
+  brotli?: boolean;
+  /** If not false (defaults to true), format the path to serve static file servers and not require a trailing slash for directories, so that you can do both /directory and /directory/. */
+  format?: boolean;
+  /** Function to set custom headers on response. */
+  setHeaders?: SetHeaders;
+  /** Try to match extensions from passed array to search for file when no extension is sufficed in URL. First found is served. (defaults to false) */
+  extensions?: string[] | false;
+}
+```
+
+:::
 
 ## Expose a webapp
 
@@ -151,10 +211,9 @@ The configuration can be a bit complicated because you have to add the right hea
 
 Here is a small example to configure statics directory with the right headers and redirection rules.
 
-<Tabs class="-code">
-  <Tab label="Express.js">
+::: code-group
 
-```typescript
+```typescript [Express.js]
 import {Configuration} from "@tsed/di";
 import {PlatformApplication} from "@tsed/platform-http";
 import send from "send";
@@ -190,10 +249,7 @@ export class Server {
 }
 ```
 
-  </Tab>
-  <Tab label="Koa.js">
-
-```typescript
+```typescript [Koa.js]
 import {Configuration} from "@tsed/di";
 import {PlatformApplication} from "@tsed/platform-http";
 import send from "send";
@@ -229,6 +285,4 @@ export class Server {
 }
 ```
 
-  </Tab>
-</Tabs>
-````
+:::

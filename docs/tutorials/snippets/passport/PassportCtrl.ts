@@ -1,8 +1,8 @@
-import {Req} from "@tsed/platform-http";
+import {Controller, ProviderScope, Scope} from "@tsed/di";
 import {Authenticate} from "@tsed/passport";
+import {Req} from "@tsed/platform-http";
 import {BodyParams} from "@tsed/platform-params";
 import {Post} from "@tsed/schema";
-import {Controller, ProviderScope, Scope} from "@tsed/di";
 
 @Controller("/auth")
 @Scope(ProviderScope.SINGLETON)

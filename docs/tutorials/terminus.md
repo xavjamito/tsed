@@ -16,14 +16,27 @@ will show you how to install and use Terminus with Ts.ED.
 
 Before using terminus, we need to install the [terminus](https://www.npmjs.com/package/@godaddy/terminus) module.
 
-```bash
+::: code-group
+
+```sh [npm]
 npm install --save @godaddy/terminus @tsed/terminus
 ```
 
-Then import `@tsed/terminus` and add the following configuration in your `Server.ts`:
+```sh [yarn]
+yarn add @godaddy/terminus @tsed/terminus
+```
 
-<Tabs class="-code">
-  <Tab label="Configuration" icon="bx-code-alt">
+```sh [pnpm]
+pnpm add @godaddy/terminus @tsed/terminus
+```
+
+```sh [bun]
+bun add @godaddy/terminus @tsed/terminus
+```
+
+:::
+
+Then import `@tsed/terminus` and add the following configuration in your `Server.ts`:
 
 ```typescript
 import {Configuration} from "@tsed/di";
@@ -38,9 +51,6 @@ import {resolve} from "path";
 })
 export class Server {}
 ```
-
-  </Tab>
-</Tabs>
 
 ### Options
 

@@ -1,8 +1,9 @@
+import {Forbidden} from "@tsed/exceptions";
+import {OnInstall, OnVerify, Protocol} from "@tsed/passport";
 import {Req} from "@tsed/platform-http";
 import {BodyParams} from "@tsed/platform-params";
-import {OnInstall, OnVerify, Protocol} from "@tsed/passport";
 import {Strategy} from "passport-local";
-import {Forbidden} from "@tsed/exceptions";
+
 import {UserCreation} from "../models/UserCreation";
 import {UsersService} from "../services/users/UsersService";
 

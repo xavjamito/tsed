@@ -24,10 +24,25 @@ For more information about Pulse look at the documentation [here](https://github
 
 To begin, install the Pulse module for Ts.ED:
 
-```bash
-npm install --save @tsed/pulse
-npm install --save @pulsecron/pulse
+::: code-group
+
+```sh [npm]
+npm install --save @tsed/pulse @pulsecron/pulse
 ```
+
+```sh [yarn]
+yarn add @tsed/pulse @pulsecron/pulse
+```
+
+```sh [pnpm]
+pnpm add @tsed/pulse @pulsecron/pulse
+```
+
+```sh [bun]
+bun add @tsed/pulse @pulsecron/pulse
+```
+
+:::
 
 ## Configure your server
 

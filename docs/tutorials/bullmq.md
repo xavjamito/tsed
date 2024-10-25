@@ -21,9 +21,25 @@ For more information about BullMQ look at the documentation [here](https://docs.
 
 To begin, install the BullMQ module for Ts.ED:
 
-```bash
+::: code-group
+
+```sh [npm]
 npm install @tsed/bullmq bullmq
 ```
+
+```sh [yarn]
+yarn add @tsed/bullmq bullmq
+```
+
+```sh [pnpm]
+pnpm add @tsed/bullmq bullmq
+```
+
+```sh [bun]
+bun add @tsed/bullmq bullmq
+```
+
+:::
 
 ## Configure the Server
 
