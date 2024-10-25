@@ -1,6 +1,6 @@
 import {Configuration} from "@tsed/di";
-import * as v0Controllers from "./controllers/v1/index";
-import * as v1Controllers from "./controllers/v2/index";
+import * as v0Controllers from "./controllers/v1/index.js";
+import * as v1Controllers from "./controllers/v2/index.js";
 
 @Configuration({
   mount: {

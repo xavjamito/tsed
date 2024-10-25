@@ -1,4 +1,9 @@
 ---
+meta:
+  - name: description
+    content: Use Passport.js with Express, TypeScript and Ts.ED. Passport is authentication middleware for Node.js. Extremely flexible and modular, Passport can be unobtrusively dropped in to any Express-based web application.
+  - name: keywords
+    content: ts.ed express typescript passport.js node.js javascript decorators
 projects:
   - title: Kit Passport.js
     href: https://github.com/tsedio/tsed-example-passportjs
@@ -31,19 +36,19 @@ Before using Passport, we need to install the [Passport.js](https://www.npmjs.co
 
 ::: code-group
 
-```bash [npm]
+```sh [npm]
 npm install --save passport
 ```
 
-```bash [yarn]
+```sh [yarn]
 yarn add passport
 ```
 
-```bash [pnpm]
+```sh [pnpm]
 pnpm add passport
 ```
 
-```bash [bun]
+```sh [bun]
 bun add passport
 ```
 
@@ -222,7 +227,8 @@ Finally, we can use this decorator on an Endpoint like this:
 ## Catch Passport Exception <Badge text="6.18.0+" />
 
 ```typescript
-import {Catch, ExceptionFilterMethods, PlatformContext} from "@tsed/common";
+import {PlatformContext} from "@tsed/platform-http";
+import {Catch, ExceptionFilterMethods} from "@tsed/platform-exceptions";
 import {PassportException} from "@tsed/passport";
 
 @Catch(PassportException)

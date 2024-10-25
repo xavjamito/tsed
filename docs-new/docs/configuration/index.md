@@ -391,7 +391,7 @@ See specific platform options for:
 It's possible to change the HTTP and HTTPS server address as follows:
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 
 @Configuration({
   httpPort: "127.0.0.1:8081",
@@ -405,7 +405,7 @@ export class Server {}
 Random port assignment can be enabled with the value `0`. The port assignment will be delegated to the OS.
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 
 @Configuration({
   httpPort: "127.0.0.1:0",
@@ -417,7 +417,7 @@ export class Server {}
 Or:
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 
 @Configuration({
   httpPort: 0,
@@ -429,7 +429,7 @@ export class Server {}
 ### Disable HTTP
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 
 @Configuration({
   httpPort: false
@@ -440,7 +440,7 @@ export class Server {}
 ### Disable HTTPS
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 
 @Configuration({
   httpsPort: false

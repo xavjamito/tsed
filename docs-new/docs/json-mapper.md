@@ -65,7 +65,7 @@ JsonMapper works with a class and decorators. Use decorators on properties to de
 ::: code-group
 <<< @/docs/snippets/converters/model-usage.ts [Person.ts]
 <<< @/docs/snippets/converters/model-usage.jest.ts [Jest]
-<<< @/docs/snippets/converters/model-usage.mocha.ts [Mocha]
+<<< @/docs/snippets/converters/model-usage.jest.ts [Vitest]
 :::
 
 ::: tip Note
@@ -112,7 +112,7 @@ you don't want to expose this field in other cases. One of the solution is to us
 ::: code-group
 <<< @/docs/snippets/converters/model-ignore-props.ts [User.ts]
 <<< @/docs/snippets/converters/model-ignore-props.jest.ts [Jest]
-<<< @/docs/snippets/converters/model-ignore-props.mocha.ts [Mocha]
+<<< @/docs/snippets/converters/model-ignore-props.jest.ts [Vitest]
 :::
 
 ### With a callback
@@ -156,7 +156,7 @@ Here is the available options on ctx:
 ::: code-group
 <<< @/docs/snippets/converters/model-additional-props.ts [Person.ts]
 <<< @/docs/snippets/converters/model-additional-props.jest.ts [Jest]
-<<< @/docs/snippets/converters/model-additional-props.mocha.ts [Mocha]
+<<< @/docs/snippets/converters/model-additional-props.jest.ts [Vitest]
 :::
 
 ## Alias
@@ -213,7 +213,8 @@ and import the mapper in your application.
 
 ::: code-group
 <<< @/../packages/specs/json-mapper/src/components/PrimitiveMapper.ts [PrimitiveMapper]
-<<< @/../packages/specs/json-mapper/src/components/PrimitiveMapper.spec.ts [Spec]
+<<< @/../packages/specs/json-mapper/src/components/PrimitiveMapper.spec.ts [Jest]
+<<< @/../packages/specs/json-mapper/src/components/PrimitiveMapper.spec.ts [Vitest]
 :::
 
 #### Cheat sheet
@@ -245,7 +246,8 @@ and import the mapper in your application.
 
 ::: code-group
 <<< @/../packages/specs/json-mapper/src/components/SymbolMapper.ts [SymbolMapper]
-<<< @/../packages/specs/json-mapper/src/components/SymbolMapper.spec.ts [Spec]
+<<< @/../packages/specs/json-mapper/src/components/SymbolMapper.spec.ts [Jest]
+<<< @/../packages/specs/json-mapper/src/components/SymbolMapper.spec.ts [Vitest]
 :::
 
 ### Date
@@ -254,7 +256,8 @@ and import the mapper in your application.
 
 ::: code-group
 <<< @/../packages/specs/json-mapper/src/components/DateMapper.ts [DateMapper]
-<<< @/../packages/specs/json-mapper/src/components/DateMapper.spec.ts [Spec]
+<<< @/../packages/specs/json-mapper/src/components/DateMapper.spec.ts [Jest]
+<<< @/../packages/specs/json-mapper/src/components/DateMapper.spec.ts [Vitest]
 :::
 
 ::: warn

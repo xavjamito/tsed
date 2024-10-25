@@ -9,9 +9,9 @@ import {Configuration} from "@tsed/di";
     type: "postgres",
     // ...,
 
-    entities: ["./entity/*{.ts,.js}"],
-    migrations: ["./migrations/*{.ts,.js}"],
-    subscribers: ["./subscriber/*{.ts,.js}"]
+    entities: [`./entity/*{.ts,.js}`],
+    migrations: [`./migrations/*{.ts,.js}`],
+    subscribers: [`./subscriber/*{.ts,.js}`]
   }
 })
 export class Server {}

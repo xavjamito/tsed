@@ -1,3 +1,11 @@
+---
+meta:
+  - name: description
+    content: Documentation over response filters provided by Ts.ED framework. Use class to transform data before returning it to your consumer.
+  - name: keywords
+    content: response filter ts.ed express typescript node.js javascript decorators jsonschema class models
+---
+
 # Response Filter
 
 Ts.ED response filter provide a @@ResponseFilter@@ decorator to decorate a class and handle data returned by the endpoint before sending it to your consumer.
@@ -15,7 +23,8 @@ By using the appropriate `Content-Type`, you can define a Xml serializer as foll
 ::: code-group
 
 ```typescript [XmlResponseFilter.ts]
-import {ResponseFilter, Context, ResponseFilterMethods} from "@tsed/common";
+import {ResponseFilter, ResponseFilterMethods} from "@tsed/platform-response-filter";
+import {Context} from "@tsed/platform-params";
 
 @ResponseFilter("text/xml")
 export class XmlResponseFilter implements ResponseFilterMethods {
@@ -26,7 +35,7 @@ export class XmlResponseFilter implements ResponseFilterMethods {
 ```
 
 ```typescript [UserCtrl.ts]
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 import {Returns} from "@tsed/schema";
 
 @Controller("/users")
@@ -41,8 +50,8 @@ export class UsersCtrl {
 ```
 
 ```typescript [Server.ts]
-import {Configuration} from "@tsed/common";
-import {XmlResponseFilter} from "./filters/XmlResponseFilter";
+import {Configuration} from "@tsed/di";
+import {XmlResponseFilter} from "./filters/XmlResponseFilter.js";
 
 @Configuration({
   responseFilters: [
@@ -52,10 +61,10 @@ import {XmlResponseFilter} from "./filters/XmlResponseFilter";
 ```
 
 ```typescript [UsersCtrl.spec.ts]
-import {UsersCtrl} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import * as SuperTest from "supertest";
-import {UsersCtrl} from "./UsersCtrl";
-import {Server} from "../../Server";
+import {UsersCtrl} from "./UsersCtrl.js";
+import {Server} from "../../Server.js";
 
 describe("UserCtrl", () => {
   let request: SuperTest.Agent;
@@ -105,7 +114,8 @@ to wrap data to the expected result:
 ::: code-group
 
 ```typescript [WrapperResponseFilter.ts]
-import {ResponseFilter, Context, ResponseFilterMethods} from "@tsed/common";
+import {ResponseFilter, ResponseFilterMethods} from "@tsed/platform-response-filter";
+import {Context} from "@tsed/platform-params";
 
 @ResponseFilter("application/json")
 export class WrapperResponseFilter implements ResponseFilterMethods {
@@ -116,7 +126,7 @@ export class WrapperResponseFilter implements ResponseFilterMethods {
 ```
 
 ```typescript [UserCtrl.ts]
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 import {Returns} from "@tsed/schema";
 
 @Controller("/users")
@@ -131,7 +141,7 @@ export class UsersCtrl {
 ```
 
 ```typescript [Server.ts]
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 import {WrapperResponseFilter} from "./filters/WrapperResponseFilter";
 
 @Configuration({
@@ -142,10 +152,10 @@ import {WrapperResponseFilter} from "./filters/WrapperResponseFilter";
 ```
 
 ```typescript [UsersCtrl.spec.ts]
-import {UsersCtrl} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import * as SuperTest from "supertest";
-import {UsersCtrl} from "./UsersCtrl";
-import {Server} from "../../Server";
+import {UsersCtrl} from "./UsersCtrl.js";
+import {Server} from "../../Server.js";
 
 describe("UserCtrl", () => {
   let request: SuperTest.Agent;
@@ -179,7 +189,8 @@ The wrapper won't be documented in your generated `swagger.json`!
 By using the `*/*` Content-Type value given to the @@ResponseFilter@@ you can intercept all data.
 
 ```typescript
-import {ResponseFilter, Context, ResponseFilterMethods} from "@tsed/common";
+import {ResponseFilter, ResponseFilterMethods} from "@tsed/platform-response-filter";
+import {Context} from "@tsed/platform-params";
 
 @ResponseFilter("*/*")
 export class AnyResponseFilter implements ResponseFilterMethods {

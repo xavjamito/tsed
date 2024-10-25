@@ -212,7 +212,7 @@ By using @@Context@@ decorator and @@PlatformContext@@ class we can get some inf
 To add your middleware, just import your middleware in your server:
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 import "./src/other/directory/CustomMiddleware";
 
 @Configuration({

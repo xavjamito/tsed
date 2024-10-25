@@ -1,7 +1,7 @@
 import "@tsed/platform-express";
 
 import {ApolloService} from "@tsed/apollo";
-import {PlatformTest} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import {ApolloServerTestClient, createTestClient} from "apollo-server-testing";
 import {expect} from "chai";
 import gql from "graphql-tag";

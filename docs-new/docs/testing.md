@@ -88,19 +88,19 @@ To install supertest just run these commands:
 ::: code-group
 
 ```sh [npm]
-$ npm install --save-dev supertest @types/supertest
+npm install --save-dev supertest @types/supertest
 ```
 
 ```sh [yarn]
-$ yarn add -D supertest @types/supertest
+yarn add -D supertest @types/supertest
 ```
 
 ```sh [pnpm]
-$ pnpm add -D supertest @types/supertest
+pnpm add -D supertest @types/supertest
 ```
 
 ```sh [bun]
-$ pnpm add -D supertest @types/supertest
+bun add -D supertest @types/supertest
 ```
 
 :::
@@ -110,9 +110,9 @@ $ pnpm add -D supertest @types/supertest
 ::: code-group
 
 ```ts [jest]
-import {PlatformTest} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import * as SuperTest from "supertest";
-import {Server} from "../Server";
+import {Server} from "../Server.js";
 
 describe("Rest", () => {
   beforeAll(PlatformTest.bootstrap(Server));
@@ -131,9 +131,9 @@ describe("Rest", () => {
 
 ```ts [vitest]
 import {it, expect, describe, beforeAll, afterAll} from "vitest";
-import {PlatformTest} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import * as SuperTest from "supertest";
-import {Server} from "../Server";
+import {Server} from "../Server.js";
 
 describe("Rest", () => {
   beforeAll(PlatformTest.bootstrap(Server));
@@ -187,7 +187,7 @@ Here is an example to do that:
 ::: code-group
 
 ```typescript [jest]
-import {PlatformTest} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import SuperTest from "supertest";
 import {Server} from "../../Server";
 import {Chapter} from "../../entity/Chapter";
@@ -221,10 +221,10 @@ describe("ChapterController", () => {
 
 ```typescript [vitest]
 import {it, expect, describe, beforeAll, afterAll} from "vitest";
-import {PlatformTest} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import SuperTest from "supertest";
-import {Server} from "../../Server";
-import {Chapter} from "../../entity/Chapter";
+import {Server} from "../../Server.js";
+import {Chapter} from "../../entity/Chapter.js";
 
 const entity = new Chapter();
 Object.assign(entity, {
@@ -264,12 +264,12 @@ Here is an example to do that:
 ::: code-group
 
 ```typescript [jest]
-import {PlatformTest} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import SuperTest from "supertest";
 import {TestMongooseContext} from "@tsed/testing-mongoose";
-import {HelloWorldController} from "./HelloWorldController";
-import {Server} from "../../Server";
-import {AuthMiddleware} from "../../middlewares/auth.middleware";
+import {HelloWorldController} from "./HelloWorldController.js";
+import {Server} from "../../Server.js";
+import {AuthMiddleware} from "../../middlewares/auth.middleware.js";
 
 describe("HelloWorldController", () => {
   beforeAll(async () => {
@@ -293,12 +293,12 @@ describe("HelloWorldController", () => {
 
 ```typescript [vitest]
 import {it, expect, describe, beforeAll, afterAll, beforeEach} from "vitest";
-import {PlatformTest} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import SuperTest from "supertest";
 import {TestMongooseContext} from "@tsed/testing-mongoose";
-import {HelloWorldController} from "./HelloWorldController";
-import {Server} from "../../Server";
-import {AuthMiddleware} from "../../middlewares/auth.middleware";
+import {HelloWorldController} from "./HelloWorldController.js";
+import {Server} from "../../Server.js";
+import {AuthMiddleware} from "../../middlewares/auth.middleware.js";
 
 describe("HelloWorldController", () => {
   beforeAll(async () => {
@@ -376,7 +376,7 @@ describe("MyCtrl", () => {
 It's also possible to do that with `PlatformTest.bootstrap()`:
 
 ```typescript
-import {PlatformTest} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import SuperTest from "supertest";
 import {Server} from "../../Server";
 

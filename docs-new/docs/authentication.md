@@ -1,3 +1,11 @@
+---
+meta:
+  - name: description
+    content: Authentication configuration
+  - name: keywords
+    content: ts.ed express typescript auth node.js javascript decorators
+---
+
 # Authentication
 
 Ts.ED uses middlewares to protect your route with your own strategy. To handle correctly a request and protect your endpoints,

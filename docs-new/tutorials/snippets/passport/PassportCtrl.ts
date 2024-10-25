@@ -1,6 +1,6 @@
-import {Req} from "@tsed/common";
 import {Controller, ProviderScope, Scope} from "@tsed/di";
 import {Authenticate} from "@tsed/passport";
+import {Req} from "@tsed/platform-http";
 import {BodyParams} from "@tsed/platform-params";
 import {Post} from "@tsed/schema";
 

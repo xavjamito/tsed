@@ -1,3 +1,11 @@
+---
+meta:
+  - name: description
+    content: Use Apollo, Nexus or Type-graphql with Ts.ED framework. GraphQL is a query language for APIs and a runtime for fulfilling those queries with your existing data.
+  - name: keywords
+    content: ts.ed express typescript nexus typegraphql apollo graphql-ws node.js javascript decorators
+---
+
 # GraphQL
 
 <Banner src="/graphql.svg" height="200" />
@@ -45,6 +53,38 @@ See [here](/tutorials/graphql-typegraphql.md) for more details.
 GraphQL Websocket allows you to use the `subscription` feature of GraphQL using the Websocket transport protocol.
 
 See [here](/tutorials/graphql-ws.md) for more details.
+
+## ApolloService
+
+ApolloService let you retrieve an instance of ApolloServer:
+
+```typescript
+import {AfterRoutesInit} from "@tsed/platform-http";
+import {Injectable} from "@tsed/di";
+import {graphQLService} from "@tsed/apollo";
+import {ApolloServer} from "@apollo/server";
+
+@Injectable()
+export class UsersService implements AfterRoutesInit {
+  @Injec()
+  apolloService: ApolloService;
+
+  private server: ApolloServer;
+
+  $afterRoutesInit() {
+    this.server = this.apolloService.get("server1");
+  }
+}
+```
+
+## DataSources
+
+Apollo Server provides a mechanism to fetch data from a REST API or a database. This mechanism is called DataSources.
+Ts.ED allow you to register your DataSources using the @@DataSource@@ decorator.
+
+```typescript
+
+```
 
 ## Testing
 

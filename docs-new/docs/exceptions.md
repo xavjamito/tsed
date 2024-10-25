@@ -1,3 +1,11 @@
+---
+meta:
+  - name: description
+    content: Documentation over Http Exceptions provided by Ts.ED framework. Use class to throw a standard Http error.
+  - name: keywords
+    content: http exceptions ts.ed express typescript node.js javascript decorators jsonschema class models
+---
+
 # Exceptions
 
 Ts.ED http exceptions provide classes to throw standard HTTP exceptions. These exceptions can be used on Controller, Middleware or injectable Service.
@@ -116,8 +124,8 @@ Create a new ResourceNotFoundFilter in the filters directories and copy/paste th
 Then import the custom filter in your server:
 
 ```typescript
-import {Inject} from "@tsed/di";
-import {Configuration, PlatformApplication} from "@tsed/common";
+import {Inject, Configuration} from "@tsed/di";
+import {PlatformApplication} from "@tsed/platform-http";
 import "./filters/ResourceNotFoundFilter"; // Importing filter with ES6 import is enough
 
 @Configuration({

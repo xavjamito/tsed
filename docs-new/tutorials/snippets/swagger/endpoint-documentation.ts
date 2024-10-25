@@ -11,19 +11,19 @@ export class CalendarCtrl {
   @Description("Return a calendar from the given id")
   @Returns(200, CalendarModel)
   @(Returns(404).Description("Not found"))
-  getCalendar(
+  async getCalendar(
     @Description("A calendar Id")
     @QueryParams()
     id: string
   ): Promise<CalendarModel> {
-    return Promise.resolve({});
+    return {};
   }
 
   @Get("/")
   @Description("Return a list of Calendar")
   @Returns(200, CalendarModel)
-  getCalendars(): Promise<CalendarModel[]> {
-    return Promise.resolve([]);
+  async getCalendars(): Promise<CalendarModel[]> {
+    return [];
   }
 
   @Get("/v0/:id")
@@ -31,14 +31,14 @@ export class CalendarCtrl {
   @Description("Deprecated route, use /rest/calendars/:id instead of.")
   @Returns(CalendarModel)
   @Returns(404, {description: "Not found"})
-  getCalendarDeprecated(@QueryParams("id") id: string): Promise<CalendarModel> {
-    return Promise.resolve({});
+  async getCalendarDeprecated(@QueryParams("id") id: string): Promise<CalendarModel> {
+    return {};
   }
 
   @Post("/")
   @Security("calendar_auth", "write:calendar", "read:calendar")
   @Returns(CalendarModel)
-  createCalendar(@BodyParams() body: any): Promise<CalendarModel> {
-    return Promise.resolve({});
+  async createCalendar(@BodyParams() body: any): Promise<CalendarModel> {
+    return {};
   }
 }

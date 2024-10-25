@@ -1,6 +1,6 @@
-import {PlatformTest} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import * as SuperTest from "supertest";
-import {Server} from "../../../src/Server";
+import {Server} from "../../../src/Server.js";
 
 describe("Session", () => {
   beforeAll(PlatformTest.bootstrap(Server));

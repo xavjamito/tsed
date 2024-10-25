@@ -31,9 +31,9 @@ The way to create a Ts.ED application, add [middlewares](/docs/middlewares.html)
 Here is the common way to configure a server using the Platform API:
 
 ```typescript
-import {Configuration, PlatformApplication} from "@tsed/common";
-import {Inject, Constant} from "@tsed/di";
-import {MyMiddleware} from "./MyMiddleware";
+import {PlatformApplication} from "@tsed/platform-http";
+import {Configuration, Inject, Constant} from "@tsed/di";
+import {MyMiddleware} from "./MyMiddleware.js";
 
 @Configuration({
   views: {
@@ -68,7 +68,7 @@ import the adapter to the `index.ts` or `server.ts`:
 ::: code-group
 
 ```typescript [Express.js]
-import {$log} from "@tsed/common";
+import {$log} from "@tsed/logger";
 import {PlatformExpress} from "@tsed/platform-express";
 import {Server} from "./server";
 
@@ -90,7 +90,7 @@ bootstrap();
 ```
 
 ```typescript [Koa.js]
-import {$log} from "@tsed/common";
+import {$log} from "@tsed/logger";
 import {PlatformKoa} from "@tsed/platform-koa";
 import {Server} from "./server";
 
@@ -121,7 +121,7 @@ To get the framework application instance (Express.js, Koa.js), you have to inje
 
 ```typescript [Express.js]
 import {Injectable, Inject} from "@tsed/di";
-import {PlatformApplication} from "@tsed/common";
+import {PlatformApplication} from "@tsed/platform-http";
 import {MyMiddleware} from "../middlewares/MyMiddleware";
 
 @Injectable()
@@ -142,7 +142,7 @@ class MyService {
 
 ```typescript [Koa.js]
 import {Injectable, Inject} from "@tsed/di";
-import {PlatformApplication} from "@tsed/common";
+import {PlatformApplication} from "@tsed/platform-http";
 import {MyMiddleware} from "../middlewares/MyMiddleware";
 
 @Injectable()
@@ -199,7 +199,7 @@ Or use the `app.statics()` method:
 
 ```typescript
 import {Injectable} from "@tsed/di";
-import {PlatformApplication} from "@tsed/common";
+import {PlatformApplication} from "@tsed/platform-http";
 import {join} from "path";
 
 @Injectable()

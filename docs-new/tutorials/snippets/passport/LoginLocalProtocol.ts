@@ -1,6 +1,6 @@
-import {Req} from "@tsed/common";
 import {Inject} from "@tsed/di";
 import {BeforeInstall, OnInstall, OnVerify, Protocol} from "@tsed/passport";
+import {Req} from "@tsed/platform-http";
 import {BodyParams} from "@tsed/platform-params";
 import {IStrategyOptions, Strategy} from "passport-local";
 

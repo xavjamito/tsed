@@ -24,7 +24,7 @@ standard [JsonSchema](http://json-schema.org/) model.
 Validation is only available when you import `@tsed/ajv` package in your server.
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 import "@tsed/ajv";
 
 @Configuration()
@@ -98,10 +98,9 @@ json type or when you use a mixed TypeScript types.
 
 You can also use @@Any@@ decorator to allow all types:
 
-<Tabs class="-code">
-  <Tab label="Model">
+::: code-group
 
-```typescript
+```typescript [Model]
 import {Any} from "@tsed/schema";
 
 export class Model {
@@ -110,10 +109,7 @@ export class Model {
 }
 ```
 
-  </Tab>
-  <Tab label="Json schema">
-
-```json
+```json [Json schema]
 {
   "properties": {
     "prop": {
@@ -147,10 +143,7 @@ export class Model {
 }
 ```
 
-  </Tab>
-  <Tab label="OS3">
-
-```json
+```json [OS3]
 {
   "properties": {
     "prop": {
@@ -182,8 +175,7 @@ export class Model {
 }
 ```
 
-  </Tab>
-</Tabs>
+:::
 
 Since v7.75.0, when you use @@Any@@ decorator combined with other decorators like @@MinLength@@, @@Minimum@@, etc. metadata will be automatically assigned to the right
 type. For example, if you add a @@Minimum@@ decorator, it will be assigned to the number type.
@@ -433,7 +425,8 @@ element, where each element is unique or a TypeScript enum.
 
 ```typescript
 import {Enum} from "@tsed/schema";
-import {QueryParams, Controller} from "@tsed/common";
+import {Controller} from "@tsed/di";
+import {QueryParams} from "@tsed/platform-params";
 
 @Controller("/")
 class MyController {
@@ -474,7 +467,8 @@ class Product {
 // in controller
 
 import {Enum} from "@tsed/schema";
-import {QueryParams, Controller} from "@tsed/common";
+import {Controller} from "@tsed/di";
+import {QueryParams} from "@tsed/platform-params";
 
 @Controller("/products")
 class ProductsController {
@@ -700,7 +694,7 @@ Finally, we can create a unit test to verify if our example works properly:
 
 ```typescript
 import "@tsed/ajv";
-import {PlatformTest} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import {getJsonSchema} from "@tsed/schema";
 import {Product} from "./Product";
 import "../keywords/RangeKeyword";
@@ -731,6 +725,27 @@ describe("Product", () => {
     expect(validate({price: 100})).toEqual(false);
   });
 });
+```
+
+## ~~Ignore~~
+
+<Badge text="deprecated" type="warn"/>
+
+The @@Ignore@@ decorator is used to ignore a property in the JsonSchema generation and when you use the json-mapper.
+
+But this decorator is deprecated and will be removed in the next major version of Ts.ED.
+Instead, use Groups decorator to manage your model serialization/deserialization.
+
+::: tip Note
+
+To retrieve the original Ignore decorator behavior, you can use the @@Groups@@ decorator. You have to set `jsonMapper.strictGroups` to `true` also:
+
+```ts
+@Configuration({
+  jsonMapper: {
+    strictGroups: true
+  }
+})
 ```
 
 ## Groups
@@ -838,6 +853,87 @@ You can combine different group labels or use a glob pattern to match multiple g
 to use negation by prefixing the group label with `!`.
 :::
 
+## Groups strict mode <Badge text="7.69.0+"/>
+
+The Groups decorator has introduced a big change in the way it manages its models,
+but it can sometimes be complicated to understand its default behavior when the endpoint does not define Groups.
+
+In addition, the documentation generated does not reflect the behavior observed in runtime, which adds confusion.
+
+For example, we have our User model with the following properties and Groups configuration:
+
+```ts
+export class User {
+  @Groups("!creation")
+  id: string;
+
+  @Required()
+  firstName: string;
+
+  @Required()
+  lastName: string;
+
+  @Required()
+  @Groups("group.email", "creation")
+  email: string;
+
+  @Groups("creation")
+  password: string;
+}
+```
+
+Now, we have this controller:
+
+```ts
+class TestController {
+  @Post("/")
+  @Returns(200, User)
+  async post(@BodyParams() user: User) {
+    return user;
+  }
+}
+```
+
+We can see that the @@Returns@@ and the input params doesn't set any group configuration. In this case, Ts.ED will not apply any group configuration to the input params and the output.
+
+So if you send this payload:
+
+```json
+{
+  "id": "id",
+  "firstName": "firstName",
+  "lastName": "lastName",
+  "email": "",
+  "password": "password"
+}
+```
+
+The endpoint will return the same payload without any modification. But here, we expect that the `email` and `password` fields are not returned because they are Groups configuration on these `fields`.
+
+To avoid this behavior, you can set the `strictGroups` option to the `json-mapper`:
+
+```ts
+@Configuration({
+  jsonMapper: {
+    strictGroups: true
+  }
+})
+```
+
+Now, if you send the same payload, the endpoint will return the following payload:
+
+```json
+{
+  "id": "id",
+  "firstName": "firstName",
+  "lastName": "lastName"
+}
+```
+
+::: warning
+The `strictGroups` option is enabled by default in the next major version of Ts.ED.
+:::
+
 ## Groups Name
 
 By default, Groups decorator generate automatically a name for each model impacted by the given groups list.
@@ -902,11 +998,11 @@ It's also possible to define all groups on class instead of declaring it on each
 
 ::: code-group
 
-<<< @/docs/snippets/model/group-users-ctrl-on-class.ts
-<<< @/docs/snippets/model/group-user-on-class.ts
-<<< @/docs/snippets/model/group-user-creation.json
-<<< @/docs/snippets/model/group-user-update.json
-<<< @/docs/snippets/model/group-user-change-password.json
+<<< @/docs/snippets/model/group-users-ctrl-on-class.ts [UsersCtrl.ts]
+<<< @/docs/snippets/model/group-user-on-class.ts [User.ts]
+<<< @/docs/snippets/model/group-user-creation.json [Creation]
+<<< @/docs/snippets/model/group-user-update.json [Update]
+<<< @/docs/snippets/model/group-user-change-password.json [ChangePassword]
 
 :::
 
@@ -1127,7 +1223,7 @@ Partial allow you to create a Partial model on an endpoint:
 
 ```typescript
 import {Returns, Patch, Partial} from "@tsed/schema";
-import {Controller} from "@tsed/common";
+import {Controller} from "@tsed/di";
 import {BodyParams} from "./bodyParams";
 
 @Controller("/")
@@ -1375,9 +1471,9 @@ Now, we need a model to be used with the generic Pagination model:
 Finally, we can use our models on a method as following:
 
 ::: code-group
-<<< @/docs/snippets/model/generics-controller1.ts
-<<< @/docs/snippets/model/generics-controller1-os2.json
-<<< @/docs/snippets/model/generics-controller1-os3.json
+<<< @/docs/snippets/model/generics-controller1.ts [MyController.ts]
+<<< @/docs/snippets/model/generics-controller1-os2.json [Swagger 2]
+<<< @/docs/snippets/model/generics-controller1-os3.json [OpenAPI 3]
 :::
 
 ### Declaring nested generic models
@@ -1386,13 +1482,12 @@ It's also possible to declare nested generic models in order to have this type `
 
 ::: code-group
 
-```typescript[MyController.ts]
-import {Generics, Property, Returns} from "@tsed/schema";
-import {Post} from "@tsed/common";
+```typescript [MyController.ts]
+import {Post, Generics, Property, Returns} from "@tsed/schema";
 
 class MyController {
   @Post("/")
-  @Returns(200, Pagination).Of(Submission).Nested(Product).Description("description")
+  @(Returns(200, Pagination).Of(Submission).Nested(Product).Description("description"))
   async method(): Promise<Pagination<Submission<Product>> | null> {
     return null;
   }
@@ -1587,7 +1682,7 @@ the database, it's better to rename the property to `id`.
 ## Set Schema
 
 If Ts.ED doesn't provide the expected decorator to describe your json schema, you can use the @@Schema@@ decorator
-from `@tsed/common` to set a custom schema.
+from `@tsed/schema` to set a custom schema.
 
 ### Using JsonSchemaObject
 
@@ -1631,8 +1726,8 @@ You can create a controller, or an endpoint to expose a specific schema with the
 consumers to retrieve a validation template so that they can use it to validate a form.
 
 ```typescript
-import {Controller, Get} from "@tsed/common";
-import {getJsonSchema} from "@tsed/schema";
+import {Controller} from "@tsed/di";
+import {Get, getJsonSchema} from "@tsed/schema";
 import {Product} from "../models/Product";
 
 @Controller("/products")

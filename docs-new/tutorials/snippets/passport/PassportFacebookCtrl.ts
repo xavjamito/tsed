@@ -1,6 +1,6 @@
-import {Req} from "@tsed/common";
 import {Controller} from "@tsed/di";
 import {Authenticate} from "@tsed/passport";
+import {Req} from "@tsed/platform-http";
 import {Get} from "@tsed/schema";
 
 @Controller("/auth")

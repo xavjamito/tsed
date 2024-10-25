@@ -1,5 +1,7 @@
 # Jest
 
+<Banner src="/jest.svg" height="150" href="https://jestjs.io"></Banner>
+
 ## Introduction
 
 This guide will take you through the process of installing Jest, a popular JavaScript testing framework, on an existing
@@ -14,19 +16,19 @@ Run the following npm command to install Jest and its required dependencies:
 ::: code-group
 
 ```bash [npm]
-$ npm install --save-dev jest ts-jest @types/jest
+npm install --save-dev jest ts-jest @types/jest
 ```
 
 ```bash [yarn]
-$ yarn add -D jest ts-jest @types/jest
+yarn add -D jest ts-jest @types/jest
 ```
 
 ```bash [pnpm]
-$ pnpm add -D jest ts-jest @types/jest
+pnpm add -D jest ts-jest @types/jest
 ```
 
 ```bash [bun]
-$ bun add -D jest ts-jest @types/jest
+bun add -D jest ts-jest @types/jest
 ```
 
 :::

@@ -259,12 +259,16 @@ export default defineConfig({
           {
             text: "Vitest",
             link: `/tutorials/vitest`
+          },
+          {
+            text: "Server-sent events",
+            link: `/tutorials/server-sent-events`
           }
-        ].sort((a, b) => (a.text < b.text ? -1 : 1))
+        ].sort((a, b) => a.text.localeCompare(b.text))
       },
       {
         text: "Plugins",
-        link: "./plugins"
+        link: "/plugins/index"
       },
       {
         text: "More",
@@ -521,6 +525,10 @@ export default defineConfig({
             {
               text: "Vike",
               link: `/tutorials/vike`
+            },
+            {
+              text: "Server-sent events",
+              link: `/tutorials/server-sent-events`
             }
           ].sort((a, b) => a.text.localeCompare(b.text))
         }

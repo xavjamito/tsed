@@ -11,10 +11,16 @@ you can use another module which follows the same convention.
 
 ```bash [Express.js]
 npm install --save express-session
+yarn add express-session
+pnpm add express-session
+bun add express-session
 ```
 
 ```bash [Koa.js]
 npm install --save koa-session
+yarn add koa-session
+pnpm add koa-session
+bun add koa-session
 ```
 
 :::
@@ -42,8 +48,9 @@ Edit your Server and add these lines:
 #### Set value
 
 ```typescript
-import {BodyParams, Controller, Post, Session} from "@tsed/common";
-import {Returns} from "@tsed/schema";
+import {Controller} from "@tsed/di";
+import {BodyParams, Session} from "@tsed/platform-params";
+import {Post, Returns} from "@tsed/schema";
 
 @Controller("/")
 export class MyCtrl {
@@ -64,8 +71,9 @@ export class MyCtrl {
 #### Set value
 
 ```typescript
-import {BodyParams, Controller, Post, Cookies} from "@tsed/common";
-import {Returns} from "@tsed/schema";
+import {Controller} from "@tsed/di";
+import {BodyParams, Cookies} from "@tsed/platform-params";
+import {Post, Returns} from "@tsed/schema";
 
 @Controller("/")
 export class MyCtrl {

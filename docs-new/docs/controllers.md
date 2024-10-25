@@ -163,8 +163,9 @@ Finally, @@BodyParams@@ accepts to give a @@ParamOptions@@ object as parameter t
 @@QueryParams@@ decorator accept a model to transform `Express.request.query` plain object to a Class.
 
 ```typescript
-import {Controller, Get, QueryParams} from "@tsed/common";
-import {Required, MinLength, Property} from "@tsed/schema";
+import {QueryParams} from "@tsed/platform-params";
+import {Controller} from "@tsed/di";
+import {Get, Required, MinLength, Property} from "@tsed/schema";
 
 class QueryParamsModel {
   @Required()
@@ -254,7 +255,6 @@ class ExampleCtrl {
 <<< @/docs/snippets/controllers/request-headers.ts
 
 ::: warning
-
 By default, the validator/json-mapper aren't executed on header parameters.
 You have to add extra parameter to enable it:
 
@@ -285,7 +285,7 @@ Here is an example:
 
 #### Context
 
-See our dedicated page on [PlatformContext](/docs/request-context) for more details.
+See our dedicated page on [PlatformContext](/docs/request-context.md) for more details.
 
 #### Validation
 
@@ -438,8 +438,8 @@ Finally, it also possible to perform redirection programmatically:
 
 ```typescript
 import {Controller} from "@tsed/di";
+import {Context} from "@tsed/platform-params";
 import {Get} from "@tsed/schema";
-import {Context} from "@tsed/common";
 
 @Controller("/")
 class MyCtrl {
@@ -480,7 +480,7 @@ sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-ori
 
 ### Throw exceptions
 
-You can use [@tsed/exceptions](/docs/exceptions) or similar module to throw an http exception.
+You can use [@tsed/exceptions](/docs/exceptions) or similar module to throw a http exception.
 All exception will be intercepted by PlatformExceptions and will be sent to the client.
 
 Here is an example:
@@ -493,7 +493,7 @@ This example will produce a response with status code 400 and "Not a number" mes
 :::
 
 ::: tip
-See our guide on [HttpExceptions to throw customer HttpExceptions](/docs/throw-http-exceptions)
+See our guide to [throw custom Http Exception](/docs/exceptions)
 :::
 
 ## Inject Request and Response

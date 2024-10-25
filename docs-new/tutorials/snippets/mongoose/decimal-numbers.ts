@@ -1,4 +1,4 @@
-import type {Decimal128, Model, NumberDecimal} from "@tsed/mongoose";
+import {Decimal128, Model, NumberDecimal} from "@tsed/mongoose";
 import {Property} from "@tsed/schema";
 
 @Model()

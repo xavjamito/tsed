@@ -1,5 +1,5 @@
 import {createReadStream, ReadStream} from "node:fs";
-import {PlatformResponse, Res} from "@tsed/common";
+import {PlatformResponse, Res} from "@tsed/platform-http";
 import {Controller} from "@tsed/di";
 import {Get} from "@tsed/schema";
 import {Observable, of} from "rxjs";

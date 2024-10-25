@@ -1,3 +1,11 @@
+---
+meta:
+  - name: description
+    content: Nexus
+  - name: keywords
+    content: ts.ed express typescript graphql websocket node.js javascript decorators
+---
+
 # GraphQL Nexus
 
 <Banner src="/graphql-nexus.png" height="200" />
@@ -12,14 +20,12 @@ This example need to be used with `@tsed/apollo` module. So, you must install it
 ::: code-group
 
 ```bash [Express.js]
-npm install --save @tsed/apollo
-npm install --save nexus graphql apollo-server-express
+npm install --save @tsed/apollo nexus graphql @apollo/server
 npm install --save-dev apollo-server-testing
 ```
 
 ```bash [Koa.js]
-npm install --save @tsed/apollo graphql
-npm install --save nexus graphql apollo-server-koa
+npm install --save @tsed/apollo nexus graphql @apollo/server @as-integration/koa
 npm install --save-dev apollo-server-testing
 ```
 
@@ -28,7 +34,7 @@ npm install --save-dev apollo-server-testing
 Now, we can configure the Ts.ED server by importing `@tsed/apollo` in your Server:
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 import "@tsed/platform-express";
 import "@tsed/apollo";
 import {schema} from "./schema";
@@ -77,7 +83,7 @@ a @@DataSourceService@@ decorator to declare a DataSource which will be injected
 
 ```typescript
 import {DataSource} from "@tsed/typegraphql";
-import {RESTDataSource} from "apollo-datasource-rest";
+import {RESTDataSource} from "@apollo/datasource-rest";
 import {User} from "../models/User";
 @DataSource()
 export class UserDataSource extends RESTDataSource {

@@ -1,3 +1,11 @@
+---
+meta:
+  - name: description
+    content: Use template engine with Ts.ED by using decorators. Ts.ED is built on top of Express/Koa and uses TypeScript language.
+  - name: keywords
+    content: template engine tsed-engines ts.ed express typescript node.js javascript decorators
+---
+
 # Templating
 
 @@View@@ is a decorator which can be used on a controller method (endpoint).
@@ -123,7 +131,7 @@ You can instantiate them manually beforehand if you want to add filters, globals
 ### Nunjucks
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 import nunjucks from "nunjucks";
 
 const nunjucksInstances = nunjucks.configure("./views");

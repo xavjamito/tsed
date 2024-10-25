@@ -1,7 +1,7 @@
 import {it, expect, describe, beforeEach, afterEach} from "vitest";
-import {PlatformTest} from "@tsed/common";
-import {MyCtrl} from "../controllers/MyCtrl";
-import {DbService} from "../services/DbService";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {MyCtrl} from "../controllers/MyCtrl.js";
+import {DbService} from "../services/DbService.js";
 
 describe("MyCtrl", () => {
   // bootstrap your Server to load all endpoints before run your test

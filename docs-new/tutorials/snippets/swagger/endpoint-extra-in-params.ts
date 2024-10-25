@@ -9,7 +9,7 @@ export class CalendarCtrl {
   @Post("/")
   @(In("header").Name("authorization").Type(String).Description("Bearer authorization"))
   @Security("oidc")
-  createCalendar(@BodyParams() body: any): Promise<CalendarModel> {
-    return Promise.resolve({});
+  async createCalendar(@BodyParams() body: any): Promise<CalendarModel> {
+    return {};
   }
 }

@@ -1,7 +1,7 @@
-import {$log} from "@tsed/common";
+import {$log} from "@tsed/logger";
 import {PlatformExpress} from "@tsed/platform-express";
 import dotenv from "dotenv";
-import {Server} from "./server";
+import {Server} from "./Server.js";
 
 dotenv.config({path: "/full/custom/path/to/your/env/vars"});
 

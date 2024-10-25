@@ -1,6 +1,6 @@
-import {Req} from "@tsed/common";
 import {Forbidden} from "@tsed/exceptions";
 import {OnInstall, OnVerify, Protocol} from "@tsed/passport";
+import {Req} from "@tsed/platform-http";
 import {BodyParams} from "@tsed/platform-params";
 import {Strategy} from "passport-local";
 

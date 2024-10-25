@@ -1,7 +1,6 @@
 import {IncomingMessage} from "node:http";
 import Axios from "axios";
-import {Context} from "@tsed/common";
-import {QueryParams} from "@tsed/platform-params";
+import {QueryParams, Context} from "@tsed/platform-params";
 import {Get} from "@tsed/schema";
 import {Controller} from "@tsed/di";
 

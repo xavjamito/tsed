@@ -186,7 +186,7 @@ This is useful when you have to get data from **database** based on an input dat
 Given this `PersonModel`:
 
 ```typescript
-import {MinLength, Required, Property} from "@tsed/common";
+import {MinLength, Required, Property} from "@tsed/schema";
 
 class PersonModel {
   @Property()
@@ -225,7 +225,9 @@ To avoid future mistakes, it could be a good idea to summarize these two decorat
 Now, we can use our custom decorator on parameter:
 
 ```typescript
-import {Controller, Put, RawPathParams, UsePipe} from "@tsed/common";
+import {Controller} from "@tsed/di";
+import {RawPathParams, UsePipe} from "@tsed/platform-params";
+import {Put} from "@tsed/schema";
 import {PersonModel} from "../models/PersonModel";
 import {PersonPipe} from "../services/PersonPipe";
 
@@ -255,10 +257,9 @@ Now, we can retrieve the options by using the `metadata.store`:
 And finally, we can use our new decorator on a parameter:
 
 ```typescript
-import {Controller} from "@tsed/di";
-import {UsePipe} from "@tsed/common";
 import {Put} from "@tsed/schema";
-import {RawPathParams, UsePipe} from "@tsed/platform-params";
+import {Controller} from "@tsed/di";
+import {RawPathParams, UsePipe} from "@tsed/plaform-params";
 import {PersonModel} from "../models/PersonModel";
 import {PersonPipe} from "../services/PersonPipe";
 

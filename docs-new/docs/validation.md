@@ -31,7 +31,7 @@ bun add ajv @tsed/ajv
 Then import `@tsed/ajv` in your Server:
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 import "@tsed/ajv"; // import ajv ts.ed module
 
 @Configuration({
@@ -50,7 +50,7 @@ The AJV module allows a few settings to be added through the ServerSettings (all
 The error message could be changed like this:
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/diu";
 import "@tsed/ajv"; // import ajv ts.ed module
 
 @Configuration({
@@ -79,7 +79,7 @@ or other decorators, and will
 be validated by Ajv.
 
 ```typescript
-import {Required, MaxLength, MinLength, Minimum, Maximum, Format, Enum, Pattern, Email} from "@tsed/common";
+import {Required, MaxLength, MinLength, Minimum, Maximum, Format, Enum, Pattern, Email} from "@tsed/schema";
 
 export class CalendarModel {
   @MaxLength(20)
@@ -192,7 +192,7 @@ Finally, we can create a unit test to verify if our example works properly:
 
 ```typescript
 import "@tsed/ajv";
-import {PlatformTest} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import {getJsonSchema} from "@tsed/schema";
 import {Product} from "./Product";
 import "../keywords/RangeKeyword";
@@ -303,9 +303,9 @@ export class UriFormat implements FormatsMethods<string> {
 Then, we can import this class to our server as follows:
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 import "@tsed/ajv"; // import ajv ts.ed module
-import "./formats/UriFormat"; // just import the class, then Ts.ED will mount automatically the new format
+import "./formats/UriFormat.js"; // just import the class, then Ts.ED will mount automatically the new format
 
 @Configuration({
   ajv: {
@@ -319,9 +319,9 @@ Now, this example will be valid:
 
 ```typescript
 import {Uri, getJsonSchema} from "@tsed/schema";
-import {PlatformTest} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import {AjvService} from "@tsed/ajv";
-import "./UriFormat";
+import "./UriFormat.js";
 
 describe("UriFormat", () => {
   beforeEach(() => PlatformTest.create());

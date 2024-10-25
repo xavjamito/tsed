@@ -1,4 +1,9 @@
 ---
+meta:
+  - name: description
+    content: Use Mongoose with Express, TypeScript and Ts.ED. Mongoose provides a straight-forward, schema-based solution to model your application data.
+  - name: keywords
+    content: ts.ed express typescript mongoose node.js javascript decorators
 projects:
   - title: Kit Mongoose
     href: https://github.com/tsedio/tsed-example-mongoose
@@ -37,18 +42,25 @@ Before using the `@tsed/mongoose` package, we need to install the [mongoose](htt
 ```bash [npm]
 npm install --save mongoose
 npm install --save @tsed/mongoose
-npm install --save-dev @tsed/testing-mongoose
+npm install --save-dev @tsed/testcontainers-mongo
 ```
 
 ```bash [yarn]
 yarn add mongoose
 yarn add @tsed/mongoose
-yarn add --dev @tsed/testing-mongoose
+yarn add --dev @tsed/testcontainers-mongo
 ```
 
-::: warning
-Since mongoose v5.11.0, the module exposes its own file definition and can break your build!
-To solve it, install @tsed/mongoose v6.14.1 and remove the `@types/mongoose` dependencies.
+```sh [yarn]
+yarn add mongoose @tsed/mongoose
+yarn add -D @tsed/testcontainers-mongo
+```
+
+```sh [bun]
+bun add mongoose @tsed/mongoose
+bun add -D @tsed/testcontainers-mongo
+```
+
 :::
 
 Then import `@tsed/mongoose` in your [Configuration](/docs/configuration/index.md):
@@ -62,7 +74,7 @@ Then import `@tsed/mongoose` in your [Configuration](/docs/configuration/index.m
 @@MongooseService@@ lets you retrieve an instance of Mongoose.Connection.
 
 ```typescript
-import {Service} from "@tsed/common";
+import {Service} from "@tsed/di";
 import {MongooseService} from "@tsed/mongoose";
 
 @Service()
@@ -110,7 +122,7 @@ Schema decorator accepts a second parameter to configure the Schema (See [Mongoo
 ### Declaring Properties
 
 By default, `@tsed/mongoose` reuses the metadata stored by the decorators dedicated
-to describe a JsonSchema. These decorators come from the `@tsed/common` package.
+to describe a JsonSchema. These decorators come from the `@tsed/schema` package.
 
 <<< @/tutorials/snippets/mongoose/example-model-mongoose.ts
 
@@ -257,7 +269,7 @@ Mongoose doesn't return a real instance of your class. If you inspected the retu
 you'll see that the instance is as Model type instead of the expected class:
 
 ```typescript
-import {Inject, Injectable} from "@tsed/common";
+import {Inject, Injectable} from "@tsed/di";
 import {MongooseModel} from "@tsed/mongoose";
 import {Product} from "./models/Product";
 
@@ -282,7 +294,7 @@ the class with the @@deserialize@@ function.
 To simplify this, Ts.ED adds a `toClass` method to the MongooseModel to find, if necessary, an instance of type Product.
 
 ```typescript
-import {Inject, Injectable} from "@tsed/common";
+import {Inject, Injectable} from "@tsed/di";
 import {MongooseModel} from "@tsed/mongoose";
 import {Product} from "./models/Product";
 
@@ -304,84 +316,64 @@ export class MyRepository {
 
 ## Testing
 
-The package [`@tsed/testing-mongoose`](https://www.npmjs.com/package/@tsed/testing-mongoose) allows you to test your server with a memory database.
+The [`@tsed/testcontainers-mongo`](https://www.npmjs.com/package/@tsed/testcontainers-mongo) package allows you to test your code using the [TestContainers](https://node.testcontainers.org/) library.
 
-::: tip
-This package uses the amazing [mongodb-memory-server](https://www.npmjs.com/package/mongodb-memory-server) to mock the mongo database.
-:::
+### Configuration
 
-### Testing API
-
-This example shows you how you can test your Rest API with superagent and a mocked Mongo database:
+To use the `@tsed/testcontainers-mongo` package, you need to install the package:
 
 ::: code-group
 
-<<< @/tutorials/snippets/mongoose/testing-api.jest.ts [Jest]
-
-<<< @/tutorials/snippets/mongoose/testing-api.mocha.ts [Mocha]
-:::
-
-::: tip
-To increase mocha timeout from 2000ms to 10000ms, use option `--timeout 10000`.
-:::
-
-### Testing API with ReplicaSet
-
-A [ReplicaSet](https://github.com/nodkz/mongodb-memory-server#replica-set-start) can be easily started with:
-
-```typescript
-import {PlatformTest} from "@tsed/common";
-import {PlatformExpress} from "@tsed/platform-express";
-import {TestMongooseContext} from "@tsed/testing-mongoose";
-import {expect} from "chai";
-import * as SuperTest from "supertest";
-import {Server} from "../Server";
-
-describe("Rest", () => {
-  // bootstrap your Server to load all endpoints before run your test
-  let request: SuperTest.Agent;
-
-  before(
-    TestMongooseContext.bootstrap(Server, {
-      platform: PlatformExpress,
-      mongod: {
-        replicaSet: true
-      }
-    })
-  ); // Create a server with mocked database
-  before((done) => {
-    request = SuperTest(PlatformTest.callback());
-    done();
-  });
-
-  after(TestMongooseContext.reset); // reset database and injector
-
-  describe("GET /rest/calendars", () => {
-    it("should do something", async () => {
-      const response = await request.get("/rest/calendars").expect(200);
-
-      expect(response.body).to.be.an("array");
-    });
-  });
-});
+```sh [npm]
+npm install --save-dev @tsed/testcontainers-mongo
 ```
 
-### Jest additional setup
-
-Add a script to close connection after all unit test. In your jest configuration file, add the following line:
-
-```json
-{
-  "globalTeardown": "./scripts/jest/teardown.js"
-}
+```sh [yarn]
+yarn add --dev @tsed/testcontainers-mongo
 ```
 
-And create the script with the following content:
+```sh [pnpm]
+pnpm add --dev @tsed/testcontainers-mongo
+```
 
-```js
-module.exports = async () => {
-  (await global.__MONGOD__) && global.__MONGOD__.stop();
+```sh [bun]
+bun add --dev @tsed/testcontainers-mongo
+```
+
+:::
+
+Then add or update your jest or vitest configuration file to add a global setup file:
+
+::: code-group
+
+```ts [Jest]
+// jest.config.js
+module.exports = {
+  globalSetup: ["jest.setup.js"],
+  globalTeardown: ["jest.teardown.js"]
 };
+
+// jest.setup.js
+const {TestContainersMongo} = require("@tsed/testcontainers-mongo");
+module.exports = async () => {
+  await TestContainersMongo.startMongoServer();
+};
+
+// jest.teardown.js
+const {TestContainersMongo} = require("@tsed/testcontainers-mongo");
+module.exports = async () => {
+  await TestContainersMongo.stopMongoServer();
+};
+```
+
+```ts [Vitest]
+import {defineConfig} from "vitest/config";
+
+export default defineConfig({
+  test: {
+    globalSetup: [import.meta.resolve("@tsed/testcontainers-mongo/vitest/setup")]
+  }
+});
 ```
 
 ### Testing Model
@@ -392,7 +384,19 @@ This example shows you how can test the model:
 
 <<< @/tutorials/snippets/mongoose/testing-model.jest.ts [Jest]
 
-<<< @/tutorials/snippets/mongoose/testing-model.mocha.ts [Mocha]
+<<< @/tutorials/snippets/mongoose/testing-model.vitest.ts [Vitest]
+
+:::
+
+### Testing API
+
+This example shows you how you can test your Rest API with superagent and a mocked Mongo database:
+
+::: code-group
+
+<<< @/tutorials/snippets/mongoose/testing-api.jest.ts [Jest]
+
+<<< @/tutorials/snippets/mongoose/testing-api.jest.ts [Vitest]
 
 :::
 

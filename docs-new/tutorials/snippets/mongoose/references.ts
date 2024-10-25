@@ -15,5 +15,5 @@ export class MyModel {
   refs: Ref<MyRef>[];
 
   @Ref(MyRef)
-  refsMap: Map<string, MyRef>;
+  refs: Map<string, MyRef>;
 }

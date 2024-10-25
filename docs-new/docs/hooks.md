@@ -47,7 +47,7 @@ By convention
 You can subscribe to a hook in your Server:
 
 ```typescript
-import {BeforeInit, Configuration} from "@tsed/common";
+import {BeforeInit, Configuration} from "@tsed/di";
 
 @Configuration({})
 class Server implements BeforeInit {
@@ -60,7 +60,7 @@ class Server implements BeforeInit {
 You can subscribe to a hook in your @@Module@@ or @@Service@@:
 
 ```typescript
-import {Module, OnInit} from "@tsed/common";
+import {Module, OnInit} from "@tsed/di";
 
 @Module()
 export class MyModule implements OnInit {
@@ -79,7 +79,7 @@ on an injectable service:
 
 ```typescript
 import {Module} from "@tsed/di";
-import {PlatformContext} from "@tsed/common";
+import {PlatformContext} from "@tsed/platform-http";
 
 @Module()
 class CustomContextModule {

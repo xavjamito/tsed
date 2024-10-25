@@ -1,3 +1,11 @@
+---
+meta:
+  - name: description
+    content: Serve statics files with Ts.ED by using decorators. Ts.ED is built on top of Express/Koa and use TypeScript language.
+  - name: keywords
+    content: ts.ed express typescript statics files node.js javascript decorators
+---
+
 # Serve files
 
 To serve static files such as images, CSS files, and JavaScript files, Ts.ED uses `express.static` and `koa-send` for Express and Koa respectively.
@@ -9,7 +17,7 @@ Ts.ED allows you to configure several directories to be exposed to your consumer
 So for each endpoint, specify a `root` path to expose files under this root directory:
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 
 @Configuration({
   statics: {
@@ -39,7 +47,7 @@ http://localhost:3000/hello.html
 To create a virtual path prefix (where the path does not actually exist in the file system) for files that are served by Ts.ED, specify a mount path for the static directory, as shown below:
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 
 @Configuration({
   statics: {
@@ -206,7 +214,8 @@ Here is a small example to configure statics directory with the right headers an
 ::: code-group
 
 ```typescript [Express.js]
-import {Configuration, PlatformApplication} from "@tsed/common";
+import {Configuration} from "@tsed/di";
+import {PlatformApplication} from "@tsed/platform-http";
 import send from "send";
 
 function setCustomCacheControl(res: ServerResponse, path: string) {
@@ -241,7 +250,8 @@ export class Server {
 ```
 
 ```typescript [Koa.js]
-import {Configuration, PlatformApplication} from "@tsed/common";
+import {Configuration} from "@tsed/di";
+import {PlatformApplication} from "@tsed/platform-http";
 import send from "send";
 
 function setCustomCacheControl(res: ServerResponse, path: string) {
