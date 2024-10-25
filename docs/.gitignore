@@ -2,6 +2,7 @@ api
 .vitepress/public/api.json
 .vitepress/cache
 .vitepress/dist
+public/api.json
 
 # Yarn
 .pnp.*

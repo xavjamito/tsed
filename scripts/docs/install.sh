@@ -2,10 +2,10 @@ cd docs && yarn install && cd ..
 
 # clean
 rm -rf "$PWD/docs-references/package.json"
-rm -rf "$PWD/docs-references/.vuepress/scripts"
-rm -rf "$PWD/docs-references/.vuepress/components"
-rm -rf "$PWD/docs-references/.vuepress/styles"
-rm -rf "$PWD/docs-references/.vuepress/public"
+rm -rf "$PWD/docs-references/.vitepress/scripts"
+rm -rf "$PWD/docs-references/.vitepress/components"
+rm -rf "$PWD/docs-references/.vitepress/styles"
+rm -rf "$PWD/docs-references/.vitepress/public"
 rm -rf "$PWD/docs-references/assets"
 rm -rf "$PWD/docs-references/.vuepress/enhanceApp.js"
 rm -rf "$PWD/docs-references/.vuepress/config.base.js"
