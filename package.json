@@ -221,14 +221,14 @@
         "dir": "./docs/.vitepress/dist",
         "url": "https://github.com/tsedio/beta.tsed.dev.git",
         "branch": "main",
-        "cname": "beta.tsed.io",
+        "cname": "beta.tsed.dev",
         "if": "beta"
       },
       {
         "dir": "./docs/.vitepress/dist",
         "url": "https://github.com/tsedio/alpha.tsed.dev.git",
         "branch": "main",
-        "cname": "alpha.tsed.io",
+        "cname": "alpha.tsed.dev",
         "if": "alpha"
       }
     ]
