@@ -1,6 +1,6 @@
+import {Controller} from "@tsed/di";
 import {MultipartFile, PlatformMulterFile} from "@tsed/platform-http";
 import {Post} from "@tsed/schema";
-import {Controller} from "@tsed/di";
 
 @Controller("/")
 class MyCtrl {

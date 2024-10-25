@@ -17,24 +17,19 @@ them in your code, giving you IDE completion and type error catching out of the 
 
 This example need to be used with `@tsed/apollo` module. So, you must install it before (see [here](/tutorials/graphql-apollo.md)).
 
-<Tabs class="-code">
-<Tab label="Express.js">
+::: code-group
 
-```bash
+```bash [Express.js]
 npm install --save @tsed/apollo nexus graphql @apollo/server
 npm install --save-dev apollo-server-testing
 ```
 
-</Tab>
-<Tab label="Koa.js">
-
-```bash
+```bash [Koa.js]
 npm install --save @tsed/apollo nexus graphql @apollo/server @as-integration/koa
 npm install --save-dev apollo-server-testing
 ```
 
-</Tab>
-</Tabs>
+:::
 
 Now, we can configure the Ts.ED server by importing `@tsed/apollo` in your Server:
 

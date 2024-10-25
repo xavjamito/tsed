@@ -45,7 +45,7 @@ module.exports = {
   ],
   outputDir: "<rootDir>/docs-references/api",
   baseUrl: "/api",
-  jsonOutputDir: "<rootDir>/docs/.vuepress/public",
+  jsonOutputDir: "<rootDir>/docs/public",
   scope: "@tsed",
   modules: {}
 };

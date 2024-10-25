@@ -11,10 +11,10 @@ Creating and consuming an interceptor is a two-step process:
 
 They make it possible to:
 
-- bind extra logic before / after method execution
+- bind extra logic before/after method execution
 - transform the result returned from a function
 - transform the exception thrown from a function
-- extend the basic function behavior
+- extend the basic function's behavior
 - completely override a function depending on specific conditions
 
 ## Decorators
@@ -23,15 +23,17 @@ They make it possible to:
 
 ## Interceptor class
 
-To create an interceptor class you need to implement the `IInterceptor` interface and implement the
-`intercept(context: IInterceptorContext<any>, next?: IInterceptorNextHandler)` method, and use the `@Interceptor()` annotation to register your interceptor class.
-Inside your `src/interceptors/MyInterceptor.ts` folder, create the following simple interceptor.
+To create an interceptor class you need to implement the @@InterceptorMethods@@ interface and implement the
+`intercept(context: InterceptorContext<any>, next?: InterceptorNext)` method, and use the `@Interceptor()` annotation to register your interceptor class.
+
+Inside your `src/interceptors/MyInterceptor.ts` file, create the following simple interceptor.
 
 <<< @/docs/snippets/interceptors/interceptor-example.ts
 
 ## Use the interceptor
 
-Now that your interceptor logic is in place, you can use it in any other service. You need to use the `@Intercept(InterceptorClass, opts)` annotation to register which interceptor should be used for the specific method you want to intercept. An example service in `src/services/MyService.ts`:
+Now that your interceptor logic is in place, you can use it in any other service. You need to use the `@Intercept(InterceptorClass, opts)` annotation to register which interceptor should be used for the specific method you want to intercept.
+An example service in `src/services/MyService.ts`:
 
 <<< @/docs/snippets/interceptors/interceptor-usage.ts
 
@@ -42,3 +44,10 @@ the method mySimpleMethod will be executed with args and static data simple data
 the simple method is executed
 the method was executed, and returned undefined
 ```
+
+## Catch error with Interceptor
+
+You can also catch errors with an interceptor.
+To do this, you need to implement the `intercept` method in your interceptor class:
+
+<<< @/docs/snippets/interceptors/interceptor-catch-error.ts

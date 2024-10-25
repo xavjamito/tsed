@@ -1,5 +1,5 @@
 import {GeneratorOptions} from "@prisma/generator-helper";
-import {parseEnvValue} from "@prisma/internals";
+import internals from "@prisma/internals";
 import fs from "fs-extra";
 import path, {join} from "path";
 
@@ -21,13 +21,13 @@ export interface GenerateOptions {
 
 export function generate({defaultOutput, packageDir}: GenerateOptions) {
   return async (options: GeneratorOptions) => {
-    const outputDir = parseEnvValue(options.generator.output!);
+    const outputDir = internals.parseEnvValue(options.generator.output!);
     await fs.mkdir(outputDir, {recursive: true});
     await removeDir(outputDir, true);
 
     const generatorConfig = options.generator.config;
-    const prismaClientProvider = options.otherGenerators.find((it) => parseEnvValue(it.provider) === "prisma-client-js")!;
-    const prismaClientPath = parseEnvValue(prismaClientProvider.output!);
+    const prismaClientProvider = options.otherGenerators.find((it) => internals.parseEnvValue(it.provider) === "prisma-client-js")!;
+    const prismaClientPath = internals.parseEnvValue(prismaClientProvider.output!);
 
     await generateCode(options.dmmf, {
       emitTranspiledCode: parseStringBoolean(generatorConfig.emitTranspiledCode),

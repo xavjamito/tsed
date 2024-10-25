@@ -53,27 +53,29 @@ tsed init .
 ? Choose the package manager: Yarn
 ```
 
-::: tip This tutorial works also with NPM package manager!
-:::
+::: code-group
 
-<Tabs class="-code">
-  <Tab label="Yarn">
-
-```bash
-yarn add @tsed/platform-serverless-http serverless-http serverless-offline
-yarn add -D @types/aws-lambda
-```
-
-  </Tab>
-  <Tab label="NPM">
-
-```bash
+```sh [npm]
 npm install @tsed/platform-serverless-http serverless-http serverless-offline
 npm install --save-dev @types/aws-lambda
 ```
 
-  </Tab>
-</Tabs>
+```sh [yarn]
+yarn add @tsed/platform-serverless-http serverless-http serverless-offline
+yarn add -D @types/aws-lambda
+```
+
+```sh [pnpm]
+pnpm add @tsed/platform-serverless-http serverless-http serverless-offline
+pnpm add -D @types/aws-lambda
+```
+
+```sh [bun]
+bun add @tsed/platform-serverless-http serverless-http serverless-offline
+bun add -D @types/aws-lambda
+```
+
+:::
 
 In the `src/lambda` create a new Lambda class:
 

@@ -47,14 +47,15 @@
     "sync:packages": "monorepo sync packages",
     "api:build": "lerna run build && tsdoc",
     "docs:install": "sh ./scripts/docs/install.sh",
-    "docs:serve": "yarn api:build && yarn vuepress:docs:serve",
-    "docs:build": "yarn api:build && yarn docs:install && yarn vuepress:build",
+    "docs:serve": "yarn api:build && yarn vitepress:docs:serve",
+    "docs:build": "yarn api:build && yarn vitepress:build",
     "docs:publish": "CI=1 monorepo publish ghpages",
-    "vuepress:build": "concurrently \"yarn vuepress:docs:build\" \"yarn vuepress:ref:build\"",
-    "vuepress:docs:build": "rm -rf ./docs/api && cd ./docs && yarn vuepress:build",
-    "vuepress:ref:build": "cd ./docs-references && yarn vuepress:build",
-    "vuepress:docs:serve": "yarn docs:install && cd docs && yarn vuepress:serve -p 8080",
-    "vuepress:ref:serve": "yarn docs:install && cd docs-references && yarn vuepress:serve -p 8081",
+    "//vitepress:build": "yarn vitepress:docs:build && yarn vitepress:ref:build",
+    "vitepress:build": "yarn vitepress:docs:build",
+    "vitepress:docs:build": "rm -rf ./docs/api && cd ./docs && yarn docs:build",
+    "vitepress:ref:build": "cd ./docs-references && yarn vitepress:build",
+    "vitepress:docs:serve": "yarn docs:install && cd docs && yarn docs:serve -p 8080",
+    "vitepress:ref:serve": "yarn docs:install && cd docs-references && yarn docs:serve -p 8081",
     "prettier": "prettier '**/*.{ts,js,json,md,yml,yaml}' --write",
     "release": "semantic-release",
     "release:dryRun": "semantic-release --dry-run",
@@ -116,7 +117,7 @@
     "@swc-node/register": "1.10.9",
     "@swc/core": "1.7.28",
     "@swc/helpers": "0.5.13",
-    "@tsed/monorepo-utils": "2.3.5",
+    "@tsed/monorepo-utils": "2.3.9",
     "@tsed/ts-doc": "4.1.0",
     "@types/axios": "0.14.0",
     "@types/globby": "9.1.0",
@@ -193,24 +194,42 @@
     "productionBranch": "production",
     "developBranch": "production",
     "npmAccess": "public",
-    "ignoreSyncDependencies": [
-      "express",
-      "@types/express"
-    ],
+    "ignoreSyncDependencies": [],
     "ghpages": [
       {
-        "dir": "./docs/.vuepress/dist",
+        "dir": "./docs/.vitepress/dist",
         "url": "https://github.com/tsedio/tsed",
         "branch": "gh-pages",
-        "cname": "tsed.io",
+        "cname": "tsed.dev",
         "if": "production"
       },
       {
         "dir": "./docs-references/.vuepress/dist",
         "url": "https://github.com/tsedio/api-docs.tsed.io.git",
         "branch": "main",
-        "cname": "api-docs.tsed.io",
+        "cname": "api-docs.tsed.dev",
         "if": "production"
+      },
+      {
+        "dir": "./docs/.vuepress/dist",
+        "url": "https://github.com/tsedio/rc.tsed.dev.git",
+        "branch": "gh-pages",
+        "cname": "rc.tsed.dev",
+        "if": "rc"
+      },
+      {
+        "dir": "./docs/.vitepress/dist",
+        "url": "https://github.com/tsedio/beta.tsed.dev.git",
+        "branch": "main",
+        "cname": "beta.tsed.io",
+        "if": "beta"
+      },
+      {
+        "dir": "./docs/.vitepress/dist",
+        "url": "https://github.com/tsedio/alpha.tsed.dev.git",
+        "branch": "main",
+        "cname": "alpha.tsed.io",
+        "if": "alpha"
       }
     ]
   },

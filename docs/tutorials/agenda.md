@@ -22,10 +22,29 @@ For more information about Agenda look at the documentation [here](https://githu
 
 To begin, install the Agenda module for Ts.ED:
 
-```bash
+::: code-group
+
+```sh [npm]
 npm install --save @tsed/agenda
 npm install --save agenda
 ```
+
+```sh [yarn]
+yarn add @tsed/agenda
+yarn add agenda
+```
+
+```sh [pnpm]
+pnpm add @tsed/agenda
+pnpm add agenda
+```
+
+```sh [bun]
+bun add @tsed/agenda
+bun add agenda
+```
+
+:::
 
 ## Configure your server
 

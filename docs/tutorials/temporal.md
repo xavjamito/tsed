@@ -8,7 +8,11 @@ meta:
 
 # Temporal
 
-<Banner src="/temporal.svg" href="https://temporal.io/" height="38" />
+<div class="flex items-center justify-center pt-6">
+ <a href="https://temporal.io/">
+<img src="/temporal.svg" />
+ </a>
+</div>
 
 ## Feature
 
@@ -25,10 +29,25 @@ Use the `bootstrapWorker` helper to start a queue that executes your workflows a
 
 To begin, install the Temporal module for Ts.ED:
 
-```bash
-npm install --save @tsed/temporal
-npm install --save @temporalio/client @temporalio/worker
+::: code-group
+
+```sh [npm]
+npm install --save @tsed/temporal @temporalio/client @temporalio/worker
 ```
+
+```sh [yarn]
+yarn add @tsed/temporal @temporalio/client @temporalio/worker
+```
+
+```sh [pnpm]
+pnpm add @tsed/temporal @temporalio/client @temporalio/worker
+```
+
+```sh [bun]
+bun add @tsed/temporal @temporalio/client @temporalio/worker
+```
+
+:::
 
 ## Configure your server
 

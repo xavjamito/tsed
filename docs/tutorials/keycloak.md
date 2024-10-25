@@ -20,11 +20,29 @@ Before securing the application with Keycloak, we need to install the [Keycloak 
 The version of the `keycloak-connect` module should be the same version as your Keycloak instance.
 :::
 
-```bash
-npm install --save keycloak-connect
-npm install --save express-session
+::: code-group
+
+```sh [npm]
+npm install --save keycloak-connect express-session
 npm install --save-dev @types/express-session
 ```
+
+```sh [yarn]
+yarn add keycloak-connect express-session
+yarn add -D @types/express-session
+```
+
+```sh [pnpm]
+pnpm add keycloak-connect express-session
+pnpm add -D @types/express-session
+```
+
+```sh [bun]
+bun add keycloak-connect express-session
+bun add -D @types/express-session
+```
+
+:::
 
 ## Download keycloak.json
 

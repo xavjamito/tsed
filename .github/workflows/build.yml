@@ -379,4 +379,4 @@ jobs:
           curl -X POST  https://api.github.com/repos/tsedio/tsed/actions/workflows/website.yml/dispatches \
           -H 'Accept: application/vnd.github.everest-preview+json' \
           -H 'Authorization: Bearer ${{secrets.GH_TOKEN}}' \
-          --data '{"ref": "production"}'
+          --data '{"ref": "${{github.ref_name}}"}'

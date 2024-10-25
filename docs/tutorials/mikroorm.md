@@ -22,10 +22,9 @@ Currently, `@tsed/mikro-orm` allows you:
 
 To begin, install the MikroORM module for TS.ED:
 
-<Tabs class="-code">
-  <Tab label="NPM">
+::: code-group
 
-```bash
+```sh [npm]
 npm install @mikro-orm/core @tsed/mikro-orm @mikro-orm/mongodb     # for mongo
 npm install @mikro-orm/core @tsed/mikro-orm @mikro-orm/mysql       # for mysql/mariadb
 npm install @mikro-orm/core @tsed/mikro-orm @mikro-orm/mariadb     # for mysql/mariadb
@@ -33,10 +32,7 @@ npm install @mikro-orm/core @tsed/mikro-orm @mikro-orm/postgresql  # for postgre
 npm install @mikro-orm/core @tsed/mikro-orm @mikro-orm/sqlite      # for sqlite
 ```
 
-  </Tab>
-  <Tab label="Yarn">
-
-```bash
+```sh [yarn]
 yarn add @mikro-orm/core @tsed/mikro-orm @mikro-orm/mongodb     # for mongo
 yarn add @mikro-orm/core @tsed/mikro-orm @mikro-orm/mysql       # for mysql/mariadb
 yarn add @mikro-orm/core @tsed/mikro-orm @mikro-orm/mariadb     # for mysql/mariadb
@@ -44,8 +40,23 @@ yarn add @mikro-orm/core @tsed/mikro-orm @mikro-orm/postgresql  # for postgresql
 yarn add @mikro-orm/core @tsed/mikro-orm @mikro-orm/sqlite      # for sqlite
 ```
 
-  </Tab>
-</Tabs>
+```sh [pnpm]
+pnpm add @mikro-orm/core @tsed/mikro-orm @mikro-orm/mongodb     # for mongo
+pnpm add @mikro-orm/core @tsed/mikro-orm @mikro-orm/mysql       # for mysql/mariadb
+pnpm add @mikro-orm/core @tsed/mikro-orm @mikro-orm/mariadb     # for mysql/mariadb
+pnpm add @mikro-orm/core @tsed/mikro-orm @mikro-orm/postgresql  # for postgresql
+pnpm add @mikro-orm/core @tsed/mikro-orm @mikro-orm/sqlite      # for sqlite
+```
+
+```sh [bun]
+bun add @mikro-orm/core @tsed/mikro-orm @mikro-orm/mongodb     # for mongo
+bun add @mikro-orm/core @tsed/mikro-orm @mikro-orm/mysql       # for mysql/mariadb
+bun add @mikro-orm/core @tsed/mikro-orm @mikro-orm/mariadb     # for mysql/mariadb
+bun add @mikro-orm/core @tsed/mikro-orm @mikro-orm/postgresql  # for postgresql
+bun add @mikro-orm/core @tsed/mikro-orm @mikro-orm/sqlite      # for sqlite
+```
+
+:::
 
 Once the installation process is completed, we can import the `MikroOrmModule` into the `Server` configuration:
 

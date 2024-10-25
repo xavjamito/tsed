@@ -34,9 +34,25 @@ A comprehensive set of strategies support authentication using a username and pa
 
 Before using Passport, we need to install the [Passport.js](https://www.npmjs.com/package/passport) and the Passport-local.
 
-```bash
+::: code-group
+
+```sh [npm]
 npm install --save passport
 ```
+
+```sh [yarn]
+yarn add passport
+```
+
+```sh [pnpm]
+pnpm add passport
+```
+
+```sh [bun]
+bun add passport
+```
+
+:::
 
 ## Configure your server
 
@@ -46,7 +62,7 @@ Add this configuration to your server:
 
 ### UserInfo
 
-By default Ts.ED use a UserInfo model to serialize and deserialize user in session:
+By default, Ts.ED uses a UserInfo model to serialize and deserialize users in sessions:
 
 ```typescript
 import {Format, Property} from "@tsed/schema";
@@ -90,21 +106,16 @@ A Protocol is a special Ts.ED service which is used to declare a Passport Strate
 
 Here is an example with the PassportLocal:
 
-<Tabs class="-code">
-  <Tab label="LoginLocalProtocol.ts">
-  
-<<< @/tutorials/snippets/passport/LoginLocalProtocol.ts
+::: code-group
 
-  </Tab>
-  <Tab label="LoginLocalProtocol.spec.ts">
-  
-<<< @/tutorials/snippets/passport/LoginLocalProtocol.spec.ts
+<<< @/tutorials/snippets/passport/LoginLocalProtocol.ts [LoginLocalProtocol.ts]
 
-  </Tab>
-</Tabs>
+<<< @/tutorials/snippets/passport/LoginLocalProtocol.spec.ts [LoginLocalProtocol.spec.ts]
+
+:::
 
 ::: tip
-For signup and basic flow you can checkout one of our examples:
+For signup and basic flow, you can check out one of our examples:
 
 <Projects type="projects"/>
 :::
@@ -158,7 +169,7 @@ Azure bearer uses another scenario which requires to return multiple arguments. 
 
 ### Discord Auth
 
-Discord passport gives an example to refresh the token. To do that you have to create a new Strategy and register with the refresh function from `passport-oauth2-refresh` module.
+Discord passport gives an example to refresh the token. To do that, you have to create a new Strategy and register with the refresh function from `passport-oauth2-refresh` module.
 
 Here is the JavaScript code:
 
@@ -177,6 +188,7 @@ Here is the corresponding Facebook protocol:
 <<< @/tutorials/snippets/passport/FacebookProtocol.ts
 
 ::: tip Note
+To use Facebook authentication, first create an app at Facebook Developers.
 In order to use Facebook authentication, you must first create an app at Facebook Developers. When created, an app is assigned an App ID and an App Secret. Your application must also implement a redirect URL, to which Facebook will redirect users after they have approved access for your application.
 
 The verify callback for Facebook authentication accepts `accessToken`, `refreshToken`, and `profile` arguments. `profile` will contain user profile information provided by Facebook; refer to User [Profile](http://www.passportjs.org/guide/profile/) for additional information.

@@ -95,38 +95,21 @@ Here is an example to create a test server based on TypeGraphQL and run a query:
 The unit example is also available to test any Apollo Server!
 :::
 
-<Tabs class="-code">
-  <Tab label="Jest">
+::: code-group
 
-<<< @/tutorials/snippets/graphql/testing.jest.ts
+<<< @/tutorials/snippets/graphql/testing.jest.ts [Jest]
 
-  </Tab>
-  <Tab label="Mocha">
+<<< @/tutorials/snippets/graphql/testing.mocha.ts [Mocha]
 
-<<< @/tutorials/snippets/graphql/testing.mocha.ts
+<<< @/tutorials/snippets/graphql/recipe-type.ts [RecipeType.ts]
 
-  </Tab>  
-  <Tab label="RecipeResolver.ts">
+<<< @/tutorials/snippets/graphql/recipe-args.ts [RecipeArgs.ts]
 
-<<< @/tutorials/snippets/graphql/resolver-service.ts
+<<< @/tutorials/snippets/graphql/recipes-service.ts [RecipesService.ts]
 
-  </Tab>   
-  <Tab label="RecipesService.ts">
+<<< @/tutorials/snippets/graphql/resolver-service.ts [RecipeResolver.ts]
 
-<<< @/tutorials/snippets/graphql/recipes-service.ts
-
-  </Tab>
-  <Tab label="Recipe.ts">
-
-<<< @/tutorials/snippets/graphql/recipe-type.ts
-
-  </Tab>  
-  <Tab label="RecipeArgs.ts">
-
-<<< @/tutorials/snippets/graphql/recipe-args.ts
-
-  </Tab>      
-</Tabs>
+:::
 
 ## Author
 

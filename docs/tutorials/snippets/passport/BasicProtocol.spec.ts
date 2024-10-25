@@ -1,8 +1,9 @@
+import {PlatformTest} from "@tsed/platform-http/testing";
 import * as Sinon from "sinon";
+
 import {User} from "../models/User";
 import {UsersService} from "../services/users/UsersService";
 import {BasicProtocol} from "./BasicProtocol";
-import {PlatformTest} from "@tsed/platform-http/testing";
 
 describe("BasicProtocol", () => {
   beforeEach(() => PlatformTest.create());
@@ -36,7 +37,7 @@ describe("BasicProtocol", () => {
       usersService.findOne.should.be.calledWithExactly({email: "username@domain.fr"});
       result.should.deep.equal(user);
     });
-    it("should return a user", async () => {
+    it("should return a false", async () => {
       // GIVEN
       const request = {};
       const username = "username@domain.fr";

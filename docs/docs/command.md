@@ -8,12 +8,12 @@ meta:
 
 # Command
 
-`@tsed/cli-core` is the npm module that provide API to create CLI. It can be to create your own CLI or to run your Ts.ED
-application code. Ts.ED cli-core use [commander](https://www.npmjs.com/package/commander) to parse cli
+`@tsed/cli-core` is the npm module that provides API to create CLI. It can be used to create your own CLI or to run your Ts.ED
+application code. Ts.ED cli-core uses [commander](https://www.npmjs.com/package/commander) to parse cli
 arguments, [Inquirer](https://www.npmjs.com/package/inquirer)
 to display prompt and [Listr](https://www.npmjs.com/package/listr) to run tasks.
 
-The cli-core works as a standalone process, like the classic entry point, and will initialize a container to run your
+The cli-core works as a standalone process, like the classic entry point, and will initialize a container for running your
 code (Service/Provider/etc...).
 
 1. Bootstrap (entry point e.g: `bin/index.ts`) is invoked by cli.
@@ -22,26 +22,41 @@ code (Service/Provider/etc...).
 
 ## Installation
 
-```bash
+::: code-group
+
+```sh [npm]
 npm install @tsed/cli-core
-# Or yarn
+```
+
+```sh [yarn]
 yarn add  @tsed/cli-core
 ```
 
-> Note: You have to install the @tsed/cli-core
+```sh [pnpm]
+pnpm add @tsed/cli-core
+```
+
+```sh [bun]
+bun add @tsed/cli-core
+```
+
+:::
 
 ::: tip
-If you start your project from scratch, you can use Ts.ED cli v3 to bootstrap your project with the Command
+If you start your project from scratch, you can use Ts.ED cli v3+ to bootstrap your project with the Command
 feature.
 :::
 
-Optional. You can install the @tsed/cli in global to run your custom commands directly from the Ts.ED CLI:
+::: tip Optional
+You can install `@tsed/cli` globally to run your custom commands directly from the Ts.ED CLI:
 
-```
+```sh
 npm install -g @tsed/cli
 ```
 
-## Create the CLI entrypoint
+:::
+
+## Create the CLI entry point
 
 Create `index.ts` file in `src/bin`. This file will be dedicated to bootstrap the CLI with your own configuration.
 
@@ -76,7 +91,7 @@ export interface HelloCommandContext {}
 })
 export class HelloCommand implements CommandProvider {
   /**
-   *  Ask questions with Inquirer. Return an empty array or don't implement the method to skip this step
+   *  Ask questions using Inquirer. Return an empty array or don't implement the method to skip this step
    */
   async $prompt(initialOptions: Partial<HelloCommandContext>): Promise<QuestionOptions> {
     return [];
@@ -98,7 +113,7 @@ export class HelloCommand implements CommandProvider {
   async $exec(ctx: HelloCommandContext): Promise<any> {
     return [
       {
-        title: "Do something",
+        title: "Doing something",
         task: () => {
           console.log("HELLO");
         }
@@ -115,17 +130,17 @@ following command:
 tsed run hello-command
 ```
 
-By default, you have to give the `name` and `description`.
+By default, you need to provide the `name` and `description`.
 
-## Command Args
+## Command Arguments
 
-Arguments are the values given to your command without a flag option. Example:
+Arguments are the values given to your command without a flag option:
 
 ```sh
 tsed run hello-command create user
 ```
 
-To bind these arguments with your custom command, you have to declare the arguments as following:
+To bind these arguments with your custom command, you have to declare the arguments as follows:
 
 ```typescript
 import {Command, CommandProvider, QuestionOptions} from "@tsed/cli-core";
@@ -142,12 +157,12 @@ export interface HelloCommandContext {
     action: {
       type: String,
       defaultValue: "create",
-      description: "My action"
+      description: "Action description"
     },
     subAction: {
       type: String,
       defaultValue: "user",
-      description: "My sub action"
+      description: "My sub-action"
     }
   },
   options: {},
@@ -202,7 +217,7 @@ export class HelloCommand implements CommandProvider {
 By default, commander doesn't accept unknown options. You can change this behaviour, by change the `allowUnknownOption`
 to `true`.
 
-Then you'll be able to get all `args` and `options` in the `rawArgs` property:
+Then you'll be able to get all args and options in the rawArgs property. Here is an example:
 
 ```typescript
 import {Command, CommandProvider, QuestionOptions} from "@tsed/cli-core";
@@ -225,7 +240,7 @@ export class HelloCommand implements CommandProvider {
 }
 ```
 
-## Inject service
+## Injecting service
 
 Use the @@Inject@@ decorator to inject your service in a command:
 
@@ -301,4 +316,4 @@ export class HelloCommand implements CommandProvider {
 }
 ```
 
-See [Inquirer](https://www.npmjs.com/package/inquirer) for more details to create prompt.
+See [Inquirer](https://www.npmjs.com/package/inquirer) for more details on creating prompts.

@@ -11,36 +11,35 @@ meta:
 @@View@@ is a decorator which can be used on a controller method (endpoint).
 This decorator will use the data returned by the method, and the configured view to create the response.
 
-<figure><img src="./../assets/templating-engine.png" style="max-height: 500px; padding:20px; background: white"></figure>
+<figure class="flex items-center justify-center"><img src="./assets/templating-engine.png" alt="template engine" style="max-height: 500px; padding:20px; background: white"></figure>
 
 ## Configuration
 
 Install the Ts.ED engines:
 
-<Tabs class="-code">
-  <Tab label="Yarn">
+::: code-group
 
-```bash
-$ yarn add @tsed/engines
+```sh [npm]
+npm install --save @tsed/engines
 ```
 
-  </Tab>
-  <Tab label="Npm">
-
-```bash
-$ npm install --save @tsed/engines
+```sh [yarn]
+yarn add @tsed/engines
 ```
 
-  </Tab>
-</Tabs>
+```sh [pnpm]
+pnpm add @tsed/engines
+```
+
+```sh [bun]
+bun add @tsed/engines
+```
+
+:::
 
 The default template engine installed with Ts.ED is [EJS](https://ejs.co/).
 
 <<< @/docs/snippets/templating/configuration.ts
-
-::: tip
-Supported engines is available [here](https://github.com/tsedio/tsed-engines/blob/production/packages/engines/readme.md#supported-template-engines).
-:::
 
 ## Options
 
@@ -73,8 +72,7 @@ export interface PlatformViewsSettings {
 ## Supported template engines
 
 Some package has the same key name, `@tsed/engines` will load them according to the order number.
-For example with dust, @tsed/engines will try to use in this order: `dustjs-helpers` and `dustjs-linkedin`.
-If `dustjs-helpers` is installed, `dustjs-linkedin` will not be used by consolidate.
+For example, with dust, @tsed/engines will try to use in this order: `dustjs-helpers` and `dustjs-linkedin`.
 
 | Name                                                      | Package Name / Order                                                                                                                                                      | Website / State                                                       |
 | --------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------------------------------------------- |
@@ -162,21 +160,14 @@ export default class ShopApp {}
 
 Here is an example of a controller using the @@View@@ decorator:
 
-<Tabs class="-code">
-  <Tab label="EventCtrl.ts">
+::: code-group
 
-<<< @/docs/snippets/templating/response-templating.ts
+<<< @/docs/snippets/templating/response-templating.ts [EventCtrl.ts]
 
-  </Tab>
-  <Tab label="event.ejs">
-
-```html
+```html [event.ejs]
 <h1><%- name %></h1>
 <div>Start: <%- startDate %></div>
 ```
-
-  </Tab>
-</Tabs>
 
 ::: tip
 
@@ -189,21 +180,16 @@ rendering the template. See [Locals](/docs/controllers.html#locals) decorator us
 
 It's also possible to render a view by injecting and using @@PlatformResponse@@ instance.
 
-<Tabs class="-code">
-  <Tab label="EventCtrl.ts">
+::: code-group
 
-<<< @/docs/snippets/templating/template-platform-api.ts
+<<< @/docs/snippets/templating/template-platform-api.ts [EventCtrl.ts]
 
-  </Tab>
-  <Tab label="event.ejs">
-
-```html
+```html [event.ejs]
 <h1><%- name %></h1>
 <div>Start: <%- startDate %></div>
 ```
 
-  </Tab>
-</Tabs>
+:::
 
 ### With PlatformViews
 
