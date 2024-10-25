@@ -1,5 +1,6 @@
 import {defineConfig} from "vitepress";
 import {apiAnchor} from "@tsed/vitepress-theme/markdown/api-anchor/api-anchor.js";
+import pkg from "../../package.json";
 
 // https://vitepress.dev/reference/site-config
 export default defineConfig({
@@ -271,15 +272,31 @@ export default defineConfig({
         link: "/plugins/index"
       },
       {
-        text: "More",
+        text: pkg.version,
         items: [
-          {
-            text: "Team",
-            link: "/more/team"
-          },
           {
             text: "Releases",
             link: "https://github.com/tsedio/tsed/releases"
+          },
+          {
+            text: "v7 (maintenance)",
+            link: "https://v7.tsed.dev"
+          },
+          {
+            text: "v6 (obsolete)",
+            link: "https://v5.tsed.dev"
+          },
+          {
+            text: "v5 (obsolete)",
+            link: "https://v4.tsed.dev"
+          },
+          {
+            text: "Contributing",
+            link: "https://github.com/tsedio/tsed/blob/production/CONTRIBUTING.md"
+          },
+          {
+            text: "Team",
+            link: "/more/team"
           }
         ]
       }
