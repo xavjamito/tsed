@@ -1,4 +1,5 @@
 import {ValueOf} from "@tsed/core";
+
 import {JsonFormatTypes} from "../../domain/JsonFormatTypes.js";
 import {withErrorMsg} from "../../utils/withErrorMsg.js";
 import {JsonEntityFn} from "./jsonEntityFn.js";
@@ -17,7 +18,7 @@ import {JsonEntityFn} from "./jsonEntityFn.js";
  * - **regex**: tests whether a string is a valid regular expression by passing it to RegExp constructor.
  *
  * ::: warning
- * For v6 user, use @@Format@@ from @tsed/schema instead of @tsed/common.
+ * For v6 user, use @@Format@@ from @tsed/schema instead of @tsed/platform-http.
  * :::
  *
  * ## Example
@@ -87,7 +88,7 @@ export const Format = withErrorMsg("format", (format: JsonFormatTypes | ValueOf<
  * Apply an email validation on property.
  *
  * ::: warning
- * For v6 user, use @@Email@@ from @tsed/schema instead of @tsed/common.
+ * For v6 user, use @@Email@@ from @tsed/schema instead of @tsed/platform-http.
  * :::
  *
  * ## Example
@@ -141,7 +142,6 @@ export const Format = withErrorMsg("format", (format: JsonFormatTypes | ValueOf<
  * }
  * ```
  *
- * > See [Format](api/common/jsonschema/schema) decorator.
  * @returns {Function}
  * @decorator
  * @validation
@@ -208,7 +208,6 @@ export const Email = withErrorMsg("format", () => {
  * }
  * ```
  *
- * > See [Format](api/common/jsonschema/schema) decorator.
  * @returns {Function}
  * @decorator
  * @validation
@@ -276,7 +275,6 @@ export const DateTime = withErrorMsg("format", () => {
  * }
  * ```
  *
- * > See [Format](api/common/jsonschema/schema) decorator.
  * @returns {Function}
  * @decorator
  * @validation
@@ -343,7 +341,6 @@ export const DateFormat = withErrorMsg("format", () => {
  * }
  * ```
  *
- * > See [Format](api/common/jsonschema/schema) decorator.
  * @returns {Function}
  * @decorator
  * @validation
@@ -410,7 +407,6 @@ export const TimeFormat = withErrorMsg("format", () => {
  * }
  * ```
  *
- * > See [Format](api/common/jsonschema/schema) decorator.
  * @returns {Function}
  * @decorator
  * @validation
@@ -477,7 +473,6 @@ export const Uri = withErrorMsg("format", () => {
  * }
  * ```
  *
- * > See [Format](api/common/jsonschema/schema) decorator.
  * @returns {Function}
  * @decorator
  * @validation

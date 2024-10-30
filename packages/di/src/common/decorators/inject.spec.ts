@@ -1,31 +1,31 @@
-import {descriptorOf} from "@tsed/core";
+import {catchAsyncError} from "@tsed/core";
+
+import {DITest} from "../../node/index.js";
+import {inject} from "../fn/inject.js";
+import {injector} from "../fn/injector.js";
 import {registerProvider} from "../registries/ProviderRegistry.js";
 import {InjectorService} from "../services/InjectorService.js";
 import {Inject} from "./inject.js";
 import {Injectable} from "./injectable.js";
 
+@Injectable()
+class ProvidersList extends Map<string, string> {}
+
+@Injectable()
+class MyService {
+  @Inject(ProvidersList)
+  providersList: ProvidersList;
+
+  getValue() {
+    return this.providersList.get("key");
+  }
+}
+
 describe("@Inject()", () => {
-  describe("used on unsupported decorator type", () => {
-    it("should store metadata", () => {
-      // GIVEN
-      class Test {
-        test() {}
-      }
+  beforeEach(() => DITest.create());
+  afterEach(() => DITest.reset());
 
-      // WHEN
-      let actualError;
-      try {
-        Inject()(Test, "test", descriptorOf(Test, "test"));
-      } catch (er) {
-        actualError = er;
-      }
-
-      // THEN
-      expect(actualError.message).toEqual("Inject cannot be used as method.static decorator on Test.test");
-    });
-  });
-
-  describe("@property", () => {
+  describe("when the decorator used on property", () => {
     it("should inject service", async () => {
       // GIVEN
       @Injectable()
@@ -34,13 +34,13 @@ describe("@Inject()", () => {
         test: InjectorService;
       }
 
-      const injector = new InjectorService();
-      const instance = await injector.invoke<Test>(Test);
+      const inj = injector({rebuild: true});
+      const instance = await inj.invoke<Test>(Test);
 
       expect(instance).toBeInstanceOf(Test);
       expect(instance.test).toBeInstanceOf(InjectorService);
     });
-    it("should inject service w/ async factory", async () => {
+    it("should inject service and async factory", async () => {
       // GIVEN
       class Test {
         constructor(public type: string) {}
@@ -69,26 +69,40 @@ describe("@Inject()", () => {
         test: Test;
       }
 
-      const injector = new InjectorService();
+      const inj = injector({rebuild: true});
 
-      await injector.load();
+      await inj.load();
 
-      const parent1 = await injector.invoke<Parent1>(Parent1);
-      const parent2 = await injector.invoke<Parent2>(Parent2);
+      const parent1 = await inj.invoke<Parent1>(Parent1);
+      const parent2 = await inj.invoke<Parent2>(Parent2);
 
       expect(parent1.test).toBeInstanceOf(Test);
       expect(parent2.test).toBeInstanceOf(Test);
     });
-    it("should inject service with the given type", async () => {
+    it("should inject service and use onGet option to transform injected service", async () => {
       // GIVEN
       @Injectable()
       class Test {
-        @Inject(InjectorService, (bean: any) => bean.get(InjectorService))
+        @Inject(InjectorService, {transform: (instance) => instance.get(InjectorService)})
         test: InjectorService;
       }
 
-      const injector = new InjectorService();
-      const instance = await injector.invoke<Test>(Test);
+      const inj = injector({rebuild: true});
+      const instance = await inj.invoke<Test>(Test);
+
+      expect(instance).toBeInstanceOf(Test);
+      expect(instance.test).toBeInstanceOf(InjectorService);
+    });
+    it("should inject service and use onGet option to transform injected service (legacy)", async () => {
+      // GIVEN
+      @Injectable()
+      class Test {
+        @Inject(InjectorService, (instance) => instance.get(InjectorService))
+        test: InjectorService;
+      }
+
+      const inj = injector({rebuild: true});
+      const instance = await inj.invoke<Test>(Test);
 
       expect(instance).toBeInstanceOf(Test);
       expect(instance.test).toBeInstanceOf(InjectorService);
@@ -137,11 +151,11 @@ describe("@Inject()", () => {
         instances: InterfaceGroup[];
       }
 
-      const injector = new InjectorService();
+      const inj = injector({rebuild: true});
 
-      await injector.load();
+      await inj.load();
 
-      const instance = await injector.invoke<MyInjectable>(MyInjectable);
+      const instance = await inj.invoke<MyInjectable>(MyInjectable);
 
       expect(instance.instances).toBeInstanceOf(Array);
       expect(instance.instances).toHaveLength(3);
@@ -161,9 +175,36 @@ describe("@Inject()", () => {
         expect(er.message).toContain("Object isn't a valid token. Please check the token set on Test.test");
       }
     });
-  });
+    it("should inject service and use mock", async () => {
+      @Injectable()
+      class Nested {
+        get cache() {
+          return true;
+        }
+      }
 
-  describe("@constructorParameters", () => {
+      @Injectable()
+      class Test {
+        @Inject()
+        nested: Nested;
+      }
+
+      const instance = await DITest.invoke(Test, [
+        {
+          token: Nested,
+          use: {
+            cache: false
+          }
+        }
+      ]);
+
+      expect(instance.nested.cache).toEqual(false);
+
+      const instance2 = await DITest.invoke(Test, []);
+      expect(instance2.nested.cache).toEqual(true);
+    });
+  });
+  describe("when the decorator is used on constructor parameter", () => {
     describe("when token is given on constructor", () => {
       it("should inject the expected provider", async () => {
         @Injectable()
@@ -171,8 +212,8 @@ describe("@Inject()", () => {
           constructor(@Inject(InjectorService) readonly injector: InjectorService) {}
         }
 
-        const injector = new InjectorService();
-        const instance = await injector.invoke<MyInjectable>(MyInjectable);
+        const inj = injector({rebuild: true});
+        const instance = await inj.invoke<MyInjectable>(MyInjectable);
 
         expect(instance.injector).toBeInstanceOf(InjectorService);
       });
@@ -222,11 +263,11 @@ describe("@Inject()", () => {
           constructor(@Inject(TOKEN_GROUPS) readonly instances: InterfaceGroup[]) {}
         }
 
-        const injector = new InjectorService();
+        const inj = injector({rebuild: true});
 
-        await injector.load();
+        await inj.load();
 
-        const instance = await injector.invoke<MyInjectable>(MyInjectable);
+        const instance = await inj.invoke<MyInjectable>(MyInjectable);
 
         expect(instance.instances).toBeInstanceOf(Array);
         expect(instance.instances).toHaveLength(3);
@@ -235,5 +276,33 @@ describe("@Inject()", () => {
         expect(instance.instances[2].type).toEqual("async");
       });
     });
+  });
+  describe("when token is Object", () => {
+    it("should throw error", async () => {
+      class Test {
+        @Inject()
+        test: any;
+      }
+
+      const error = await catchAsyncError(async () => {
+        const instance = await DITest.invoke(Test);
+
+        return instance.test;
+      });
+
+      expect(error?.message).toContain("Object isn't a valid token. Please check the token set on Test.test");
+    });
+  });
+  it("should rebuild all dependencies using invoke", async () => {
+    const providersList = inject(ProvidersList);
+    const myService = inject(MyService);
+    providersList.set("key", "value");
+
+    expect(inject(ProvidersList).get("key")).toEqual("value");
+    expect(myService.getValue()).toEqual("value");
+
+    const newMyService = await DITest.invoke(MyService, []);
+    expect(newMyService.getValue()).toEqual(undefined);
+    expect(myService.getValue()).toEqual("value");
   });
 });

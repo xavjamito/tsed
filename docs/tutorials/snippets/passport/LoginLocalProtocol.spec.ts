@@ -1,5 +1,6 @@
+import {PlatformTest} from "@tsed/platform-http/testing";
 import * as Sinon from "sinon";
-import {PlatformTest} from "@tsed/common";
+
 import {User} from "../models/User";
 import {UsersService} from "../services/users/UsersService";
 import {LoginLocalProtocol} from "./LoginLocalProtocol";
@@ -36,7 +37,7 @@ describe("LoginLocalProtocol", () => {
       usersService.findOne.should.be.calledWithExactly({email: "email@domain.fr"});
       result.should.deep.equal(user);
     });
-    it("should return a user", async () => {
+    it("should return a false", async () => {
       // GIVEN
       const request = {};
       const email = "email@domain.fr";

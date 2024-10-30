@@ -16,31 +16,23 @@ Although TypeGraphQL is data-layer library agnostic, it integrates well with oth
 
 To begin, install the `@tsed/typegraphql` package:
 
-<Tabs class="-code">
-<Tab label="Express.js">
+::: code-group
 
-```bash
-npm install --save @tsed/typegraphql graphql apollo-server-express
-npm install --save type-graphql apollo-datasource apollo-datasource-rest
+```bash [Express.js]
+npm install --save @tsed/apollo graphql type-graphql @apollo/server @apollo/datasource-rest graphql-scalars
 npm install --save-dev apollo-server-testing
 ```
 
-</Tab>
-<Tab label="Koa.js">
-
-```bash
-npm install --save @tsed/typegraphql graphql apollo-server-koa
-npm install --save type-graphql apollo-datasource apollo-datasource-rest
+```bash [Koa.js]
+npm install --save @tsed/apollo graphql type-graphql @apollo/server @as-integration/koa @apollo/datasource-rest graphql-scalars
 npm install --save-dev apollo-server-testing
 ```
 
-</Tab>
-</Tabs>
+:::
 
 Now, we can configure the Ts.ED server by importing `@tsed/typegraphql` in your Server:
 
-<Tabs class="-code">
-  <Tab label="Configuration" icon="bx-code-alt">
+### Configuration
 
 ```ts
 import {Configuration} from "@tsed/di";
@@ -49,22 +41,18 @@ import "@tsed/typegraphql";
 import "./resolvers/index"; // barrel file with all resolvers
 
 @Configuration({
-  typegraphql: {
+  apollo: {
     server1: {
       // GraphQL server configuration
+      // See options descriptions on https://www.apollographql.com/docs/apollo-server/api/apollo-server.html
       path: "/",
-      playground: true, // enable playground GraphQL IDE. Set false to use Apollo Studio
+      playground: true // enable playground GraphQL IDE. Set false to use Apollo Studio
 
       // resolvers?: (Function | string)[];
       // dataSources?: Function;
       // server?: (config: Config) => ApolloServer;
 
-      // Apollo Server options
-      // See options descriptions on https://www.apollographql.com/docs/apollo-server/api/apollo-server.html
-      serverConfig: {
-        plugins: []
-      }
-
+      // plugins: []
       // middlewareOptions?: ServerRegistration;
 
       // type-graphql
@@ -75,19 +63,6 @@ import "./resolvers/index"; // barrel file with all resolvers
 })
 export class Server {}
 ```
-
-  </Tab>
-  <Tab label="CodeSandbox" icon="bxl-codepen">
-
-<iframe src="https://codesandbox.io/embed/tsed-graphql-pgvfz?fontsize=14&hidenavigation=1&theme=dark"
-style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
-title="TsED Graphql"
-allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi;
-payment; usb; vr; xr-spatial-tracking"
-sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"></iframe>
-
-   </Tab>
-</Tabs>
 
 ## Types
 
@@ -165,7 +140,7 @@ The first one is to use the `@InjectContext()` decorator:
 
 ```ts
 import {Inject, InjectContext} from "@tsed/di";
-import {PLatformContext} from "@tsed/common";
+import {PLatformContext} from "@tsed/platform-http";
 import {ResolverController} from "@tsed/typegraphql";
 import {Arg, Args, Query} from "type-graphql";
 import {Recipe} from "../types/Recipe";
@@ -210,17 +185,35 @@ a @@DataSourceService@@ decorator to declare a DataSource which will be injected
 
 ```typescript
 import {DataSource} from "@tsed/typegraphql";
-import {RESTDataSource} from "apollo-datasource-rest";
+import {RESTDataSource} from "@apollo/datasource-rest";
 import {User} from "../models/User";
+import {DataSource, InjectApolloContext, ApolloContext, InjectApolloContext} from "@tsed/apollo";
+import {Constant, Opts} from "@tsed/di";
+import {RESTDataSource} from "@apollo/datasource-rest";
 
 @DataSource()
 export class UserDataSource extends RESTDataSource {
-  constructor() {
-    super();
-    this.baseURL = "https://myapi.com/api/users";
+  @InjectContext()
+  protected $ctx: PlatformContext;
+
+  @Constant("envs.USERS_URL", "https://myapi.com/api/users")
+  protected baseURL: string;
+
+  @InjectApolloContext()
+  protected context: CustomApolloContext;
+
+  constructor(server: ApolloServer, logger: Logger) {
+    super({
+      logger,
+      cache: server.cache
+    });
   }
 
-  getUserById(id: string): Promise<User> {
+  willSendRequest(path, request) {
+    request.headers["authorization"] = this.context.token;
+  }
+
+  getUserById(id: string) {
     return this.get(`/${id}`);
   }
 }

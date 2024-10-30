@@ -1,7 +1,8 @@
-import {Err, Next, Req} from "@tsed/common";
 import {Controller, InjectorService} from "@tsed/di";
+import {Err, Next, Req} from "@tsed/platform-http";
 import {Middleware} from "@tsed/platform-middlewares";
 import {Get, JsonMethodStore} from "@tsed/schema";
+
 import {useContextHandler} from "../utils/useContextHandler.js";
 import {PlatformHandlerMetadata} from "./PlatformHandlerMetadata.js";
 import {PlatformHandlerType} from "./PlatformHandlerType.js";

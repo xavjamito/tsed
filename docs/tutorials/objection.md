@@ -8,7 +8,7 @@ meta:
 
 # Objection.js
 
-<Badge text="alpha" /> <Badge text="Contributors are welcome" />
+<Badge text="Contributors are welcome" />
 
 This tutorial show yous how you can use [Objection.js](https://vincit.github.io/objection.js/) package with Ts.ED.
 
@@ -18,25 +18,66 @@ Before using the `@tsed/objection` package, we need to install the [Obection.js]
 
 Install the dependencies:
 
-```bash
+::: code-group
+
+```sh [npm]
 npm install --save @tsed/objection objection knex
 ```
 
+```sh [yarn]
+yarn add @tsed/objection objection knex
+```
+
+```sh [pnpm]
+pnpm add @tsed/objection objection knex
+```
+
+```sh [bun]
+bun add @tsed/objection objection knex
+```
+
+:::
+
 We also need to install one of the following depending on the database you want to use:
 
-```bash
+::: code-group
+
+```sh [npm]
 npm install pg
 npm install sqlite3
 npm install mysql
 npm install mysql2
 ```
 
+```sh [yarn]
+yarn add pg
+yarn add sqlite3
+yarn add mysql
+yarn add mysql2
+```
+
+```sh [pnpm]
+pnpm add pg
+pnpm add sqlite3
+pnpm add mysql
+pnpm add mysql2
+```
+
+```sh [bun]
+bun add pg
+bun add sqlite3
+bun add mysql
+bun add mysql2
+```
+
+:::
+
 ## Configuration
 
 Add a `knex` configuration to your Ts.ED configuration (see: http://knexjs.org/#Installation-client for options):
 
 ```typescript
-import {Server} from "@tsed/common";
+import {Server} from "@tsed/platform-http";
 import "@tsed/objection"; // don't forget to add this line!
 
 @Configuration({
@@ -54,7 +95,8 @@ class Server {}
 You can use the @@Entity@@ decorator to create your models and make them work with Objection.js. `Entity` expects the table name as its argument.
 
 ```typescript
-import {Required, MinLength, MaxLength, Inject} from "@tsed/common";
+import {Required, MinLength, MaxLength} from "@tsed/schema";
+import {Inject} from "@tsed/di";
 import {Entity, IdColumn} from "@tsed/objection";
 import {Model} from "objection";
 

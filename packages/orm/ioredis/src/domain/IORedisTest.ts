@@ -1,4 +1,5 @@
 import {DITest} from "@tsed/di";
+
 import {mockConnections} from "../utils/mockConnections.js";
 
 export class IORedisTest extends DITest {
@@ -8,7 +9,6 @@ export class IORedisTest extends DITest {
     await Promise.all(imports.map(({use}) => use.flushall()));
 
     return DITest.create({
-      ...IORedisTest.options,
       ...options,
       imports: [...(options?.imports || []), ...imports]
     });

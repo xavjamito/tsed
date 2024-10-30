@@ -1,10 +1,11 @@
-import {PlatformContext, setResponseHeaders} from "@tsed/common";
 import {AnyToPromise, AnyToPromiseStatus} from "@tsed/core";
 import {Inject, InjectorService, Provider} from "@tsed/di";
 import {FormioActionInfo} from "@tsed/formio-types";
+import {PlatformContext, setResponseHeaders} from "@tsed/platform-http";
 import {PlatformParams} from "@tsed/platform-params";
 import {PlatformResponseFilter} from "@tsed/platform-response-filter";
 import {EndpointMetadata} from "@tsed/schema";
+
 import {Alter} from "../decorators/alter.js";
 import {AlterHook} from "../domain/AlterHook.js";
 import {SetActionItemMessage} from "../domain/FormioAction.js";

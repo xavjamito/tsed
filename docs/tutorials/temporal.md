@@ -8,7 +8,11 @@ meta:
 
 # Temporal
 
-<Banner src="/temporal.svg" href="https://temporal.io/" height="38" />
+<div class="flex items-center justify-center pt-6">
+ <a href="https://temporal.io/">
+<img src="/temporal.svg" />
+ </a>
+</div>
 
 ## Feature
 
@@ -25,17 +29,32 @@ Use the `bootstrapWorker` helper to start a queue that executes your workflows a
 
 To begin, install the Temporal module for Ts.ED:
 
-```bash
-npm install --save @tsed/temporal
-npm install --save @temporalio/client @temporalio/worker
+::: code-group
+
+```sh [npm]
+npm install --save @tsed/temporal @temporalio/client @temporalio/worker
 ```
+
+```sh [yarn]
+yarn add @tsed/temporal @temporalio/client @temporalio/worker
+```
+
+```sh [pnpm]
+pnpm add @tsed/temporal @temporalio/client @temporalio/worker
+```
+
+```sh [bun]
+bun add @tsed/temporal @temporalio/client @temporalio/worker
+```
+
+:::
 
 ## Configure your server
 
 Import `@tsed/temporal` in your Server:
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 import "@tsed/temporal"; // import temporal ts.ed module
 
 @Configuration({
@@ -63,7 +82,10 @@ import {Temporal, Activity} from "@tsed/agenda";
 
 @Temporal()
 export class UserOnboardingActivities {
-  constructor(private userService: UserService, private emailService: EmailService) {}
+  constructor(
+    private userService: UserService,
+    private emailService: EmailService
+  ) {}
 
   @Activity()
   async sendVerificationEmail(email: string) {
@@ -155,7 +177,8 @@ export async function onboardUser(email: string): Promise<string> {
 Inject the TemporalClient instance to interact with it directly, e.g. to start a workflow.
 
 ```typescript
-import {Service, AfterRoutesInit} from "@tsed/common";
+import {AfterRoutesInit} from "@tsed/platform-http";
+import {Service} from "@tsed/di";
 import {TemporalClient} from "@tsed/temporal";
 import {onboardUser} from "../workflows";
 
@@ -196,7 +219,7 @@ const worker = await bootstrapWorker(Server, {
     /* optional: see NativeConnectionOptions of @temporalio/worker */
   },
   platform: {
-    /* optional: see PlatformBuilderSettings of @tsed/common */
+    /* optional: see PlatformBuilderSettings of @tsed/platform-http */
     componentsScan: false,
     logger: {
       level: "info"

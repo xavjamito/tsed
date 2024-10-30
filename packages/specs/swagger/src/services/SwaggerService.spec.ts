@@ -1,4 +1,5 @@
-import {PlatformTest} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
+
 import {SwaggerService} from "../index.js";
 
 describe("SwaggerService", () => {

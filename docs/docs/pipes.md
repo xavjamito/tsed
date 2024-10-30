@@ -1,12 +1,12 @@
 # Pipes
 
 A pipe is a class annotated with the @@Injectable@@ decorator.
-Pipes should implement the @@IPipe@@ interface.
+Pipes should implement the @@PipeMethods@@ interface.
 
 Pipes have two typical use cases:
 
-- **transformation**: transform input data to the desired output
-- **validation**: evaluate input data and if valid, simply pass it through unchanged; otherwise, throw an exception when the data is incorrect
+- **Transformation**: transform input data to the desired output
+- **Validation**: evaluate input data and if valid, simply pass it through unchanged; otherwise, throw an exception when the data is incorrect
 
 Pipes are called when an Incoming request is handled by the controller route handler and operate on **the method's parameters**. It takes **Request** or **Response** object and transform theses object to the expected value.
 
@@ -37,18 +37,13 @@ In this case, the pipes are added by using @@UseParam@@ on a parameter.
 For example, the use of @@BodyParams@@ on a parameter calls the @@UseParams@@ with some options, and @@UseParams@@ calls also different decorators
 to add Pipes:
 
-<Tabs class="-code">
-  <Tab label="BodyParams">
+::: code-group
 
 <<< @/docs/snippets/pipes/body-params.ts
 
-  </Tab>
-  <Tab label="UseParams">
-  
-<<< @/docs/snippets/pipes/use-params.ts    
-  
-  </Tab>
-</Tabs>
+<<< @/docs/snippets/pipes/use-params.ts
+
+:::
 
 The **main idea** is, you are able to combine any pipes to reach the expected behavior !
 
@@ -59,7 +54,7 @@ Initially, we'll have it simply take an input value and immediately return the s
 <<< @/docs/snippets/pipes/validation-pipe-identity.ts
 
 ::: tip
-`IPipe<T, R>` is a generic interface in which `T` indicates the type of the input value, and `R` indicates the return type of the `transform()` method.
+`PipeMethods<T, R>` is a generic interface in which `T` indicates the type of the input value, and `R` indicates the return type of the `transform()` method.
 :::
 
 Every pipe has to provide the `transform()` method. This method has two parameters:
@@ -109,13 +104,13 @@ The goal of validation use case is to ensure that the input parameter is valid b
 
 Officially, Ts.ED has two way to declare a @@JsonShema@@ validation:
 
-- With [model](/docs/model.html) decorators,
+- With [model](/docs/model) decorators,
 - With @@UseSchema@@ decorator, it's a decorator Pipe provided by @tsed/ajv package.
 
 We'll take the model declaration to explain the Validation pipe use case. Let's focus on the `PersonModel`:
 
 ```typescript
-import {MinLength, Required} from "@tsed/common";
+import {MinLength, Required} from "@tsed/schema";
 
 class PersonModel {
   @MinLength(3)
@@ -160,7 +155,7 @@ and throw an exception when the payload is not valid.
 The validation pipe is a very specific use case because Ts.ED uses it automatically when a parameter is handled
 by the **routing request**. The previous pipe example, in order to work, needs to be registered with the @@OverrideProvider@@ decorator instead of @@Injectable@@.
 
-See more details on the [validation page](/docs/validation.html).
+See more details on the [validation page](/docs/validation).
 
 ## Transformation use case
 
@@ -191,8 +186,7 @@ This is useful when you have to get data from **database** based on an input dat
 Given this `PersonModel`:
 
 ```typescript
-import {MinLength, Required} from "@tsed/common";
-import {Property} from "./property";
+import {MinLength, Required, Property} from "@tsed/schema";
 
 class PersonModel {
   @Property()
@@ -231,7 +225,9 @@ To avoid future mistakes, it could be a good idea to summarize these two decorat
 Now, we can use our custom decorator on parameter:
 
 ```typescript
-import {Controller, Put, RawPathParams, UsePipe} from "@tsed/common";
+import {Controller} from "@tsed/di";
+import {RawPathParams, UsePipe} from "@tsed/platform-params";
+import {Put} from "@tsed/schema";
 import {PersonModel} from "../models/PersonModel";
 import {PersonPipe} from "../services/PersonPipe";
 
@@ -261,7 +257,9 @@ Now, we can retrieve the options by using the `metadata.store`:
 And finally, we can use our new decorator on a parameter:
 
 ```typescript
-import {Controller, Put, RawPathParams, UsePipe} from "@tsed/common";
+import {Put} from "@tsed/schema";
+import {Controller} from "@tsed/di";
+import {RawPathParams, UsePipe} from "@tsed/plaform-params";
 import {PersonModel} from "../models/PersonModel";
 import {PersonPipe} from "../services/PersonPipe";
 

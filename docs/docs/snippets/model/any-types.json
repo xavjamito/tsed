@@ -1,53 +1,14 @@
 {
+  "definitions": {},
   "properties": {
     "prop1": {
-      "allOf": [
-        {
-          "type": "integer",
-          "minLength": 1
-        },
-        {
-          "type": "number"
-        },
-        {
-          "type": "string"
-        },
-        {
-          "type": "boolean"
-        },
-        {
-          "type": "array"
-        },
-        {
-          "type": "object"
-        },
-        {
-          "type": "null"
-        }
-      ]
+      "type": ["integer", "number", "string", "boolean", "array", "object", "null"]
     },
     "prop2": {
-      "allOf": [
-        {
-          "type": "number"
-        },
-        {
-          "type": "string"
-        },
-        {
-          "type": "boolean"
-        }
-      ]
+      "type": ["string", "number", "boolean"]
     },
     "prop3": {
-      "allOf": [
-        {
-          "type": "string"
-        },
-        {
-          "type": "null"
-        }
-      ]
+      "type": ["string", "null"]
     }
   },
   "type": "object"

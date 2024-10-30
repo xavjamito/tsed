@@ -1,5 +1,6 @@
 import {getValue} from "@tsed/core";
 import {OpenSpec2, OpenSpec3} from "@tsed/openspec";
+
 import {SpecTypes} from "../domain/SpecTypes.js";
 import {getSpec, JsonTokenOptions, SpecSerializerOptions} from "./getSpec.js";
 import {getSpecTypeFromSpec} from "./getSpecType.js";
@@ -38,9 +39,11 @@ export function generateSpec({tokens, ...options}: GenerateSpecOptions): OpenSpe
   const spec = mergeSpec(defaultSpec, controllersSpec) as OpenSpec2 | OpenSpec3;
 
   if (options.sortPaths) {
-    spec.paths = Object.fromEntries(Object.entries(spec.paths!).sort(([k1], [k2]) => {
-      return k1.localeCompare(k2);
-    }));
+    spec.paths = Object.fromEntries(
+      Object.entries(spec.paths!).sort(([k1], [k2]) => {
+        return k1.localeCompare(k2);
+      })
+    );
   }
 
   if (specType === SpecTypes.SWAGGER) {

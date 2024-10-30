@@ -1,7 +1,13 @@
-import {Controller, Get, Locals, Middleware, PlatformTest, UseBefore} from "@tsed/common";
+import {Controller} from "@tsed/di";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {Middleware, UseBefore} from "@tsed/platform-middlewares";
+import {Locals} from "@tsed/platform-params";
+import {View} from "@tsed/platform-views";
+import {Get} from "@tsed/schema";
 import {EOL} from "os";
 import SuperTest from "supertest";
-import {View} from "@tsed/platform-views";
+import {afterAll, beforeAll, describe, expect, it} from "vitest";
+
 import {PlatformTestingSdkOpts} from "../interfaces/index.js";
 
 @Middleware()
@@ -45,7 +51,7 @@ export function testView(options: PlatformTestingSdkOpts) {
   beforeAll(() => {
     request = SuperTest(PlatformTest.callback());
   });
-  afterAll(PlatformTest.reset);
+  afterAll(() => PlatformTest.reset());
 
   describe("Scenario1: GET /rest/views/scenario-1", () => {
     it("should render a view", async () => {

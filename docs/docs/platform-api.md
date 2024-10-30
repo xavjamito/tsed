@@ -8,50 +8,32 @@ This page will describe how you can get these instances with the new API.
 
 ## Platform classes
 
-<Tabs>
-  <Tab label="Abstraction">
-  <ApiList query="status.includes('platform') && ['@tsed/common', '@tsed/platform-views', '@tsed/platform-params', '@tsed/platform-response-filter', '@tsed/platform-exceptions'].includes(module)" />
-  </Tab>
-  <Tab label="Express.js">
-  <ApiList query="status.includes('platform') && module.includes('@tsed/platform-express')" />
-  </Tab>
-  <Tab label="Koa.js">
-  <ApiList query="status.includes('platform') && module.includes('@tsed/platform-koa')" />
-  </Tab>
-  <Tab label="Serverless">
-  <ApiList query="status.includes('platform') && module.includes('@tsed/platform-serverless')" />
-  </Tab>  
-</Tabs>
+### Abstraction
+
+<ApiList query="status.includes('platform') && ['@tsed/common', '@tsed/platform-views', '@tsed/platform-params', '@tsed/platform-response-filter', '@tsed/platform-exceptions'].includes(module)" />
+
+### Express.js
+
+<ApiList query="status.includes('platform') && module.includes('@tsed/platform-express')" />
+
+### Koa.js
+
+<ApiList query="status.includes('platform') && module.includes('@tsed/platform-koa')" />
+
+### Serverless
+
+<ApiList query="status.includes('platform') && module.includes('@tsed/platform-serverless')" />
 
 ## Create application
 
-The way to create a Ts.ED application, add [middlewares](/docs/middlewares.html), configure Express or Koa, all are impacted by the new Platform API.
+The way to create a Ts.ED application, add [middlewares](/docs/middlewares.html), configure Express or Koa, are all impacted by the new Platform API.
 
-If you use `ServerLoader`, you'll probably know this example to create a Ts.ED application:
-
-```typescript
-import {ServerLoader, ServerSettings} from "@tsed/common";
-import {MyMiddleware} from "./MyMiddleware";
-
-@Configuration({
-  viewsDir: `${process.cwd()}/views`,
-  middlewares: [MyMiddleware, "cookie-parser", "compression", "method-override"]
-})
-export class Server extends ServerLoader {
-  $beforeRoutesInit() {
-    // configure express app
-    this.set("views", this.settings.get("viewsDir"));
-    this.engine("ejs", ejs);
-  }
-}
-```
-
-With Platform API you have to inject @@PlatformApplication@@ to register a middleware and set configuration to `Express.Application`:
+Here is the common way to configure a server using the Platform API:
 
 ```typescript
-import {Configuration, PlatformApplication} from "@tsed/common";
-import {Inject, Constant} from "@tsed/di";
-import {MyMiddleware} from "./MyMiddleware";
+import {PlatformApplication} from "@tsed/platform-http";
+import {Configuration, Inject, Constant} from "@tsed/di";
+import {MyMiddleware} from "./MyMiddleware.js";
 
 @Configuration({
   views: {
@@ -70,76 +52,23 @@ export class Server {
 }
 ```
 
-::: tip
-With Platform API, the Server class is considered as a @@Provider@@. It means that you can use decorators like @@Constant@@ and @@Inject@@ to get any configuration, provider or service from the DI registry.
-:::
+We can see that the middlewares and views are configured through the `@Configuration` decorator.
 
-## Inject service in the Server
-
-With `ServerLoader`, injecting a provider can be done as follows:
-
-```typescript
-import {ServerLoader, ServerSettings} from "@tsed/common";
-import {MyService} from "./services/MyService";
-
-@ServerLoader({})
-export class Server extends ServerLoader {
-  $beforeRoutesInit() {
-    const myService = this.injector.get<MyService>(MyService);
-
-    myService.getSomething();
-  }
-}
-```
-
-Now with Platform API, the Server class is considered as a @@Provider@@.
+With Platform API, the Server class is considered as a @@Provider@@.
 It means that you can use decorators like @@Constant@@ and @@Inject@@ to get any configuration, provider or service from the DI registry.
+Also, there decorators can be used in any Service or Injectable class.
 
-```typescript
-import {Configuration} from "@tsed/common";
-import {Inject} from "@tsed/di";
-import {MyService} from "./services/MyService";
-
-@Configuration({})
-export class Server {
-  @Inject()
-  protected myService: MyService;
-
-  $beforeRoutesInit() {
-    this.myService.getSomething();
-  }
-}
-```
+By this way, we can decouple the configuration from the code and make it more testable and more adaptable to different frameworks (Express, Koa, etc...).
 
 ## Bootstrap application
 
-In v5, boostrap a `Server` can be done with the `ServerLoader.boostrap` method:
+Ts.ED need a Platform Adapter to work. It means that you have to install `@tsed/platform-express` (or `@tsed/platform-koa`) and
+import the adapter to the `index.ts` or `server.ts`:
 
-```typescript
-import {$log, ServerLoader} from "@tsed/common";
-import {Server} from "./server";
+::: code-group
 
-async function bootstrap() {
-  try {
-    $log.debug("Start server...");
-    const platform = await ServerLoader.bootstrap(Server, {
-      // extra settings
-    });
-
-    await platform.listen();
-    $log.debug("Server initialized");
-  } catch (er) {
-    $log.error(er);
-  }
-}
-
-bootstrap();
-```
-
-Now with Platform API, you have to install `@tsed/platform-express` (or `@tsed/platform-koa`) and change the code by the following example:
-
-```typescript
-import {$log} from "@tsed/common";
+```typescript [Express.js]
+import {$log} from "@tsed/logger";
 import {PlatformExpress} from "@tsed/platform-express";
 import {Server} from "./server";
 
@@ -160,29 +89,39 @@ async function bootstrap() {
 bootstrap();
 ```
 
-## Get Application
+```typescript [Koa.js]
+import {$log} from "@tsed/logger";
+import {PlatformKoa} from "@tsed/platform-koa";
+import {Server} from "./server";
 
-Before with v5, to get `Express.Application`, you had to use `ExpressApplication` decorator:
+async function bootstrap() {
+  try {
+    $log.debug("Start server...");
+    const platform = await PlatformKoa.bootstrap(Server, {
+      // extra settings
+    });
 
-```typescript
-import {Injectable} from "@tsed/di";
-import {ExpressApplication} from "@tsed/common";
-
-@Injectable()
-class MyService {
-  constructor(@ExpressApplication private app: ExpressApplication) {}
-
-  getExpressApp() {
-    return this.app;
+    await platform.listen();
+    $log.debug("Server initialized");
+  } catch (er) {
+    $log.error(er);
   }
 }
+
+bootstrap();
 ```
 
-With Platform API, you have to inject @@PlatformApplication@@ and use the `app.raw` or `app.getApp()` to get the `Express.Application`:
+:::
 
-```typescript
+## Get Application
+
+To get the framework application instance (Express.js, Koa.js), you have to inject @@PlatformApplication@@ and use `app.getApp()` to get the `Express.Application`:
+
+::: code-group
+
+```typescript [Express.js]
 import {Injectable, Inject} from "@tsed/di";
-import {PlatformApplication} from "@tsed/common";
+import {PlatformApplication} from "@tsed/platform-http";
 import {MyMiddleware} from "../middlewares/MyMiddleware";
 
 @Injectable()
@@ -195,45 +134,72 @@ class MyService {
   }
 
   $onInit() {
-    // With Platform API, it is also possible to add middlewares with a service, module, etc...
+    // With Platform API, it is also possible to adding middlewares with a service, module, etc...
     this.app.use(MyMiddleware);
   }
 }
 ```
 
-## Request and Response
-
-There is no big change over Response and Request, you can always get @@Request@@ and @@Response@@ by using decorators.
-With the Platform API, you are also able to use @@Context@@ decorator to deal with the @@PlatformRequest@@ or @@PlatformResponse@@ high level API.
-
-See [Request context](/docs/request-context.md#request-and-response-abstraction) page to get more details.
-
-## Statics files
-
-Since v5.65.0, Platform API manages also the statics files. The @@ServeStaticService@@ is now deprecated in favor of `PlatformApplication.statics()` method.
-
-Before:
-
-```typescript
-import {Injectable} from "@tsed/di";
-import {ServeStaticService} from "@tsed/common";
-import {join} from "path";
+```typescript [Koa.js]
+import {Injectable, Inject} from "@tsed/di";
+import {PlatformApplication} from "@tsed/platform-http";
+import {MyMiddleware} from "../middlewares/MyMiddleware";
 
 @Injectable()
 class MyService {
-  constructor(private service: ServeStaticService) {}
+  @Inject()
+  protected app: PlatformApplication<Koa>;
 
-  $onReady() {
-    this.service.statics({"/endpoint": join(process.cwd(), "../publics")});
+  getExpressApp() {
+    return this.app.getApp(); // GET Koa raw Application. E.g.: const app = new Koa()
+  }
+
+  $onInit() {
+    // With Platform API, it is also possible to adding middlewares with a service, module, etc...
+    this.app.use(MyMiddleware);
   }
 }
 ```
 
-After:
+:::
+
+## Request and Response
+
+There are no significant changes to Response and Request, you can always get @@Request@@ and @@Response@@ by using decorators.
+With the Platform API, you are also able to use @@Context@@ decorator to deal with the @@PlatformRequest@@ or @@PlatformResponse@@ high level API.
+
+See [Request Context](/docs/request-context.md#request-and-response-abstraction) page to get more details.
+
+## Statics files
+
+To serve static files, you can use the `@Configuration` decorator:
+
+```typescript
+@Configuration({
+  statics: {
+    "/before": [
+      {
+        root: `${process.cwd()}/public`,
+        hook: "$beforeRoutesInit"
+        // ... statics options
+      }
+    ],
+    "/after": [
+      {
+        root: `${process.cwd()}/public`,
+        hook: "$afterRoutesInit"
+        // ... statics options
+      }
+    ]
+  }
+})
+```
+
+Or use the `app.statics()` method:
 
 ```typescript
 import {Injectable} from "@tsed/di";
-import {PlatformApplication} from "@tsed/common";
+import {PlatformApplication} from "@tsed/platform-http";
 import {join} from "path";
 
 @Injectable()
@@ -248,7 +214,7 @@ class MyService {
 
 ## Catch exceptions
 
-The new [Platform API](/docs/platform-api.md) introduces a new way to catch an exception with the @@Catch@@ decorator, and
+[Platform API](/docs/platform-api.md) provide a way to catch an exception with the @@Catch@@ decorator, and
 to let you control the exact flow of control and the response's content sent back to the client.
 
 See [Exception filter](/docs/exceptions.md#exception-filter) page to get more details.

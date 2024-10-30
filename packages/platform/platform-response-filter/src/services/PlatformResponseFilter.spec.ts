@@ -1,6 +1,9 @@
-import {Context, EndpointMetadata, Get, PlatformContext, PlatformTest, View} from "@tsed/common";
 import {catchAsyncError} from "@tsed/core";
-import {Returns} from "@tsed/schema";
+import {PlatformContext} from "@tsed/platform-http";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {Context} from "@tsed/platform-params";
+import {EndpointMetadata, Get, Returns, View} from "@tsed/schema";
+
 import {ResponseFilter} from "../decorators/responseFilter.js";
 import {ResponseFilterMethods} from "../interfaces/ResponseFilterMethods.js";
 import {PlatformResponseFilter} from "./PlatformResponseFilter.js";
@@ -127,7 +130,7 @@ describe("PlatformResponseFilter", () => {
     it("should transform data for default content-type from metadata", async () => {
       class Test {
         @Get("/")
-        @Returns(200).ContentType("application/json")
+        @(Returns(200).ContentType("application/json"))
         test() {}
       }
 
@@ -151,7 +154,7 @@ describe("PlatformResponseFilter", () => {
     it("should transform data for default content-type from metadata with any response filter", async () => {
       class Test {
         @Get("/")
-        @Returns(200).ContentType("application/json")
+        @(Returns(200).ContentType("application/json"))
         test() {}
       }
 

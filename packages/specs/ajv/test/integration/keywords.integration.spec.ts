@@ -1,7 +1,9 @@
-import "@tsed/ajv";
-import {PlatformTest} from "@tsed/common";
+import "../../src/index.js";
+
+import {PlatformTest} from "@tsed/platform-http/testing";
 import {array, CustomKey, getJsonSchema, number} from "@tsed/schema";
-import Ajv, {_, KeywordCxt} from "ajv";
+import {_, Ajv, KeywordCxt} from "ajv";
+
 import {Keyword} from "../../src/decorators/keyword.js";
 import {KeywordMethods} from "../../src/interfaces/KeywordMethods.js";
 

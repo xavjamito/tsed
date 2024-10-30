@@ -25,18 +25,11 @@ Originally, multer is provided by Express.js, but Ts.ED implements a multer wrap
 
 By default, the directory used is `${projetRoot}/uploads`. You can configure another directory on your Server settings.
 
-<Tabs class="-code">
-  <Tab label="Configuration" icon="bx-code-alt">
+<<< @/docs/snippets/multer/configuration.ts
 
-<<< @/tutorials/snippets/multer/configuration.ts
-
-  </Tab>
-  <Tab label="CodeSandbox" icon="bxl-codepen">
+Live example:
 
 <CodeSandbox sandboxId="rough-frost-6bi81" title="Multer example" />
-
-  </Tab>
-</Tabs>
 
 ## Options
 
@@ -59,12 +52,12 @@ By default, the directory used is `${projetRoot}/uploads`. You can configure ano
 
 A single file can be injected to your endpoint by using the @@MultipartFile@@ decorator like this:
 
-<<< @/tutorials/snippets/multer/controller.ts
+<<< @/docs/snippets/multer/controller.ts
 
 ::: tip
 Many frontend code examples are available on the web and some of them don't work as expected. So, to help you, here is a short vanilla Javascript code example:
 
-<<< @/tutorials/snippets/multer/loading-file.js
+<<< @/docs/snippets/multer/loading-file.js
 
 :::
 
@@ -72,14 +65,4 @@ Many frontend code examples are available on the web and some of them don't work
 
 For multiple files, just use `PlatformMulterFile[]` annotation type. Ts.ED will understand that you want to inject a list of files even if your consumer only sends you one:
 
-<<< @/tutorials/snippets/multer/file-array.ts
-
-::: warning
-Swagger spec (v2.0) doesn't support multiple files. Enable OAS 3 to support multipart files in swagger-ui.
-:::
-
-### Use with Middleware
-
-The @@PlatformMulterMiddleware@@ will convert FormData key/value pairs into @@BodyParams@@. If you need access to @@BodyParams@@ in a custom Middleware, make sure to set the `priority` on the Middleware to something greater than 10 so it is executed after the @@PlatformMulterMiddleware@@.
-
-<<< @/tutorials/snippets/multer/middleware.ts
+<<< @/docs/snippets/multer/file-array.ts

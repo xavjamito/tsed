@@ -37,65 +37,44 @@ Currently, [`@tsed/mongoose`](https://www.npmjs.com/package/@tsed/mongoose) allo
 ## Installation
 
 Before using the `@tsed/mongoose` package, we need to install the [mongoose](https://www.npmjs.com/package/mongoose) module.
+::: code-group
 
-<Tabs class="-code">
-  <Tab label="npm">
-
-```sh [npm]
-npm install --save mongoose @tsed/mongoose
+```bash [npm]
+npm install --save mongoose
+npm install --save @tsed/mongoose
 npm install --save-dev @tsed/testcontainers-mongo
 ```
 
-  </Tab>
-  <Tab label="yarn">
+```bash [yarn]
+yarn add mongoose
+yarn add @tsed/mongoose
+yarn add --dev @tsed/testcontainers-mongo
+```
 
 ```sh [yarn]
 yarn add mongoose @tsed/mongoose
 yarn add -D @tsed/testcontainers-mongo
 ```
 
-  </Tab>
-  <Tab label="pnpm">
-
-```sh [pnpm]
-pnpm add mongoose @tsed/mongoose
-pnpm add -D @tsed/testcontainers-mongo
-```
-
-  </Tab>
-  <Tab label="bun">
-
 ```sh [bun]
 bun add mongoose @tsed/mongoose
 bun add -D @tsed/testcontainers-mongo
 ```
 
-</Tab>
-</Tabs>
+:::
 
-Then import `@tsed/mongoose` in your [Configuration](/docs/configuration.md):
+Then import `@tsed/mongoose` in your [Configuration](/docs/configuration/index.md):
 
-<Tabs class="-code">
-  <Tab label="Configuration" icon="bx-code-alt">
-  
+## Configuration
+
 <<< @/tutorials/snippets/mongoose/configuration.ts
 
-  </Tab>
-  <Tab label="CodeSandbox" icon="bxl-codepen">
-<iframe src="https://codesandbox.io/embed/tsed-mongoose-example-omkbm?fontsize=14&hidenavigation=1&theme=dark" 
-     style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;" 
-     title="tsed-mongoose-example"
-     allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation; gyroscope; hid; microphone; midi; payment; usb; vr; xr-spatial-tracking"
-     sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"></iframe>
-  </Tab>
-</Tabs>
-     
 ## MongooseService
 
-@@MongooseService@@ lets you to retrieve an instance of Mongoose.Connection.
+@@MongooseService@@ lets you retrieve an instance of Mongoose.Connection.
 
 ```typescript
-import {Service} from "@tsed/common";
+import {Service} from "@tsed/di";
 import {MongooseService} from "@tsed/mongoose";
 
 @Service()
@@ -143,7 +122,7 @@ Schema decorator accepts a second parameter to configure the Schema (See [Mongoo
 ### Declaring Properties
 
 By default, `@tsed/mongoose` reuses the metadata stored by the decorators dedicated
-to describe a JsonSchema. These decorators come from the `@tsed/common` package.
+to describe a JsonSchema. These decorators come from the `@tsed/schema` package.
 
 <<< @/tutorials/snippets/mongoose/example-model-mongoose.ts
 
@@ -163,7 +142,7 @@ Mongoose and `@tsed/mongoose` support both lists and maps.
 
 ### Subdocuments
 
-`@tsed/mongoose` supports `mongoose` subdocuments as long as they are defined schemas. Therefore, subdocuments must be decorated by `@Schema()`.
+`@tsed/mongoose` supports `mongoose` subdocuments as long as they are defined as schemas. Therefore, subdocuments must be decorated by `@Schema()`.
 
 <<< @/tutorials/snippets/mongoose/subdocuments.ts
 
@@ -178,7 +157,7 @@ Mongoose and `@tsed/mongoose` support both lists and maps.
 `@tsed/mongoose` supports `mongoose` circular references between defined models.
 When you have models that either both refer to each other, or refer to themselves there is a slightly different way to declare this inside those models.
 
-In this example a **Customer** has many **Contracts** and each **Contract** has a reference back to the **Customer**. This is declared using an arrow function.
+In this example, a **Customer** has many **Contracts** and each **Contract** has a reference back to the **Customer**. This is declared using an arrow function.
 
 ```
 () => ModelName
@@ -200,18 +179,12 @@ The same rules for Circular References apply (**See above**);
 
 This works by having a field with the referenced object model's name and a field with the referenced field.
 
-<Tabs class="-code">
-  <Tab label="Example">
+::: code-group
 
-<<< @/tutorials/snippets/mongoose/dynamic-references.ts
+<<< @/tutorials/snippets/mongoose/dynamic-references.ts [Example]
 
-  </Tab>
-  <Tab label="JsonSchema">
-
-<<< @/tutorials/snippets/mongoose/dynamic-references.json
-
-  </Tab>
-</Tabs>
+<<< @/tutorials/snippets/mongoose/dynamic-references.json [JsonSchema]
+:::
 
 ### Decimal Numbers
 
@@ -228,9 +201,9 @@ Optionally a custom decimal type implementation, such as [big.js](https://www.np
 ## Register hook
 
 Mongoose allows the developer to add pre and post [hooks / middlewares](http://mongoosejs.com/docs/middleware.html) to the schema.
-With this it is possible to add document transformations and observations before or after validation, save and more.
+With this, it is possible to add document transformations and observations before or after validation, save, and more.
 
-Ts.ED provides class decorator to register middlewares on the pre and post hook.
+Ts.ED provides class decorators to register middlewares on the pre- and post-hook.
 
 ### Pre hook
 
@@ -262,7 +235,7 @@ Multiple `plugin` decorator can be used for a single model class.
 
 Set the `@DiscriminatorKey` decorator on a property in the parent class to define the name of the field for the discriminator value.
 
-Extend the child model classes from the parent class. By default the value for the discriminator field is the class name but it can be overwritten via the `discriminatorValue` option on the model.
+Extend the child model classes from the parent class. By default, the value for the discriminator field is the class name, but it can be overwritten via the `discriminatorValue` option on the model.
 
 <<< @/tutorials/snippets/mongoose/discriminator.ts
 
@@ -296,7 +269,7 @@ Mongoose doesn't return a real instance of your class. If you inspected the retu
 you'll see that the instance is as Model type instead of the expected class:
 
 ```typescript
-import {Inject, Injectable} from "@tsed/common";
+import {Inject, Injectable} from "@tsed/di";
 import {MongooseModel} from "@tsed/mongoose";
 import {Product} from "./models/Product";
 
@@ -321,7 +294,7 @@ the class with the @@deserialize@@ function.
 To simplify this, Ts.ED adds a `toClass` method to the MongooseModel to find, if necessary, an instance of type Product.
 
 ```typescript
-import {Inject, Injectable} from "@tsed/common";
+import {Inject, Injectable} from "@tsed/di";
 import {MongooseModel} from "@tsed/mongoose";
 import {Product} from "./models/Product";
 
@@ -349,41 +322,29 @@ The [`@tsed/testcontainers-mongo`](https://www.npmjs.com/package/@tsed/testconta
 
 To use the `@tsed/testcontainers-mongo` package, you need to install the package:
 
-<Tabs class="-code">
-  <Tab label="npm">
+::: code-group
 
 ```sh [npm]
 npm install --save-dev @tsed/testcontainers-mongo
 ```
 
-  </Tab>
-  <Tab label="yarn">
-
 ```sh [yarn]
 yarn add --dev @tsed/testcontainers-mongo
 ```
-
-  </Tab>
-  <Tab label="pnpm">
 
 ```sh [pnpm]
 pnpm add --dev @tsed/testcontainers-mongo
 ```
 
-  </Tab>
-  <Tab label="bun">
-
 ```sh [bun]
 bun add --dev @tsed/testcontainers-mongo
 ```
 
-</Tab>
-</Tabs>
+:::
 
 Then add or update your jest or vitest configuration file to add a global setup file:
 
-<Tabs class="-code">
-  <Tab label="Jest">
+::: code-group
 
 ```ts [Jest]
 // jest.config.js
@@ -405,9 +366,6 @@ module.exports = async () => {
 };
 ```
 
-  </Tab>
-  <Tab label="Vitest">
-
 ```ts [Vitest]
 import {defineConfig} from "vitest/config";
 
@@ -418,42 +376,29 @@ export default defineConfig({
 });
 ```
 
-  </Tab>
-</Tabs>
-
 ### Testing Model
 
 This example shows you how can test the model:
 
-<Tabs class="-code">
-<Tab label="Jest">
+::: code-group
 
-<<< @/tutorials/snippets/mongoose/testing-model.jest.ts
+<<< @/tutorials/snippets/mongoose/testing-model.jest.ts [Jest]
 
-</Tab>
-<Tab label="Vitest">
+<<< @/tutorials/snippets/mongoose/testing-model.vitest.ts [Vitest]
 
-<<< @/tutorials/snippets/mongoose/testing-model.vitest.ts
-
-</Tab>
-</Tabs>
+:::
 
 ### Testing API
 
 This example shows you how you can test your Rest API with superagent and a mocked Mongo database:
 
-<Tabs class="-code">
-  <Tab label="Jest">
+::: code-group
 
-<<< @/tutorials/snippets/mongoose/testing-api.jest.ts
+<<< @/tutorials/snippets/mongoose/testing-api.jest.ts [Jest]
 
-  </Tab>
-  <Tab label="Vitest">
+<<< @/tutorials/snippets/mongoose/testing-api.jest.ts [Vitest]
 
-<<< @/tutorials/snippets/mongoose/testing-api.jest.ts
-
-  </Tab>
-</Tabs>
+:::
 
 ## Author
 

@@ -1,19 +1,20 @@
-import {FileSyncAdapter} from "@tsed/adapters";
 import "@tsed/ajv";
-import "../../src/index";
-import {Constant, PlatformApplication} from "@tsed/common";
-import {Configuration, Inject} from "@tsed/di";
-import "@tsed/oidc-provider";
+import "../../src/index.js";
 import "@tsed/swagger";
+
+import {FileSyncAdapter} from "@tsed/adapters";
+import {Configuration, Constant, Inject} from "@tsed/di";
+import {PlatformApplication} from "@tsed/platform-http";
 import bodyParser from "body-parser";
 import compress from "compression";
 import cookieParser from "cookie-parser";
 import session from "express-session";
 import methodOverride from "method-override";
 import {join} from "path";
+
 import {Accounts} from "./services/Accounts.js";
 
-const rootDir = __dirname; // automatically replaced by import.meta.dirname on build
+const rootDir = import.meta.dirname; // automatically replaced by import.meta.dirname on build
 export {rootDir};
 
 @Configuration({

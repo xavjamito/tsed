@@ -1,7 +1,10 @@
-import {Controller, Get, PlatformTest} from "@tsed/common";
+import {Controller} from "@tsed/di";
 import {PlatformExpress} from "@tsed/platform-express";
-import {Nsp, SocketService} from "@tsed/socketio";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {Get} from "@tsed/schema";
 import SuperTest from "supertest";
+
+import {Nsp, SocketService} from "../src/index.js";
 import {Server} from "./app/Server.js";
 
 @SocketService("/my-namespace")

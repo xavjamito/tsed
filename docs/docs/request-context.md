@@ -1,11 +1,6 @@
----
-prev: true
-next: true
----
-
 # Context
 
-Ts.ED provides an util to get request, response, to store and share data along all middlewares/endpoints during a
+Ts.ED provides an utility to get request, response, to store and share data along all middlewares/endpoints during a
 request with @@PlatformContext@@. This context is created by Ts.ED when the request is handled by the server.
 
 It contains some information as following:
@@ -14,12 +9,43 @@ It contains some information as following:
 - The request id,
 - The request container used by the Ts.ED DI. It contains all services annotated with `@Scope(ProviderScope.REQUEST)`,
 - The current @@EndpointMetadata@@ context resolved by Ts.ED during the request,
-- The data returned by the previous endpoint if you use multiple handlers on the same route. By default data is empty.
+- The data returned by the previous endpoint if you use multiple handlers on the same route. By default, data is empty.
 - The @@ContextLogger@@ to log some information related to the request and his id.
 
 Here is an example:
 
-<<< @/docs/snippets/request-context/context-example.ts
+```ts
+import {Context} from "@tsed/platform-params";
+import {Middleware, UseBefore} from "@tsed/platform-middlewares";
+import {Get} from "@tsed/schema";
+import {Controller} from "@tsed/di";
+import {Forbidden} from "@tsed/exceptions";
+import {AuthToken} from "../domain/auth/AuthToken.js";
+
+@Middleware()
+class AuthTokenMiddleware {
+  use(@Context() ctx: Context) {
+    if (!ctx.has("auth")) {
+      ctx.set("auth", new AuthToken(ctx.request));
+    }
+
+    try {
+      ctx.get("auth").claims(); // check token
+    } catch (er) {
+      throw new Forbidden("Access forbidden - Bad token");
+    }
+  }
+}
+
+@Controller("/")
+@UseBefore(AuthTokenMiddleware) // protect all routes for this controller
+class MyCtrl {
+  @Get("/")
+  get(@Context() context: Context, @Context("auth") auth: AuthToken) {
+    context.logger.info({event: "auth", auth}); // Attach log to the request
+  }
+}
+```
 
 ::: tip
 
@@ -34,12 +60,15 @@ response and then printing all logs.
 metadata when you use the middleware over a controller method. By accessing to the @@EndpointMetadata@@ you are able to:
 
 - Get endpoint information,
-- Create [custom middleware and decorator](/docs/custom-endpoint-decorators.md),
+- Create [custom middleware and decorator](/docs/custom-endpoint-decorators),
 - Get the controller class name and propertyKey.
 
 ```typescript
 import {StoreSet} from "@tsed/core";
-import {Get, Controller, Middleware, Context, EndpointInfo, Use, Returns} from "@tsed/common";
+import {Controller} from "@tsed/di";
+import {Middleware, Use} from "@tsed/platform-middlewares";
+import {Context} from "@tsed/platform-params";
+import {Get, Returns} from "@tsed/schema";
 import {Resource} from "./Resource";
 
 @Middleware()
@@ -75,7 +104,9 @@ cannot provide all necessaries properties or methods. It's also possible to get 
 different ways.
 
 ```typescript
-import {Middleware, Context, Req, Res} from "@tsed/common";
+import {Req, Res} from "@tsed/platform-http";
+import {Middleware} from "@tsed/platform-middlewares";
+import {Context} from "@tsed/platform-params";
 
 @Middleware()
 export class MyMiddleware {
@@ -105,7 +136,7 @@ export class MyMiddleware {
 following:
 
 ```typescript
-class PlatformRequest<T = Req> {
+interface PlatformRequest<T = Req> {
   raw: T;
 
   get secure(): boolean;
@@ -140,7 +171,8 @@ class PlatformRequest<T = Req> {
 ### Get request headers
 
 ```typescript
-import {Controller, Context} from "@tsed/common";
+import {Controller} from "@tsed/di";
+import {Context} from "@tsed/platform-params";
 
 @Controller("/")
 export class MyController {
@@ -156,7 +188,8 @@ export class MyController {
 ### Get request params/body/query/cookies/session
 
 ```typescript
-import {Controller, Context} from "@tsed/common";
+import {Controller} from "@tsed/di";
+import {Context} from "@tsed/platform-params";
 
 @Controller("/")
 export class MyController {
@@ -180,7 +213,7 @@ send the response to your consumer.
 His interface is the following:
 
 ```typescript
-class PlatformResponse {
+interface PlatformResponse {
   raw: Res;
 
   get statusCode(): number;
@@ -214,7 +247,8 @@ class PlatformResponse {
 ### Set response headers
 
 ```typescript
-import {Controller, Context} from "@tsed/common";
+import {Controller} from "@tsed/di";
+import {Context} from "@tsed/platform-params";
 
 @Controller("/")
 export class MyController {
@@ -231,7 +265,8 @@ export class MyController {
 Can be also done by returning a response like object:
 
 ```typescript
-import {Controller, Context} from "@tsed/common";
+import {Controller} from "@tsed/di";
+import {Context} from "@tsed/platform-params";
 
 @Controller("/")
 export class MyController {
@@ -250,7 +285,8 @@ export class MyController {
 ### Set response cookie
 
 ```typescript
-import {Controller, Context} from "@tsed/common";
+import {Controller} from "@tsed/di";
+import {Context} from "@tsed/platform-params";
 
 @Controller("/")
 export class MyController {
@@ -268,7 +304,8 @@ export class MyController {
 ### Set response body
 
 ```typescript
-import {Controller, Context} from "@tsed/common";
+import {Controller} from "@tsed/di";
+import {Context} from "@tsed/platform-params";
 
 @Controller("/")
 export class MyController {
@@ -298,7 +335,8 @@ But prefer returning payload from your method! Ts.ED will handle all data type (
 You can retrieve the Express\Koa response by using `ctx.getResponse()` method:
 
 ```typescript
-import {Controller, Context} from "@tsed/common";
+import {Controller} from "@tsed/di";
+import {Context} from "@tsed/platform-params";
 
 @Controller("/")
 export class MyController {
@@ -357,7 +395,7 @@ controller:
 
 ```typescript
 import {Injectable, Controller, InjectContext} from "@tsed/di";
-import {PlatformContext} from "@tsed/common";
+import {PlatformContext} from "@tsed/platform-http";
 
 @Injectable()
 export class CustomRepository {
@@ -390,7 +428,7 @@ To run a method with context in your unit test, you can use the @@PlatformAsyncH
 
 ```typescript
 import {runInContext} from "@tsed/di";
-import {PlatformContext} from "@tsed/common";
+import {PlatformContext} from "@tsed/platform-http";
 import {CustomRepository} from "./CustomRepository";
 
 describe("CustomRepository", () => {

@@ -1,6 +1,10 @@
-import {Context, Controller, Get, PathParams, PlatformTest} from "@tsed/common";
-import {Property, Required, Title} from "@tsed/schema";
+import {Controller} from "@tsed/di";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {Context, PathParams} from "@tsed/platform-params";
+import {Get, Property, Required, Title} from "@tsed/schema";
 import SuperTest from "supertest";
+import {afterAll, beforeAll, expect, it} from "vitest";
+
 import {PlatformTestingSdkOpts} from "../interfaces/index.js";
 
 export class MyModel {

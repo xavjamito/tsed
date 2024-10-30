@@ -16,7 +16,8 @@ projects:
 
 This tutorial shows you how you can use Stripe package with Ts.ED.
 
-The Stripe Node library provides convenient access to the Stripe API from applications written in server-side JavaScript.
+The Stripe Node library provides convenient access to the Stripe API from applications written in server-side
+JavaScript.
 
 For collecting customer and payment information in the browser, use [Stripe.js](https://stripe.com/docs/stripe.js).
 
@@ -34,15 +35,31 @@ Currently, [`@tsed/stripe`](https://www.npmjs.com/package/@tsed/stripe) allows y
 
 To begin, install the Stripe module for Ts.ED:
 
-```bash
-npm install --save @tsed/stripe
-npm install --save stripe
+::: code-group
+
+```sh [npm]
+npm install --save @tsed/stripe stripe
 ```
+
+```sh [yarn]
+yarn add @tsed/stripe stripe
+```
+
+```sh [pnpm]
+pnpm add @tsed/stripe stripe
+```
+
+```sh [bun]
+bun add @tsed/stripe stripe
+```
+
+:::
 
 Then import `@tsed/stripe` in your Server:
 
 ```typescript
-import {Configuration, PlatformApplication} from "@tsed/common";
+import {Configuration} from "@tsed/di";
+import {PlatformApplication} from "@tsed/platform-http";
 import "@tsed/stripe";
 import {Stripe} from "stripe";
 
@@ -107,12 +124,15 @@ class MyStripeService {
 
 ## Webhook signing
 
-Stripe can optionally sign the webhook events it sends to your endpoint, allowing you to validate that they were not sent by a third-party. You can read more about it [here](https://stripe.com/docs/webhooks#signatures).
+Stripe can optionally sign the webhook events it sends to your endpoint, allowing you to validate that they were not
+sent by a third-party. You can read more about it [here](https://stripe.com/docs/webhooks#signatures).
 
-To register a Stripe webhook with Ts.ED, just use the @@WebhookEvent@@ decorator. It'll call for you the `stripe.webhooks.constructEvent` with the right parameters:
+To register a Stripe webhook with Ts.ED, just use the @@WebhookEvent@@ decorator. It'll call for you the
+`stripe.webhooks.constructEvent` with the right parameters:
 
 ```typescript
-import {RawBodyParams, HeaderParams, Controller, Context} from "@tsed/common";
+import {RawBodyParams, HeaderParams, Context} from "@tsed/platform-params";
+import {Controller} from "@tsed/di";
 import {Stripe} from "stripe";
 
 @Controller("/webhooks")
@@ -143,7 +163,7 @@ You can use stripe.webhooks.generateTestHeaderString to mock webhook events that
 
 ```typescript
 import {Stripe} from "stripe";
-import {PlatformTest} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import {StripWebhookCtrl} from "./StripWebhookCtrl";
 
 describe("StripWebhookCtrl", () => {
@@ -188,7 +208,7 @@ describe("StripWebhookCtrl", () => {
 With SuperTest:
 
 ```typescript
-import {PlatformTest} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import {PlatformExpress} from "@tsed/platform-express";
 import {PlatformTestUtils} from "@tsed/platform-test-utils";
 import {expect} from "chai";

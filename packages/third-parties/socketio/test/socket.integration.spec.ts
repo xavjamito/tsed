@@ -1,8 +1,10 @@
-import {Inject, PlatformTest} from "@tsed/common";
+import {Inject} from "@tsed/di";
 import {PlatformExpress} from "@tsed/platform-express";
-import {Emit, Input, Nsp, SocketNsp, SocketIOServer, SocketService, SocketSession, SocketUseBefore} from "../src/index.js";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import {SocketClientService} from "@tsed/socketio-testing";
 import {Namespace, Socket as IOSocket} from "socket.io";
+
+import {Emit, Input, Nsp, SocketIOServer, SocketNsp, SocketService, SocketSession, SocketUseBefore} from "../src/index.js";
 import {ConverterUserSocketMiddleware} from "./app/middlewares/ConverterUserSocketMiddleware.js";
 import {Server} from "./app/Server.js";
 
@@ -117,7 +119,7 @@ describe("Socket integration: custom path", () => {
       const client = await service.get("/test", CUSTOM_WS_PATH);
 
       return new Promise((resolve: any) => {
-        client.emit("input:scenario1", (result) => {
+        client.emit("input:scenario1", (result: any) => {
           expect(result).toEqual("my Message");
           resolve();
         });

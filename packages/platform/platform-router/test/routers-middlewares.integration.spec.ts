@@ -1,8 +1,9 @@
-import {PlatformTest, UseBeforeEach} from "@tsed/common";
 import {Controller, InjectorService} from "@tsed/di";
-import {Middleware} from "@tsed/platform-middlewares";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {Middleware, UseBeforeEach} from "@tsed/platform-middlewares";
 import {Context, PlatformParams} from "@tsed/platform-params";
 import {Get} from "@tsed/schema";
+
 import {PlatformRouter} from "../src/domain/PlatformRouter.js";
 import {PlatformRouters} from "../src/domain/PlatformRouters.js";
 

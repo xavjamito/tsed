@@ -1,4 +1,5 @@
 import type {JSONSchema6Type} from "json-schema";
+
 import {withErrorMsg} from "../../utils/withErrorMsg.js";
 import {JsonEntityFn} from "./jsonEntityFn.js";
 
@@ -16,7 +17,7 @@ function EnumFn(enumValue: JSONSchema6Type | any, ...enumValues: JSONSchema6Type
  * Elements in the array might be of any value, including null.
  *
  * ::: warning
- * For v6 user, use @@Enum@@ from @tsed/schema instead of @tsed/common.
+ * For v6 user, use @@Enum@@ from @tsed/schema instead of @tsed/platform-http.
  * :::
  *
  * ## Example

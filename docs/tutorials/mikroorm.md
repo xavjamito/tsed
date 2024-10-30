@@ -22,10 +22,9 @@ Currently, `@tsed/mikro-orm` allows you:
 
 To begin, install the MikroORM module for TS.ED:
 
-<Tabs class="-code">
-  <Tab label="NPM">
+::: code-group
 
-```bash
+```sh [npm]
 npm install @mikro-orm/core @tsed/mikro-orm @mikro-orm/mongodb     # for mongo
 npm install @mikro-orm/core @tsed/mikro-orm @mikro-orm/mysql       # for mysql/mariadb
 npm install @mikro-orm/core @tsed/mikro-orm @mikro-orm/mariadb     # for mysql/mariadb
@@ -33,10 +32,7 @@ npm install @mikro-orm/core @tsed/mikro-orm @mikro-orm/postgresql  # for postgre
 npm install @mikro-orm/core @tsed/mikro-orm @mikro-orm/sqlite      # for sqlite
 ```
 
-  </Tab>
-  <Tab label="Yarn">
-
-```bash
+```sh [yarn]
 yarn add @mikro-orm/core @tsed/mikro-orm @mikro-orm/mongodb     # for mongo
 yarn add @mikro-orm/core @tsed/mikro-orm @mikro-orm/mysql       # for mysql/mariadb
 yarn add @mikro-orm/core @tsed/mikro-orm @mikro-orm/mariadb     # for mysql/mariadb
@@ -44,8 +40,23 @@ yarn add @mikro-orm/core @tsed/mikro-orm @mikro-orm/postgresql  # for postgresql
 yarn add @mikro-orm/core @tsed/mikro-orm @mikro-orm/sqlite      # for sqlite
 ```
 
-  </Tab>
-</Tabs>
+```sh [pnpm]
+pnpm add @mikro-orm/core @tsed/mikro-orm @mikro-orm/mongodb     # for mongo
+pnpm add @mikro-orm/core @tsed/mikro-orm @mikro-orm/mysql       # for mysql/mariadb
+pnpm add @mikro-orm/core @tsed/mikro-orm @mikro-orm/mariadb     # for mysql/mariadb
+pnpm add @mikro-orm/core @tsed/mikro-orm @mikro-orm/postgresql  # for postgresql
+pnpm add @mikro-orm/core @tsed/mikro-orm @mikro-orm/sqlite      # for sqlite
+```
+
+```sh [bun]
+bun add @mikro-orm/core @tsed/mikro-orm @mikro-orm/mongodb     # for mongo
+bun add @mikro-orm/core @tsed/mikro-orm @mikro-orm/mysql       # for mysql/mariadb
+bun add @mikro-orm/core @tsed/mikro-orm @mikro-orm/mariadb     # for mysql/mariadb
+bun add @mikro-orm/core @tsed/mikro-orm @mikro-orm/postgresql  # for postgresql
+bun add @mikro-orm/core @tsed/mikro-orm @mikro-orm/sqlite      # for sqlite
+```
+
+:::
 
 Once the installation process is completed, we can import the `MikroOrmModule` into the `Server` configuration:
 
@@ -82,7 +93,8 @@ The `mikroOrm` options accepts the same configuration object as `init()` from th
 `@Orm` decorator lets you retrieve an instance of MikroORM.
 
 ```typescript
-import {Injectable, AfterRoutesInit} from "@tsed/common";
+import {AfterRoutesInit} from "@tsed/platform-http";
+import {Injectable} from "@tsed/di";
 import {Orm} from "@tsed/mikro-orm";
 import {MikroORM} from "@mikro-orm/core";
 
@@ -127,7 +139,8 @@ export class MyService {
 `@EntityManager` and `@Em` decorators lets you retrieve an instance of EntityManager.
 
 ```typescript
-import {Injectable, AfterRoutesInit} from "@tsed/common";
+import {AfterRoutesInit} from "@tsed/platform-http";
+import {Injectable} from "@tsed/di";
 import {Em} from "@tsed/mikro-orm";
 import {EntityManager} from "@mikro-orm/mysql"; // Import EntityManager from your driver package or `@mikro-orm/knex`
 
@@ -148,7 +161,8 @@ export class UsersService {
 It's also possible to inject Entity manager by his context name:
 
 ```typescript
-import {Injectable, AfterRoutesInit} from "@tsed/common";
+import {AfterRoutesInit} from "@tsed/platform-http";
+import {Injectable} from "@tsed/di";
 import {Em} from "@tsed/mikro-orm";
 import {EntityManager} from "@mikro-orm/mysql"; // Import EntityManager from your driver package or `@mikro-orm/knex`
 
@@ -171,7 +185,7 @@ export class UsersService {
 To begin, we need to define an Entity MikroORM like this and use Ts.ED Decorator to define the JSON Schema.
 
 ```typescript
-import {Property, MaxLength, Required} from "@tsed/common";
+import {Property, MaxLength, Required} from "@tsed/schema";
 import {Entity, Property, PrimaryKey, Property as Column} from "@mikro-orm/core";
 
 @Entity()
@@ -204,7 +218,9 @@ Now, the model is correctly defined and can be used with a [Controller](https://
 We can use this model with a Controller like that:
 
 ```typescript
-import {Controller, Post, BodyParams, Inject, Post, Get} from "@tsed/common";
+import {Post, Post, Get} from "@tsed/schema";
+import {Controller, Inject} from "@tsed/di";
+import {BodyParams} from "@tsed/platform-params";
 
 @Controller("/users")
 export class UsersCtrl {
@@ -232,7 +248,9 @@ We can use the `@Transactional()` decorator, which will register a new request c
 inside the context.
 
 ```typescript
-import {Controller, Post, BodyParams, Inject, Get} from "@tsed/common";
+import {Post, Post, Get} from "@tsed/schema";
+import {Controller, Inject} from "@tsed/di";
+import {BodyParams} from "@tsed/platform-params";
 import {Transactional} from "@tsed/mikro-orm";
 
 @Controller("/users")
@@ -335,7 +353,9 @@ export class ExponentialBackoff implements RetryStrategy {
 Once a retry strategy is implemented, you can enable an automatic retry mechanism using the `@Transactional` decorator like that:
 
 ```typescript
-import {Controller, Post, BodyParams, Inject, Get} from "@tsed/common";
+import {Post, Post, Get} from "@tsed/schema";
+import {Controller, Inject} from "@tsed/di";
+import {BodyParams} from "@tsed/platform-params";
 import {Transactional} from "@tsed/mikro-orm";
 
 @Controller("/users")

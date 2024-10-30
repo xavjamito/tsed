@@ -1,4 +1,5 @@
 import {decoratorTypeOf, DecoratorTypes, StaticMethodDecorator} from "@tsed/core";
+
 import {MongooseHookOptions, MongoosePostHookCB} from "../interfaces/MongooseSchemaOptions.js";
 import {schemaOptions} from "../utils/schemaOptions.js";
 
@@ -7,7 +8,7 @@ import {schemaOptions} from "../utils/schemaOptions.js";
  * define the hook function like you normally would in Mongoose.
  *
  * ```typescript
- * import {Ignore, Required} from "@tsed/common";
+ * import {Ignore, Required} from "@tsed/platform-http";
  * import {PostHook, Model} from "@tsed/mongoose";
  *
  * @Model()

@@ -1,5 +1,6 @@
-import {PlatformTest, Property, Required} from "@tsed/common";
 import {Model, MongooseModel, ObjectID, PostHook, PreHook, Unique} from "@tsed/mongoose";
+import {Property, Required} from "@tsed/platform-http";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import {TestMongooseContext} from "@tsed/testing-mongoose";
 import {expect} from "chai";
 

@@ -10,7 +10,7 @@
       "path": "../adapters/tsconfig.json"
     },
     {
-      "path": "../../platform/common/tsconfig.json"
+      "path": "../../platform/platform-http/tsconfig.json"
     },
     {
       "path": "../../core/tsconfig.json"
@@ -20,9 +20,6 @@
     },
     {
       "path": "../ioredis/tsconfig.json"
-    },
-    {
-      "path": "./tsconfig.cjs.json"
     },
     {
       "path": "./tsconfig.esm.json"

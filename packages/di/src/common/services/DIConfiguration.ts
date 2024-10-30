@@ -1,4 +1,5 @@
-import {Env, getValue, proxyDelegation, setValue} from "@tsed/core";
+import {Env, getValue, setValue} from "@tsed/core";
+
 import type {ProviderScope} from "../domain/ProviderScope.js";
 import type {DILoggerOptions} from "../interfaces/DILoggerOptions.js";
 import type {DIResolver} from "../interfaces/DIResolver.js";
@@ -21,16 +22,10 @@ export class DIConfiguration {
     }).forEach(([key, value]) => {
       this.default.set(key, value);
     });
-
-    return proxyDelegation<DIConfiguration>(this, {
-      ownKeys(target) {
-        return [...target.default.keys(), ...target.map.keys()];
-      }
-    });
   }
 
   get version() {
-    return this.get("version");
+    return this.get("version")!;
   }
 
   set version(v: string) {
@@ -38,7 +33,7 @@ export class DIConfiguration {
   }
 
   get rootDir() {
-    return this.get("rootDir");
+    return this.get("rootDir")!;
   }
 
   set rootDir(value: string) {
@@ -70,7 +65,7 @@ export class DIConfiguration {
   }
 
   get imports(): (TokenProvider | ImportTokenProviderOpts)[] {
-    return this.get("imports");
+    return this.get("imports")!;
   }
 
   set imports(imports: (TokenProvider | ImportTokenProviderOpts)[]) {
@@ -78,7 +73,7 @@ export class DIConfiguration {
   }
 
   get routes(): TokenRoute[] {
-    return this.get("routes");
+    return this.get("routes")!;
   }
 
   set routes(routes: TokenRoute[]) {
@@ -86,7 +81,7 @@ export class DIConfiguration {
   }
 
   get logger(): Partial<DILoggerOptions> {
-    return this.get("logger");
+    return this.get("logger")!;
   }
 
   set logger(value: Partial<DILoggerOptions>) {
@@ -149,15 +144,6 @@ export class DIConfiguration {
    */
   get<T = any>(propertyKey: string, defaultValue?: T): T {
     return this.getRaw(propertyKey, defaultValue);
-  }
-
-  /**
-   *
-   * @param value
-   * @returns {any}
-   */
-  resolve(value: any) {
-    return value.replace("${rootDir}", this.rootDir);
   }
 
   protected getRaw(propertyKey: string, defaultValue?: any): any {

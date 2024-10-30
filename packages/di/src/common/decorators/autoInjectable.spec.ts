@@ -1,6 +1,6 @@
-import {catchError} from "@tsed/core";
 import {Logger} from "@tsed/logger";
 import {beforeEach} from "vitest";
+
 import {DITest} from "../../node/index.js";
 import {registerProvider} from "../registries/ProviderRegistry.js";
 import {InjectorService} from "../services/InjectorService.js";
@@ -104,16 +104,16 @@ describe("AutoInjectable", () => {
       class Test {
         @Inject(Logger)
         logger: Logger;
-
+        instances?: InterfaceGroup[];
         private value: string;
 
         constructor(initialValue: string, @Inject(TOKEN_GROUPS) instances?: InterfaceGroup[]) {
           this.value = initialValue;
-          expect(instances).toHaveLength(3);
+          this.instances = instances;
         }
       }
 
-      new Test("test");
+      expect(new Test("test").instances).toHaveLength(3);
     });
     it("should return a class that extends the original class (with 3 arguments)", () => {
       @AutoInjectable()
@@ -130,24 +130,6 @@ describe("AutoInjectable", () => {
       }
 
       new Test(["item1", "item2", "item3"], "group");
-    });
-  });
-  describe("when the instance is created outside of an injection context", () => {
-    it("should throw an error", () => {
-      @AutoInjectable()
-      class Test {
-        @Inject(Logger)
-        logger: Logger;
-
-        foo() {
-          this.logger.info("test");
-        }
-      }
-
-      const error = catchError(() => new Test());
-
-      expect(error).toBeInstanceOf(Error);
-      expect(error?.message).toEqual("InjectorService instance is not created yet.");
     });
   });
 });

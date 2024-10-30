@@ -1,19 +1,18 @@
-import {Configuration, Injectable, InjectorService, Platform} from "@tsed/common";
+import type {Type} from "@tsed/core";
+import {constant, Injectable} from "@tsed/di";
 import {OpenSpec2, OpenSpec3} from "@tsed/openspec";
+import {Platform} from "@tsed/platform-http";
 import {generateSpec} from "@tsed/schema";
+
 import {SwaggerOS2Settings, SwaggerOS3Settings, SwaggerSettings} from "../interfaces/SwaggerSettings.js";
 import {includeRoute} from "../utils/includeRoute.js";
-import {readSpec} from "../utils/readSpec.js"
+import {readSpec} from "../utils/readSpec.js";
 
 @Injectable()
 export class SwaggerService {
   #specs: Map<string, OpenSpec3 | OpenSpec2> = new Map();
 
-  constructor(
-    private injectorService: InjectorService,
-    private platform: Platform,
-    @Configuration() private configuration: Configuration
-  ) {}
+  constructor(private platform: Platform) {}
 
   /**
    * Generate Spec for the given configuration
@@ -24,13 +23,14 @@ export class SwaggerService {
   public async getOpenAPISpec(conf: SwaggerSettings): Promise<OpenSpec2>;
   public async getOpenAPISpec(conf: SwaggerSettings) {
     if (!this.#specs.has(conf.path)) {
-      const {version = "1.0.0", acceptMimes} = this.configuration;
-      const specPath = conf.specPath ? this.configuration.resolve(conf.specPath) : conf.specPath;
+      const version = constant("version", "1.0.0");
+      const acceptMimes = constant<string>("acceptMimes");
+      const specPath = conf.specPath;
 
       const tokens = this.platform
         .getMountedControllers()
         .filter(({routes, provider}) => [...routes.values()].some((route) => includeRoute(route, provider, conf)))
-        .map(({route, provider}) => ({token: provider.token, rootPath: route}));
+        .map(({route, provider}) => ({token: provider.token as Type, rootPath: route}));
 
       const spec = generateSpec({
         tokens,

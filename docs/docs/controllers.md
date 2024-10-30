@@ -10,7 +10,7 @@ meta:
 
 Controllers are responsible for handling incoming **requests** and returning **responses** to the client.
 
-<figure><img src="./../assets/client-controllers.png" style="max-height: 300px; padding: 10px; background: white"></figure>
+![Client controller](./assets/client-controllers.png)
 
 A controller is here to handle a specific request for a given HTTP verb and Route. The routing service is responsible
 for
@@ -36,7 +36,7 @@ will map every `GET /calendars` request to this method.
 
 Ts.ED provides a decorator for each HTTP verb which can be used to handle a request:
 
-<ApiList query="tags:decorator AND tags:httpMethod" />
+<ApiList query="tags.includes('decorator') && tags.includes('httpMethod')" />
 
 Other decorators are provided to describe your route with OpenSpec, adding middlewares, adding some constraints or
 adding headers:
@@ -45,8 +45,9 @@ adding headers:
 
 ### Configuration
 
-You can add your controller by adding glob pattern on `mount` ServerSettings attributes or by importing manually your
+You can add your controller by adding glob pattern on `mount` attributes by importing manually your
 controller.
+
 Here an example:
 
 <<< @/docs/snippets/controllers/routing.ts
@@ -103,7 +104,7 @@ See the following example:
 
 <<< @/docs/snippets/controllers/routes-order.ts
 
-In order to avoid such side-effects, simply move `findAll()` method above `findOne()`.
+In order to avoid such side effects, simply move `findAll()` method above `findOne()`.
 
 ## Request
 
@@ -140,33 +141,19 @@ like this:
 
 :::
 
-<Tabs class="-code">
-  <Tab label="Example">
+::: code-group
 
-<<< @/docs/snippets/controllers/params-decorator.ts
+<<< @/docs/snippets/controllers/params-decorator.ts [Example]
 
-  </Tab>
-  <Tab label="Body string">
+<<< @/docs/snippets/controllers/params-post-string.ts [Body string]
 
-<<< @/docs/snippets/controllers/params-post-string.ts
+<<< @/docs/snippets/controllers/params-post-array.ts [Body with Array]
 
-  </Tab> 
-  <Tab label="Body with Array">
+<<< @/docs/snippets/controllers/params-post-array-with-model.ts [Body with model]
 
-<<< @/docs/snippets/controllers/params-post-array.ts
+<<< @/docs/snippets/controllers/params-post-inline-validation.ts [Inline validation]
 
-  </Tab> 
-  <Tab label="Body with model">
-
-<<< @/docs/snippets/controllers/params-post-array-with-model.ts
-
-  </Tab>
-  <Tab label="Inline validation">
-
-<<< @/docs/snippets/controllers/params-post-inline-validation.ts
-
-  </Tab>  
-</Tabs>
+:::
 
 Finally, @@BodyParams@@ accepts to give a @@ParamOptions@@ object as parameter to change the decorator behavior:
 
@@ -176,8 +163,9 @@ Finally, @@BodyParams@@ accepts to give a @@ParamOptions@@ object as parameter t
 @@QueryParams@@ decorator accept a model to transform `Express.request.query` plain object to a Class.
 
 ```typescript
-import {Controller, Get, QueryParams} from "@tsed/common";
-import {Required, MinLength, Property} from "@tsed/schema";
+import {QueryParams} from "@tsed/platform-params";
+import {Controller} from "@tsed/di";
+import {Get, Required, MinLength, Property} from "@tsed/schema";
 
 class QueryParamsModel {
   @Required()
@@ -209,7 +197,7 @@ Add @@Any@@ decorator to fix the issue.
 
 :::
 
-### Raw Body <Badge text="v6.20.0+" />
+### Raw Body
 
 @@RawBodyParams@@ decorator provides you quick access to the `request.rawBody`:
 
@@ -220,7 +208,7 @@ There is no performed input validation and deserialization when using the @@RawB
 :::
 
 ::: warning
-To use @RawBodyParams() properly, you have to remove bodyParser add on `$beforeRoutesInit`.
+To use `@RawBodyParams()` properly, you have to remove bodyParser add on `$beforeRoutesInit`.
 
 ```diff
 
@@ -253,7 +241,7 @@ The @@Integer@@ decorator is used to set integer type for integral numbers.
 @Controller("/")
 class ExampleCtrl {
   @Get("/")
-  @Returns(200, Array).OfInteger()
+  @(Returns(200, Array).OfInteger())
   async get(@BodyParams() @Integer() list: number[]) {
     return list;
   }
@@ -310,8 +298,22 @@ Example:
 ::: warning
 Validation require the `@tsed/ajv` plugins to work.
 
-```sh
+::: code-group
+
+```sh [npm]
 npm install --save @tsed/ajv
+```
+
+```sh [yarn]
+yarn add @tsed/ajv
+```
+
+```sh [pnpm]
+pnpm add @tsed/ajv
+```
+
+```sh [bun]
+bun add @tsed/ajv
 ```
 
 :::
@@ -347,9 +349,12 @@ You can set the response header with the @@Header@@ decorator:
 ### Redirect
 
 Redirects to the URL derived from the specified path, with specified status, a positive integer that corresponds to an
-HTTP status code . If not specified, status defaults to “302 “Found”.
+HTTP status code . If not specified, status defaults to `302 “Found”`.
 
 ```typescript
+import {Redirect} from "@tsed/schema";
+import {Controller} from "@tsed/di";
+
 @Controller("/")
 class MyCtrl {
   @Redirect("/foo/bar")
@@ -361,6 +366,9 @@ class MyCtrl {
 Redirects can be a fully-qualified URL for redirecting to a different site:
 
 ```typescript
+import {Redirect} from "@tsed/schema";
+import {Controller} from "@tsed/di";
+
 @Controller("/")
 class MyCtrl {
   @Redirect("http://google.com")
@@ -383,6 +391,9 @@ Redirects can be relative to the current URL. For example, from `http://example.
 slash), the following would redirect to the URL `http://example.com/blog/admin/post/new`.
 
 ```typescript
+import {Redirect} from "@tsed/schema";
+import {Controller} from "@tsed/di";
+
 @Controller("/")
 class MyCtrl {
   @Redirect("post/new")
@@ -400,6 +411,9 @@ Path-relative redirects are also possible. If you were on `http://example.com/ad
 redirect to `http//example.com/admin/post`:
 
 ```typescript
+import {Redirect} from "@tsed/schema";
+import {Controller} from "@tsed/di";
+
 @Controller("/")
 class MyCtrl {
   @Redirect("..")
@@ -410,6 +424,10 @@ class MyCtrl {
 A back redirection redirects the request back to the referer, defaulting to / when the referer is missing.
 
 ```typescript
+import {Redirect} from "@tsed/schema";
+import {Controller} from "@tsed/di";
+
+@Controller("/")
 class MyCtrl {
   @Redirect("back")
   myMethod() {}
@@ -419,7 +437,9 @@ class MyCtrl {
 Finally, it also possible to perform redirection programmatically:
 
 ```typescript
-import {Controller, Get, ctx} from "@tsed/common";
+import {Controller} from "@tsed/di";
+import {Context} from "@tsed/platform-params";
+import {Get} from "@tsed/schema";
 
 @Controller("/")
 class MyCtrl {
@@ -441,23 +461,15 @@ commuter to discover your endpoints linked to this data.
 
 With @@Returns@@ you can document correctly your endpoint to reflect the correct model:
 
-<Tabs class="-code">
-  <Tab label="MyController.ts" icon="bx-code-alt">
+::: code-group
 
-<<< @/docs/snippets/controllers/response-generics-controller.ts
+<<< @/docs/snippets/controllers/response-generics-controller.ts [MyController.ts]
 
-  </Tab>
-  <Tab label="Document.ts" icon="bx-code-alt">
+<<< @/docs/snippets/controllers/response-generics-document.ts [Document.ts]
 
-<<< @/docs/snippets/controllers/response-generics-document.ts
+<<< @/docs/snippets/controllers/response-generics-product.ts [Product.ts]
 
-  </Tab>  
-  <Tab label="Product.ts" icon="bx-code-alt">
-
-<<< @/docs/snippets/controllers/response-generics-product.ts
-
-  </Tab>
-  <Tab label="CodeSandbox" icon="bxl-codepen">
+:::
 
 <iframe src="https://codesandbox.io/embed/tsed-swagger-example-ripfl?fontsize=14&hidenavigation=1&theme=dark"
 style="width:100%; height:500px; border:0; border-radius: 4px; overflow:hidden;"
@@ -466,14 +478,10 @@ allow="accelerometer; ambient-light-sensor; camera; encrypted-media; geolocation
 payment; usb; vr; xr-spatial-tracking"
 sandbox="allow-forms allow-modals allow-popups allow-presentation allow-same-origin allow-scripts"></iframe>
 
-  </Tab>
-</Tabs>
-
 ### Throw exceptions
 
-You can use [@tsed/exceptions](/docs/exceptions.md) or similar module to throw an http exception.
-All exception will be intercepted by the [Global error handler](/docs/middlewares/override/global-error-handler.md)
-and are sent to the client.
+You can use [@tsed/exceptions](/docs/exceptions) or similar module to throw a http exception.
+All exception will be intercepted by PlatformExceptions and will be sent to the client.
 
 Here is an example:
 
@@ -485,7 +493,7 @@ This example will produce a response with status code 400 and "Not a number" mes
 :::
 
 ::: tip
-See our guide on [HttpExceptions to throw customer HttpExceptions](/docs/throw-http-exceptions.md)
+See our guide to [throw custom Http Exception](/docs/exceptions)
 :::
 
 ## Inject Request and Response
@@ -520,8 +528,7 @@ to chain middlewares.
 ## Inject router
 
 Each controller has a @@PlatformRouter@@ which wrap the original router
-from [Express.Router](http://expressjs.com/en/guide/routing.html
-or KoaRouter.
+from [Express.Router](http://expressjs.com/en/guide/routing.html) or KoaRouter.
 You can inject @@PlatformRouter@@ in your controller to add anything related to the current Router controller.
 
 <<< @/docs/snippets/controllers/inject-router.ts
@@ -548,7 +555,7 @@ And its view:
 ```
 
 ::: tip
-To configure a template engine with Ts.ED, see our guide to [install the engine rendering](/tutorials/templating.md)
+To configure a template engine with Ts.ED, see our guide to [install the engine rendering](/docs/templating)
 with Ts.ED.
 :::
 
@@ -560,7 +567,7 @@ application’s request-response cycle.
 The next middleware function is commonly denoted by a variable named next.
 
 ::: tip
-For more details about Middleware declaration see the [Middlewares](/docs/middlewares.md) section.
+For more details about Middleware declaration see the [Middlewares](/docs/middlewares) section.
 :::
 
 The following decorators lets you add custom middleware on a method or on controller:
@@ -576,10 +583,10 @@ The following decorators lets you add custom middleware on a method or on contro
 When a request is sent to the server all middlewares added on the Server, Controller or Endpoint
 will be called while a response isn't sent by one of the middleware in the lifecycle.
 
-<figure><img src="./../assets/middleware-in-sequence.svg" style="max-width:400px; padding:30px"></figure>
+![Middleware in sequence](./assets/middleware-in-sequence.svg)
 
 ::: tip
-See [middlewares section](/docs/middlewares.md) for more information.
+See [middlewares section](/docs/middlewares) for more information.
 :::
 
 ## Nested controllers
@@ -588,37 +595,26 @@ A controller can have one or more nested controllers. This feature allows you to
 other to define your routes.
 One controller can be added to multiple controllers, so you can easily reuse the same controller.
 
-<Tabs class="-code">
-  <Tab label="RestCtrl.ts">
+::: code-group
 
-<<< @/docs/snippets/controllers/child-controllers-rest.ts
+<<< @/docs/snippets/controllers/child-controllers-rest.ts [RestCtrl.ts]
 
-  </Tab>
-  <Tab label="CalendarCtrl.ts">
+<<< @/docs/snippets/controllers/child-controllers-calendar.ts [CalendarCtrl.ts]
 
-<<< @/docs/snippets/controllers/child-controllers-calendar.ts
+<<< @/docs/snippets/controllers/child-controllers-event.ts [EventCtrl.ts]
 
-  </Tab>  
-  <Tab label="EventCtrl.ts">
+<<< @/docs/snippets/controllers/child-controllers-server.ts [Server.ts]
 
-<<< @/docs/snippets/controllers/child-controllers-event.ts
-
-  </Tab>
-  <Tab label="Server.ts">
-
-<<< @/docs/snippets/controllers/child-controllers-server.ts
-
-  </Tab>      
-</Tabs>
+:::
 
 This example will produce these following routes:
 
-| Verb | Route                    | Method                |
-| ---- | ------------------------ | --------------------- |
-| GET  | `/rest`                  |  `RestCtrl.get()`     |
-| GET  | `/rest/calendars`        |  `CalendarCtrl.get()` |
-| GET  | `/rest/calendars/events` |  `EventCtrl.get()`    |
-| GET  | `/rest/events`           |  `EventCtrl.get()`    |
+| Verb | Route                    | Method               |
+| ---- | ------------------------ | -------------------- |
+| GET  | `/rest`                  | `RestCtrl.get()`     |
+| GET  | `/rest/calendars`        | `CalendarCtrl.get()` |
+| GET  | `/rest/calendars/events` | `EventCtrl.get()`    |
+| GET  | `/rest/events`           | `EventCtrl.get()`    |
 
 ## Inheritance
 
@@ -632,7 +628,3 @@ To do that just declare a parent controller without the @@Controller@@ decorator
 Then, on your child controller:
 
 <<< @/docs/snippets/controllers/inheritance-child-controller.ts
-
-## Decorators
-
-<ApiList query="tags: decorator AND operation OR controller"/>

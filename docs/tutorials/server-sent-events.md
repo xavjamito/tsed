@@ -14,42 +14,30 @@ Server-sent events let you push data to the client. It's a simple way to send da
 
 Before using the Server-sent events, we need to install the `@tsed/sse` module.
 
-<Tabs class="-code">
-  <Tab label="npm">
+::: code-group
 
-```bash
+```sh [npm]
 npm install --save @tsed/sse
 ```
 
- </Tab>
-
-  <Tab label="yarn">
-
-```bash
+```sh [yarn]
 yarn add --save @tsed/sse
 ```
 
- </Tab>
-  <Tab label="pnpm">
-
-```bash
+```sh [pnpm]
 pnpm add --save @tsed/sse
 ```
 
- </Tab>
-  <Tab label="bun">
-
-```bash
+```sh [bun]
 bun add --save @tsed/sse
 ```
 
- </Tab>
-</Tabs>
+:::
 
 Then add the following configuration in your Server:
 
-```typescript
-import {Configuration} from "@tsed/common";
+```ts
+import {Configuration} from "@tsed/di";
 import "@tsed/sse"; // import sse Ts.ED module
 
 @Configuration({

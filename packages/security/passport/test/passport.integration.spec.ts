@@ -1,7 +1,8 @@
-import {PlatformTest} from "@tsed/common";
 import {PlatformExpress} from "@tsed/platform-express";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import {PlatformTestSdk} from "@tsed/platform-test-sdk";
 import SuperTest from "supertest";
+
 import {rootDir, Server} from "./app/Server.js";
 
 const utils = PlatformTestSdk.create({

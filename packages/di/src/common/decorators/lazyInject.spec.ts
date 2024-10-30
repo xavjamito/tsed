@@ -1,5 +1,6 @@
 import {catchAsyncError, classOf, nameOf} from "@tsed/core";
-import {InjectorService} from "../services/InjectorService.js";
+
+import {injector} from "../fn/injector.js";
 import type {MyLazyModule} from "./__mock__/lazy.module.js";
 import {Injectable} from "./injectable.js";
 import {LazyInject, OptionalLazyInject} from "./lazyInject.js";
@@ -8,29 +9,29 @@ describe("LazyInject", () => {
   it("should lazy load module (import)", async () => {
     @Injectable()
     class MyInjectable {
-      @LazyInject("MyLazyModule", () => import("./__mock__/lazy.import.module"))
+      @LazyInject("MyLazyModule", () => import("./__mock__/lazy.import.module.js"))
       lazy: Promise<MyLazyModule>;
     }
 
-    const injector = new InjectorService();
-    const service = await injector.invoke<MyInjectable>(MyInjectable);
-    const nbProviders = injector.getProviders().length;
+    const inj = injector({rebuild: true});
+    const service = await inj.invoke<MyInjectable>(MyInjectable);
+    const nbProviders = inj.getProviders().length;
 
     const lazyService = await service.lazy;
 
     expect(nameOf(classOf(lazyService))).toEqual("MyLazyModule");
-    expect(nbProviders).not.toEqual(injector.getProviders().length);
+    expect(nbProviders).not.toEqual(inj.getProviders().length);
   });
 
   it("should throw an error when token isn't a valid provider", async () => {
     @Injectable()
     class MyInjectable {
-      @LazyInject("TKO", () => import("./__mock__/lazy.nodefault.module"))
+      @LazyInject("TKO", () => import("./__mock__/lazy.nodefault.module.js"))
       lazy?: Promise<MyLazyModule>;
     }
 
-    const injector = new InjectorService();
-    const service = await injector.invoke<MyInjectable>(MyInjectable);
+    const inj = injector({rebuild: true});
+    const service = await inj.invoke<MyInjectable>(MyInjectable);
     const error = await catchAsyncError(() => service.lazy);
 
     expect(error?.message).toEqual('Unable to lazy load the "TKO". The token isn\'t a valid token provider.');
@@ -44,8 +45,8 @@ describe("LazyInject", () => {
       lazy?: Promise<MyLazyModule>;
     }
 
-    const injector = new InjectorService();
-    const service = await injector.invoke<MyInjectable>(MyInjectable);
+    const inj = injector({rebuild: true});
+    const service = await inj.invoke<MyInjectable>(MyInjectable);
     const error = await catchAsyncError(() => service.lazy);
 
     expect(error?.message).toContain("Failed to load url lazy-module");
@@ -59,8 +60,8 @@ describe("LazyInject", () => {
       lazy?: Promise<MyLazyModule>;
     }
 
-    const injector = new InjectorService();
-    const service = await injector.invoke<MyInjectable>(MyInjectable);
+    const inj = injector({rebuild: true});
+    const service = await inj.invoke<MyInjectable>(MyInjectable);
     const lazyService = await service.lazy;
 
     expect(lazyService).toEqual({});
@@ -69,23 +70,23 @@ describe("LazyInject", () => {
   it("should not return undefined if the package is imported but the bean has not been assigned yet", async () => {
     @Injectable()
     class MyInjectable {
-      @LazyInject("MyLazyModule", () => import("./__mock__/lazy.import.module"))
+      @LazyInject("MyLazyModule", () => import("./__mock__/lazy.import.module.js"))
       lazy: Promise<MyLazyModule>;
     }
 
-    const injector = new InjectorService();
-    const service = await injector.invoke<MyInjectable>(MyInjectable);
-    const originalLazyInvoke = injector.lazyInvoke.bind(injector);
+    const inj = injector({rebuild: true});
+    const service = await inj.invoke<MyInjectable>(MyInjectable);
+    const originalLazyInvoke = inj.lazyInvoke.bind(inj);
     const promise1 = service.lazy;
     let promise2: Promise<MyLazyModule> | undefined;
-    vi.spyOn(injector, "lazyInvoke").mockImplementationOnce((token) => {
+
+    vi.spyOn(inj, "lazyInvoke").mockImplementationOnce((token) => {
       promise2 = service.lazy;
       return originalLazyInvoke(token);
     });
 
     const lazyService1 = await promise1;
     const lazyService2 = await promise2;
-
     expect(lazyService1).not.toBeUndefined();
     expect(lazyService2).not.toBeUndefined();
   });

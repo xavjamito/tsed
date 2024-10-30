@@ -1,5 +1,7 @@
 # Jest
 
+<Banner src="/jest.svg" height="150" href="https://jestjs.io"></Banner>
+
 ## Introduction
 
 This guide will take you through the process of installing Jest, a popular JavaScript testing framework, on an existing
@@ -11,36 +13,25 @@ seamlessly with Ts.ED. Follow the steps below to incorporate Jest into your proj
 Open your project's terminal where you usually run npm commands.
 Run the following npm command to install Jest and its required dependencies:
 
-<Tabs class="-code">
-  <Tab label="Npm">
+::: code-group
 
-```bash
-$ npm install --save-dev jest ts-jest @types/jest
+```bash [npm]
+npm install --save-dev jest ts-jest @types/jest
 ```
 
-  </Tab>
-  <Tab label="Yarn">
-
-```bash
-$ yarn add -D jest ts-jest @types/jest
+```bash [yarn]
+yarn add -D jest ts-jest @types/jest
 ```
 
-  </Tab>
-  <Tab label="PNPM">
-
-```bash
-$ pnpm add -D jest ts-jest @types/jest
+```bash [pnpm]
+pnpm add -D jest ts-jest @types/jest
 ```
 
-  </Tab>
-  <Tab label="Bun">
-
-```bash
-$ bun add -D jest ts-jest @types/jest
+```bash [bun]
+bun add -D jest ts-jest @types/jest
 ```
 
-  </Tab>
-</Tabs>
+:::
 
 This command installs Jest, the TypeScript Jest transformer (`ts-jest`), and the Jest TypeScript types.
 
@@ -49,7 +40,7 @@ This command installs Jest, the TypeScript Jest transformer (`ts-jest`), and the
 Create a Jest configuration file named `jest.config.ts` at the root of your project. Copy and paste the following
 content into the file:
 
-```javascript
+```ts
 export default {
   // Automatically clear mock calls and instances between every test
   clearMocks: true,

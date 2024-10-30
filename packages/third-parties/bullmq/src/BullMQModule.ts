@@ -1,8 +1,9 @@
-import {BeforeInit, DIContext, OnDestroy, runInContext} from "@tsed/common";
-import {InjectorService, Module} from "@tsed/di";
+import {DIContext, InjectorService, Module, OnDestroy, runInContext} from "@tsed/di";
+import type {BeforeInit} from "@tsed/platform-http";
 import {getComputedType} from "@tsed/schema";
 import {Job, Queue, Worker} from "bullmq";
 import {v4} from "uuid";
+
 import {BullMQConfig} from "./config/config.js";
 import {BullMQTypes} from "./constants/BullMQTypes.js";
 import {BULLMQ} from "./constants/constants.js";

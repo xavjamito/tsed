@@ -1,4 +1,4 @@
-import globby from "globby";
+import {globbySync} from "globby";
 import {basename} from "node:path";
 import pkg from "./package.json" assert {type: "json"};
 import {RuleConfigSeverity} from "@commitlint/types";
@@ -8,7 +8,7 @@ function findPackages() {
     return `${pkgPattern}/package.json`;
   });
 
-  let pkgs = globby.sync(patterns, {
+  let pkgs = globbySync(patterns, {
     cwd: process.cwd(),
   });
 
@@ -21,7 +21,8 @@ export default {
   extends: ["@commitlint/config-conventional"],
   rules: {
     "scope-enum": [RuleConfigSeverity.Error, "always", findPackages()],
-    "header-max-length": [0, "always", 120]
+    "header-max-length": [0, "always", 120],
+    "footer-max-line-length": [0, "always", 200],
   },
   ignores: [
     (message) =>

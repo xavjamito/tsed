@@ -1,6 +1,9 @@
-import {Controller, Get, PlatformTest} from "@tsed/common";
+import {Controller} from "@tsed/di";
 import {PlatformExpress} from "@tsed/platform-express";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {Get} from "@tsed/schema";
 import SuperTest from "supertest";
+
 import {Server} from "./app/Server.js";
 
 @Controller("/:campaignID/polls")

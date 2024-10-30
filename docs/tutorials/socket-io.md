@@ -22,12 +22,31 @@ Socket.io enables real-time bidirectional event-based communication. It works on
 
 Before using Socket.io, we need to install the [Socket.io](https://www.npmjs.com/package/socket.io) module.
 
-```bash
+::: code-group
+
+```sh [npm]
 npm install --save socket.io @types/socket.io @tsed/socketio
 npm install --save-dev @tsed/socketio-testing
 ```
 
-Then add the following configuration in your server [Configuration](/docs/configuration.md):
+```sh [yarn]
+yarn add socket.io @types/socket.io @tsed/socketio
+yarn add --dev @tsed/socketio-testing
+```
+
+```sh [pnpm]
+pnpm add socket.io @types/socket.io @tsed/socketio
+pnpm add -D @tsed/socketio-testing
+```
+
+```sh [bun]
+bun add socket.io @types/socket.io @tsed/socketio
+bun add --dev @tsed/socketio-testing
+```
+
+:::
+
+Then add the following configuration in your server [Configuration](/docs/configuration/index):
 
 <<< @/tutorials/snippets/socketio/configuration.ts
 
@@ -85,7 +104,7 @@ Then, you can inject your socket service into another Service, Controller, etc. 
 
 You have many choices to send a response to your client. Ts.ED offers some decorators to send a response:
 
-<img alt="socketio" src="./../assets/socketio.png" style="max-width: 100%" />
+<img alt="socketio" src="./assets/socketio/socketio.png" style="max-width: 100%" />
 
 Example:
 
@@ -209,11 +228,13 @@ In plain javascript you could connect like this.
 
 ## Testing <Badge text="v6.55.0+" />
 
-<Tabs class="-code">
-  <Tab label="Jest">
+To test your Socket.io service, you can use the `@tsed/socketio-testing` package.
 
-```typescript
-import {Inject, PlatformTest} from "@tsed/common";
+::: code-group
+
+```typescript [Jest]
+import {Inject} from "@tsed/di";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import {PlatformExpress} from "@tsed/platform-express";
 import {Emit, Input, SocketIOServer, SocketService, SocketSession, SocketUseBefore} from "@tsed/socketio";
 import {SocketClientService} from "@tsed/socketio-testing";
@@ -268,17 +289,14 @@ describe("Socket integration", () => {
 });
 ```
 
-</Tab>
-  <Tab label="Mocha">
-
-```typescript
-import {Inject, PlatformTest} from "@tsed/common";
+```typescript [Vitest]
+import {Inject} from "@tsed/di";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import {PlatformExpress} from "@tsed/platform-express";
 import {Emit, Input, SocketIOServer, SocketService, SocketSession, SocketUseBefore} from "@tsed/socketio";
 import {SocketClientService} from "@tsed/socketio-testing";
-import {expect} from "chai";
 import {Namespace, Socket as IOSocket} from "socket.io";
-import {Server} from "./app/Server";
+import {Server} from "./app/Server.js";
 
 @SocketService("/test")
 export class TestWS {
@@ -297,7 +315,7 @@ export class TestWS {
 }
 
 describe("Socket integration", () => {
-  before(
+  beforeAll(
     PlatformTest.bootstrap(Server, {
       platform: PlatformExpress,
       listen: true,
@@ -305,7 +323,7 @@ describe("Socket integration", () => {
       imports: [TestWS]
     })
   );
-  after(PlatformTest.reset);
+  afterAll(PlatformTest.reset);
 
   describe("RoomWS: eventName", () => {
     it("should return the data", async () => {
@@ -313,11 +331,11 @@ describe("Socket integration", () => {
       const client = await service.get("/test");
       const client2 = await service.get("/test");
 
-      expect(client).to.eq(client2);
+      expect(client).toEqual(client2);
 
       return new Promise((resolve) => {
         client.on("output:scenario1", (result) => {
-          expect(result).to.eq("My message");
+          expect(result).toEqual("My message");
           resolve();
         });
 
@@ -328,8 +346,7 @@ describe("Socket integration", () => {
 });
 ```
 
-</Tab>
-</Tabs>
+:::
 
 ## Author
 

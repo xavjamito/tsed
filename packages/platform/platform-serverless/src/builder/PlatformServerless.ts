@@ -1,13 +1,13 @@
 import {Env, Type} from "@tsed/core";
-import {createContainer, InjectorService, setLoggerConfiguration} from "@tsed/di";
+import {createContainer, injector, InjectorService, setLoggerConfiguration} from "@tsed/di";
 import {$log, Logger} from "@tsed/logger";
 import {getOperationsRoutes, JsonEntityStore} from "@tsed/schema";
-import type {Handler} from "aws-lambda";
-import type {Context} from "aws-lambda/handler";
+import type {Context, Handler} from "aws-lambda";
 import type {HTTPMethod, Instance} from "find-my-way";
+
 import {ServerlessContext} from "../domain/ServerlessContext.js";
-import type {ServerlessEvent} from "../domain/ServerlessEvent";
-import {type RequestHandler, ServerlessResponseStream} from "../domain/ServerlessResponseStream";
+import type {ServerlessEvent} from "../domain/ServerlessEvent.js";
+import {type RequestHandler, ServerlessResponseStream} from "../domain/ServerlessResponseStream.js";
 import {getRequestId} from "../utils/getRequestId.js";
 import {PlatformServerlessHandler} from "./PlatformServerlessHandler.js";
 
@@ -183,7 +183,7 @@ export class PlatformServerless {
   }
 
   protected createInjector(settings: any) {
-    this._injector = new InjectorService();
+    this._injector = injector();
     this.injector.logger = $log;
     this.injector.settings.set(settings);
 

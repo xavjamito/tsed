@@ -1,5 +1,10 @@
-import {Controller, CookiesParams, Get, PlatformTest} from "@tsed/common";
+import {Controller} from "@tsed/di";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {CookiesParams} from "@tsed/platform-params";
+import {Get} from "@tsed/schema";
 import SuperTest from "supertest";
+import {afterAll, beforeAll, expect, it} from "vitest";
+
 import {PlatformTestingSdkOpts} from "../interfaces/index.js";
 
 @Controller("/cookies")

@@ -7,7 +7,7 @@ on:
   push:
     branches: [production, alpha, beta, rc]
   pull_request:
-    branches: [production]
+    branches: [production, alpha, beta, rc]
     types: [opened, synchronize, closed]
 
 concurrency:
@@ -22,11 +22,12 @@ jobs:
         node-version: [20.12.2]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: "yarn"
       - name: Install dependencies
         run: yarn install --immutable --network-timeout 500000
       - name: Run lint
@@ -40,13 +41,14 @@ jobs:
         node-version: [20.12.2]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: "yarn"
       - name: Install dependencies
         run: yarn install --immutable --network-timeout 500000
       - name: Run build
@@ -60,7 +62,7 @@ jobs:
       - name: Upload vitest config files
         uses: actions/upload-artifact@v4
         with:
-          name: vitest-config-integration-${{ matrix.os }}-${{ matrix.version }}
+          name: vitest-config-integration
           overwrite: true
           path: |
             team.json
@@ -74,25 +76,17 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, macos-latest, windows-latest]
-        node-version: [20.12.2, 22.x]
-        exclude:
-          - os: macos-latest
-            node-version: 20.x
-          - os: macos-latest
-            node-version: 20.12.2
-          - os: windows-latest
-            node-version: 20.x
-          - os: windows-latest
-            node-version: 20.12.2
+        node-version: [20.12.2]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: "yarn"
       - name: Install dependencies
         run: yarn install --immutable --network-timeout 500000
       - name: Run build
@@ -112,13 +106,14 @@ jobs:
         node-version: [20.12.2]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: "yarn"
       - name: Install dependencies
         run: yarn install --immutable --network-timeout 500000
       - name: Run build
@@ -132,7 +127,7 @@ jobs:
           path: |
             team.json
             packages/{core,di,engines}/vitest.config.mts
-            packages/platform/common/vitest.config.mts
+            packages/platform/platform-http/vitest.config.mts
             packages/utils/normalize-path/vitest.config.mts
         continue-on-error: true
 
@@ -144,13 +139,14 @@ jobs:
         node-version: [20.12.2]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: "yarn"
       - name: Install dependencies
         run: yarn install --immutable --network-timeout 500000
       - name: Run build
@@ -173,13 +169,14 @@ jobs:
         node-version: [20.12.2]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: "yarn"
       - name: Install dependencies
         run: yarn install --immutable --network-timeout 500000
       - name: Run build
@@ -203,13 +200,14 @@ jobs:
         node-version: [20.12.2]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: "yarn"
       - name: Install dependencies
         run: yarn install --immutable --network-timeout 500000
       - name: Run build
@@ -231,13 +229,14 @@ jobs:
         node-version: [20.12.2]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: "yarn"
       - name: Install dependencies
         run: yarn install --immutable --network-timeout 500000
       - name: Run build
@@ -259,13 +258,14 @@ jobs:
         node-version: [20.12.2]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: "yarn"
       - name: Install dependencies
         run: yarn install --immutable --network-timeout 500000
       - name: Run build
@@ -287,13 +287,14 @@ jobs:
         node-version: [20.12.2]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: "yarn"
       - name: Install dependencies
         run: yarn install --immutable --network-timeout 500000
       - name: Run build
@@ -317,11 +318,12 @@ jobs:
       matrix:
         node-version: [20.x]
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: "yarn"
       - name: Download Core vitest config files
         uses: actions/download-artifact@v4
         with:
@@ -349,11 +351,12 @@ jobs:
         node-version: [20.x]
 
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
       - name: Use Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
+          cache: "yarn"
       - name: Install dependencies
         run: yarn install --network-timeout 500000
 
@@ -376,4 +379,4 @@ jobs:
           curl -X POST  https://api.github.com/repos/tsedio/tsed/actions/workflows/website.yml/dispatches \
           -H 'Accept: application/vnd.github.everest-preview+json' \
           -H 'Authorization: Bearer ${{secrets.GH_TOKEN}}' \
-          --data '{"ref": "production"}'
+          --data '{"ref": "${{github.ref_name}}"}'

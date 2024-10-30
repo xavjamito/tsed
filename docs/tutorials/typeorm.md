@@ -1,11 +1,3 @@
----
-meta:
-  - name: description
-    content: Use TypeORM with Ts.ED. ORM for TypeScript and JavaScript (ES7, ES6, ES5). Supports MySQL, PostgreSQL, MariaDB, SQLite, MS SQL Server, Oracle, WebSQL databases. Works in NodeJS, Browser, Ionic, Cordova and Electron platforms.
-  - name: keywords
-    content: ts.ed express typescript typeorm node.js javascript decorators
----
-
 # TypeORM <Badge text="Contributors are welcome" />
 
 <Banner src="https://github.com/typeorm/typeorm/raw/master/resources/logo_big.png" href="https://typeorm.io/" height="200" />
@@ -322,8 +314,7 @@ Then inject your repository to another service:
 
 <<< @/tutorials/snippets/typeorm/typeorm-injection-entity-repository.ts
 
-::: tip Use @@UseConnection@@ decorator to select which database connection the injected repository should be used (
-require Ts.ED v5.58.0+).
+::: tip Use @@UseConnection@@ decorator to select which database connection the injected repository should be used (require Ts.ED v5.58.0+).
 :::
 
 ## Author

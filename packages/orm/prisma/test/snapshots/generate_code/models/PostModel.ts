@@ -1,6 +1,6 @@
-import { Post } from "../client/index";
+import { Post } from "../client/index.js";
 import { Integer, Required, Property, Allow } from "@tsed/schema";
-import { UserModel } from "./UserModel";
+import { UserModel } from "./UserModel.js";
 import type { Relation } from "@tsed/core";
 
 export class PostModel implements Post {

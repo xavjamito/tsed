@@ -11,36 +11,25 @@ code. Follow the steps below to integrate Vitest into your project.
 Open your project's terminal where you usually run npm commands.
 Run the following npm command to install Vitest and its required dependencies:
 
-<Tabs class="-code">
-  <Tab label="Npm">
+::: code-group
 
-```bash
+```bash [npm]
 $ npm i --save-dev vitest unplugin-swc @swc/core @vitest/coverage-v8
 ```
 
-  </Tab>
-  <Tab label="Yarn">
-
-```bash
+```bash [yarn]
 $ yarn add -D vitest unplugin-swc @swc/core @vitest/coverage-v8
 ```
 
-  </Tab>
-  <Tab label="PNPM">
-
-```bash
+```bash [pnpm]
 $ pnpm add -D vitest unplugin-swc @swc/core @vitest/coverage-v8
 ```
 
-  </Tab>
-  <Tab label="Bun">
-
-```bash
+```bash [bun]
 $ bun add -D vitest unplugin-swc @swc/core @vitest/coverage-v8
 ```
 
-  </Tab>
-</Tabs>
+:::
 
 This command installs Vitest, the SWC plugin for Vite, and the V8 coverage tool for Vitest.
 

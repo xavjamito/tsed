@@ -1,5 +1,6 @@
-import {$log} from "@tsed/common";
+import {$log} from "@tsed/platform-http";
 import {PlatformKoa} from "@tsed/platform-koa";
+
 import {Server} from "./Server.js";
 
 if (process.env.NODE_ENV !== "test") {

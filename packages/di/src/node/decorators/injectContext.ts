@@ -1,5 +1,7 @@
-import {injectProperty} from "../../common/index.js";
-import {getContext} from "../utils/asyncHookContext.js";
+import {catchError} from "@tsed/core";
+
+import {DIContext} from "../domain/DIContext.js";
+import {context} from "../fn/context.js";
 
 /**
  * Inject a context like PlatformContext or any BaseContext.
@@ -15,11 +17,12 @@ import {getContext} from "../utils/asyncHookContext.js";
  * @returns {Function}
  * @decorator
  */
-export function InjectContext(): PropertyDecorator {
+export function InjectContext(transform: ($ctx: DIContext) => unknown = (o) => o): PropertyDecorator {
   return (target: any, propertyKey: string): any | void => {
-    injectProperty(target, propertyKey, {
-      resolver() {
-        return () => getContext();
+    catchError(() => Reflect.deleteProperty(target, propertyKey));
+    Reflect.defineProperty(target, propertyKey, {
+      get() {
+        return transform(context());
       }
     });
   };

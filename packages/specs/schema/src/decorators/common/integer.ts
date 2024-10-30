@@ -1,11 +1,12 @@
 import type {JSONSchema6} from "json-schema";
+
 import {JsonEntityFn} from "./jsonEntityFn.js";
 
 /**
  * Set integer type.
  *
  * ::: warning
- * For v6 user, use @@Integer@@ from @tsed/schema instead of @@Integer@@ from @tsed/common.
+ * For v6 user, use @@Integer@@ from @tsed/schema instead of @@Integer@@ from @tsed/platform-http.
  * :::
  *
  * ## Example
