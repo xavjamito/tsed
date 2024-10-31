@@ -201,7 +201,7 @@
         "if": "production"
       },
       {
-        "dir": "./docs/.vuepress/dist",
+        "dir": "./docs/.vitepress/dist",
         "url": "https://github.com/tsedio/rc.tsed.dev.git",
         "branch": "gh-pages",
         "cname": "rc.tsed.dev",
