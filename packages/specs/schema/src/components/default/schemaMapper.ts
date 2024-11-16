@@ -14,7 +14,7 @@ const IGNORES = ["name", "$required", "$hooks", "_nestedGenerics", SpecTypes.OPE
 /**
  * @ignore
  */
-const IGNORES_OPENSPEC = ["const"];
+const IGNORES_OPENSPEC: string[] = [];
 
 /**
  * @ignore
@@ -77,10 +77,8 @@ function mapKeys(schema: JsonSchema, options: JsonSchemaOptions) {
       key = key.replace(/^#/, "");
 
       if (key === "type") {
-        return {
-          ...item,
-          [key]: schema.getJsonType()
-        };
+        item[key] = schema.getJsonType();
+        return item;
       }
 
       if (isExample(key, value, options)) {
@@ -100,10 +98,9 @@ function mapKeys(schema: JsonSchema, options: JsonSchemaOptions) {
         }
       }
 
-      return {
-        ...item,
-        [key]: value
-      };
+      item[key] = value;
+
+      return item;
     }, {});
 }
 
@@ -133,7 +130,8 @@ function serializeSchema(schema: JsonSchema, options: JsonSchemaOptions) {
   obj = execMapper("required", [obj, schema], options);
   obj = execMapper("nullable", [obj, schema], options);
   obj = alterOneOf(obj, schema, options);
-  obj = execMapper("inlineEnums", [obj, schema], options);
+  obj = execMapper("enums", [obj, schema], options);
+  obj = execMapper("discriminatorMapping", [obj, schema], options);
 
   return obj;
 }

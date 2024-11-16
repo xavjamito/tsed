@@ -5,6 +5,7 @@ import {
   DiscriminatorKey,
   DiscriminatorValue,
   Enum,
+  enums,
   Get,
   getJsonSchema,
   getSpec,
@@ -20,9 +21,17 @@ import {
   Returns
 } from "../../src/index.js";
 
+export enum EventType {
+  PAGE_VIEW = "page_view",
+  ACTION = "action",
+  CLICK_ACTION = "click_action"
+}
+
+enums(EventType);
+
 class Event {
   @DiscriminatorKey() // declare this property a discriminator key
-  type: string;
+  type: EventType;
 
   @Property()
   value: string;
@@ -33,13 +42,15 @@ class SubEvent extends Event {
   meta: string;
 }
 
-@DiscriminatorValue("page_view") // or @DiscriminatorValue() value can be inferred by the class name
+@DiscriminatorValue(EventType.PAGE_VIEW) // or @DiscriminatorValue() value can be inferred by the class name
 class PageView extends SubEvent {
+  override readonly type = EventType.PAGE_VIEW;
+
   @Required()
   url: string;
 }
 
-@DiscriminatorValue("action", "click_action")
+@DiscriminatorValue(EventType.ACTION, EventType.CLICK_ACTION)
 class Action extends SubEvent {
   @Required()
   event: string;
@@ -535,201 +546,9 @@ describe("Discriminator", () => {
         }
       }
 
-      expect(getSpec(MyTest)).toEqual({
-        components: {
-          schemas: {
-            Action: {
-              properties: {
-                event: {
-                  minLength: 1,
-                  type: "string"
-                },
-                meta: {
-                  type: "string"
-                },
-                type: {
-                  enum: ["action", "click_action"],
-                  example: "action",
-                  type: "string"
-                },
-                value: {
-                  type: "string"
-                }
-              },
-              required: ["event"],
-              type: "object"
-            },
-            ActionPartial: {
-              properties: {
-                event: {
-                  minLength: 1,
-                  type: "string"
-                },
-                meta: {
-                  type: "string"
-                },
-                type: {
-                  enum: ["action", "click_action"],
-                  example: "action",
-                  type: "string"
-                },
-                value: {
-                  type: "string"
-                }
-              },
-              type: "object"
-            },
-            CustomAction: {
-              properties: {
-                event: {
-                  minLength: 1,
-                  type: "string"
-                },
-                meta: {
-                  type: "string"
-                },
-                type: {
-                  example: "custom_action",
-                  type: "string"
-                },
-                value: {
-                  type: "string"
-                }
-              },
-              required: ["event"],
-              type: "object"
-            },
-            CustomActionPartial: {
-              properties: {
-                event: {
-                  minLength: 1,
-                  type: "string"
-                },
-                meta: {
-                  type: "string"
-                },
-                type: {
-                  example: "custom_action",
-                  type: "string"
-                },
-                value: {
-                  type: "string"
-                }
-              },
-              type: "object"
-            },
-            PageView: {
-              properties: {
-                meta: {
-                  type: "string"
-                },
-                type: {
-                  example: "page_view",
-                  type: "string"
-                },
-                url: {
-                  minLength: 1,
-                  type: "string"
-                },
-                value: {
-                  type: "string"
-                }
-              },
-              required: ["url"],
-              type: "object"
-            },
-            PageViewPartial: {
-              properties: {
-                meta: {
-                  type: "string"
-                },
-                type: {
-                  example: "page_view",
-                  type: "string"
-                },
-                url: {
-                  minLength: 1,
-                  type: "string"
-                },
-                value: {
-                  type: "string"
-                }
-              },
-              type: "object"
-            }
-          }
-        },
-        paths: {
-          "/": {
-            post: {
-              operationId: "myTestPost",
-              parameters: [],
-              requestBody: {
-                content: {
-                  "application/json": {
-                    schema: {
-                      items: {
-                        discriminator: {
-                          propertyName: "type"
-                        },
-                        oneOf: [
-                          {
-                            $ref: "#/components/schemas/PageViewPartial"
-                          },
-                          {
-                            $ref: "#/components/schemas/ActionPartial"
-                          },
-                          {
-                            $ref: "#/components/schemas/CustomActionPartial"
-                          }
-                        ],
-                        required: ["type"]
-                      },
-                      type: "array"
-                    }
-                  }
-                },
-                required: false
-              },
-              responses: {
-                "200": {
-                  content: {
-                    "application/json": {
-                      schema: {
-                        items: {
-                          discriminator: {
-                            propertyName: "type"
-                          },
-                          oneOf: [
-                            {
-                              $ref: "#/components/schemas/PageView"
-                            },
-                            {
-                              $ref: "#/components/schemas/Action"
-                            },
-                            {
-                              $ref: "#/components/schemas/CustomAction"
-                            }
-                          ],
-                          required: ["type"]
-                        },
-                        type: "array"
-                      }
-                    }
-                  },
-                  description: "Success"
-                }
-              },
-              tags: ["MyTest"]
-            }
-          }
-        },
-        tags: [
-          {
-            name: "MyTest"
-          }
-        ]
-      });
+      const schema = getSpec(MyTest);
+
+      expect(schema).toMatchSnapshot();
     });
     it("should generate the spec (input one item)", () => {
       @Controller("/")
@@ -776,6 +595,7 @@ describe("Discriminator", () => {
                 },
                 type: {
                   example: "custom_action",
+                  enum: ["custom_action"],
                   type: "string"
                 },
                 value: {
@@ -789,6 +609,7 @@ describe("Discriminator", () => {
               properties: {
                 type: {
                   example: "page_view",
+                  enum: ["page_view"],
                   type: "string"
                 },
                 meta: {
@@ -826,7 +647,13 @@ describe("Discriminator", () => {
                   "application/json": {
                     schema: {
                       discriminator: {
-                        propertyName: "type"
+                        propertyName: "type",
+                        mapping: {
+                          action: "#/components/schemas/Action",
+                          click_action: "#/components/schemas/Action",
+                          custom_action: "#/components/schemas/CustomAction",
+                          page_view: "#/components/schemas/PageView"
+                        }
                       },
                       oneOf: [
                         {
@@ -851,7 +678,13 @@ describe("Discriminator", () => {
                     "application/json": {
                       schema: {
                         discriminator: {
-                          propertyName: "type"
+                          propertyName: "type",
+                          mapping: {
+                            action: "#/components/schemas/Action",
+                            click_action: "#/components/schemas/Action",
+                            custom_action: "#/components/schemas/CustomAction",
+                            page_view: "#/components/schemas/PageView"
+                          }
                         },
                         oneOf: [
                           {
@@ -947,6 +780,7 @@ describe("Discriminator", () => {
                 },
                 type: {
                   example: "custom_action",
+                  enum: ["custom_action"],
                   type: "string"
                 },
                 value: {
@@ -967,6 +801,7 @@ describe("Discriminator", () => {
                 },
                 type: {
                   example: "custom_action",
+                  enum: ["custom_action"],
                   type: "string"
                 },
                 value: {
@@ -982,6 +817,7 @@ describe("Discriminator", () => {
                 },
                 type: {
                   example: "page_view",
+                  enum: ["page_view"],
                   type: "string"
                 },
                 url: {
@@ -1002,6 +838,7 @@ describe("Discriminator", () => {
                 },
                 type: {
                   example: "page_view",
+                  enum: ["page_view"],
                   type: "string"
                 },
                 url: {
@@ -1035,7 +872,13 @@ describe("Discriminator", () => {
                   "application/json": {
                     schema: {
                       discriminator: {
-                        propertyName: "type"
+                        propertyName: "type",
+                        mapping: {
+                          action: "#/components/schemas/ActionPartial",
+                          click_action: "#/components/schemas/ActionPartial",
+                          custom_action: "#/components/schemas/CustomActionPartial",
+                          page_view: "#/components/schemas/PageViewPartial"
+                        }
                       },
                       oneOf: [
                         {
@@ -1060,7 +903,13 @@ describe("Discriminator", () => {
                     "application/json": {
                       schema: {
                         discriminator: {
-                          propertyName: "type"
+                          propertyName: "type",
+                          mapping: {
+                            action: "#/components/schemas/Action",
+                            click_action: "#/components/schemas/Action",
+                            custom_action: "#/components/schemas/CustomAction",
+                            page_view: "#/components/schemas/PageView"
+                          }
                         },
                         oneOf: [
                           {
@@ -1136,6 +985,7 @@ describe("Discriminator", () => {
                 },
                 type: {
                   example: "custom_action",
+                  enum: ["custom_action"],
                   type: "string"
                 },
                 value: {
@@ -1149,6 +999,7 @@ describe("Discriminator", () => {
               properties: {
                 type: {
                   example: "page_view",
+                  enum: ["page_view"],
                   type: "string"
                 },
                 meta: {
@@ -1187,7 +1038,13 @@ describe("Discriminator", () => {
                     "application/json": {
                       schema: {
                         discriminator: {
-                          propertyName: "type"
+                          propertyName: "type",
+                          mapping: {
+                            action: "#/components/schemas/Action",
+                            click_action: "#/components/schemas/Action",
+                            custom_action: "#/components/schemas/CustomAction",
+                            page_view: "#/components/schemas/PageView"
+                          }
                         },
                         oneOf: [
                           {

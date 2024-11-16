@@ -28,7 +28,8 @@ describe("@Const", () => {
     expect(getJsonSchema(Model, {specType: SpecTypes.OPENAPI})).toEqual({
       properties: {
         num: {
-          type: "string"
+          type: "string",
+          enum: ["10"]
         }
       },
       type: "object"
@@ -55,7 +56,8 @@ describe("@Const", () => {
           Model: {
             properties: {
               num: {
-                type: "string"
+                type: "string",
+                enum: ["10"]
               }
             },
             type: "object"
