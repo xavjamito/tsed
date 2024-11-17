@@ -360,11 +360,11 @@ jobs:
       - name: Install dependencies
         run: yarn install --network-timeout 500000
 
-      - name: Download Core vitest config files
-        uses: actions/download-artifact@v4
-        with:
-          pattern: vitest-config-*
-          merge-multiple: true
+      #      - name: Download Core vitest config files
+      #        uses: actions/download-artifact@v4
+      #        with:
+      #          pattern: vitest-config-*
+      #          merge-multiple: true
       - name: "Git status"
         run: git status
       - name: Release packages

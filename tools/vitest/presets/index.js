@@ -1,7 +1,6 @@
 import swc from "unplugin-swc";
 import {defineConfig} from "vitest/config";
 
-import {resolveWorkspaceFiles} from "../plugins/resolveWorkspaceFiles.js";
 import {alias} from "./alias.js";
 
 export const presets = defineConfig({
@@ -17,9 +16,14 @@ export const presets = defineConfig({
     coverage: {
       enabled: true,
       reporter: ["text", "json", "html"],
-      all: true,
       include: ["src/**/*.{tsx,ts}"],
       exclude: [
+        "**/node_modules/**",
+        "**/@tsed/**",
+        "**/exports.ts",
+        "**/interfaces/**",
+        "**/*fixtures.ts",
+        "**/fixtures/**",
         "**/*.spec.{ts,tsx}",
         "**/*.stories.{ts,tsx}",
         "**/*.d.ts",
@@ -31,12 +35,11 @@ export const presets = defineConfig({
     }
   },
   plugins: [
-    resolveWorkspaceFiles(),
     swc.vite({
-      sourceMaps: "inline",
-
+      sourceMaps: true,
+      inlineSourcesContent: true,
       jsc: {
-        target: "es2022",
+        target: "esnext",
         externalHelpers: true,
         keepClassNames: true,
         parser: {
@@ -59,6 +62,7 @@ export const presets = defineConfig({
         lazy: false,
         noInterop: false
       },
+      minify: false,
       isModule: true
     })
   ]

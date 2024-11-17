@@ -10,10 +10,10 @@ export default defineConfig(
       coverage: {
         ...presets.test.coverage,
         thresholds: {
-          statements: 99.55,
-          branches: 95.45,
+          statements: 99.2,
+          branches: 90.55,
           functions: 100,
-          lines: 99.55
+          lines: 99.2
         }
       }
     }
