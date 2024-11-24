@@ -23,6 +23,7 @@ exports.create = ({root, name, entry, externals = {}, resolve = {}}) => {
     },
     externals: {
       "@tsed/core": "@tsed/core",
+      "@tsed/hooks": "@tsed/hooks",
       "@tsed/schema": "@tsed/schema",
       "@tsed/di": "@tsed/di",
       "@tsed/json-mapper": "@tsed/json-mapper",
