@@ -8,7 +8,7 @@ export default {
 
     params = params.map((param) => {
       const matched = signature.match(new RegExp(`${param.paramKey}(\\?)?:?(.[^,]+),`));
-      const type = (param.type || matched[2] ? matched[2].trim() : "")
+      const type = (param.type || matched && matched[2] ? matched[2].trim() : "")
         .split("|")
         .map((type) => {
           // type = bindSymbols(type.trim(), "");
@@ -21,7 +21,7 @@ export default {
         })
         .join(" | ");
 
-      const description = (matched[1] ? "Optional. " : "") + param.description.replace(/Optional\.?/gi, "").trim();
+      const description = (matched && matched[1] ? "Optional. " : "") + param.description.replace(/Optional\.?/gi, "").trim();
 
       return {
         param,
