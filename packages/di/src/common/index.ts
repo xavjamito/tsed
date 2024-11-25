@@ -60,3 +60,4 @@ export * from "./utils/createContainer.js";
 export * from "./utils/discoverHooks.js";
 export * from "./utils/getConfiguration.js";
 export * from "./utils/getConstructorDependencies.js";
+export * from "./utils/providerBuilder.js";
