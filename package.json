@@ -195,7 +195,7 @@
     "ghpages": [
       {
         "dir": "./docs/.vitepress/dist",
-        "url": "https://github.com/tsedio/tsed",
+        "url": "https://github.com/tsedio/tsed.dev.git",
         "branch": "gh-pages",
         "cname": "tsed.dev",
         "if": "production"
