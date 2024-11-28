@@ -1,0 +1,1 @@
+import{_ as e,j as s,h as t}from"./chunks/framework.Bs-adNqL.js";const m=JSON.parse('{"title":"","description":"","frontmatter":{},"headers":[],"relativePath":"docs/services.md","filePath":"docs/services.md","lastUpdated":1732825686000}'),a={name:"docs/services.md"};function r(c,o,d,n,i,p){return t(),s("div")}const f=e(a,[["render",r]]);export{m as __pageData,f as default};
