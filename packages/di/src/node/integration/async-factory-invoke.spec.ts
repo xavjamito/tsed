@@ -1,10 +1,10 @@
-import {Inject, Injectable, registerProvider, DITest} from "../../index.js";
+import {DITest, Inject, Injectable, registerProvider} from "../../index.js";
 
 const PrimaryPostgresDb = Symbol.for("PrimaryPostgresDb");
 type PrimaryPostgresDb = {id: string};
 
 registerProvider({
-  provide: PrimaryPostgresDb,
+  token: PrimaryPostgresDb,
   useAsyncFactory: () => {
     return Promise.resolve({
       id: "id"

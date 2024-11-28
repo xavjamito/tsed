@@ -1,13 +1,14 @@
 import {Inject, Injectable} from "@tsed/di";
-import {registerConnectionProvider} from "../utils/registerConnectionProvider.js";
-import {IORedisTest} from "./IORedisTest.js";
 import type {Redis} from "ioredis";
 import RedisMock from "ioredis-mock";
+
+import {registerConnectionProvider} from "../utils/registerConnectionProvider.js";
+import {IORedisTest} from "./IORedisTest.js";
 
 const MY_CONNECTION = Symbol("MY_CONNECTION");
 type MY_CONNECTION = Redis;
 
-registerConnectionProvider({provide: MY_CONNECTION, name: "default"});
+registerConnectionProvider({token: MY_CONNECTION, name: "default"});
 
 @Injectable()
 class MyRepository {

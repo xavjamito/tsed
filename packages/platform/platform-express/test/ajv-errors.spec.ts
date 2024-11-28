@@ -1,20 +1,24 @@
 import "@tsed/ajv";
-import {BodyParams, Controller, PlatformTest, Post} from "@tsed/common";
+
+import {Controller} from "@tsed/di";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {BodyParams} from "@tsed/platform-params";
 import {PlatformTestSdk} from "@tsed/platform-test-sdk";
-import {DefaultMsg, ErrorMsg, Integer, Property, Required, TypeError} from "@tsed/schema";
+import {DefaultMsg, ErrorMsg, Integer, Post, Property, Required, TypeError} from "@tsed/schema";
 import SuperTest from "supertest";
+
 import {PlatformExpress} from "../src/index.js";
 import {rootDir, Server} from "./app/Server.js";
 
 const utils = PlatformTestSdk.create({
   rootDir,
-  platform: PlatformExpress,
+  adapter: PlatformExpress,
   server: Server
 });
 
 @DefaultMsg("this is a default message")
 class MyModel {
-  @Required().Error("this is a required variable")
+  @(Required().Error("this is a required variable"))
   test: string;
 
   @Integer()

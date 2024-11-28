@@ -1,7 +1,10 @@
-import {BodyParams, Inject, Req} from "@tsed/common";
+import {Inject} from "@tsed/di";
 import {Unauthorized} from "@tsed/exceptions";
-import {OnInstall, OnVerify, Protocol} from "@tsed/passport";
+import {Req} from "@tsed/platform-http";
+import {BodyParams} from "@tsed/platform-params";
 import {IStrategyOptions, Strategy} from "passport-local";
+
+import {OnInstall, OnVerify, Protocol} from "../../../src/index.js";
 import {Credentials} from "../models/Credentials.js";
 import {UsersRepository} from "../services/UsersRepository.js";
 

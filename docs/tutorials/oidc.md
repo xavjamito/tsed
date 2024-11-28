@@ -53,10 +53,29 @@ Ts.ED provides decorators and services to create an OIDC provider with your Ts.E
 Before using the `@tsed/oidc-provider` package, we need to install
 the [oidc-provider](https://www.npmjs.com/package/oidc-provider) module.
 
-```bash
+::: code-group
+
+```sh [npm]
 npm install --save oidc-provider
 npm install --save @tsed/oidc-provider @tsed/jwks @tsed/adapters
 ```
+
+```sh [yarn]
+yarn add oidc-provider
+yarn add @tsed/oidc-provider @tsed/jwks @tsed/adapters
+```
+
+```sh [pnpm]
+pnpm add oidc-provider
+pnpm add @tsed/oidc-provider @tsed/jwks @tsed/adapters
+```
+
+```sh [bun]
+bun add oidc-provider
+bun add @tsed/oidc-provider @tsed/jwks @tsed/adapters
+```
+
+:::
 
 Then we need to follow these steps:
 
@@ -148,10 +167,29 @@ Ts.ED provide a Redis adapter for OIDC provider. You just have to install `@tsed
 connection to store
 all OIDC provider data in Redis.
 
-```shell
+::: code-group
+
+```sh [npm]
 npm i --save @tsed/redis-adapters @tsed/ioredis ioredis
 npm i --save-dev ioredis-mock
 ```
+
+```sh [yarn]
+yarn add @tsed/redis-adapters @tsed/ioredis ioredis
+yarn add -D ioredis-mock
+```
+
+```sh [pnpm]
+pnpm add @tsed/redis-adapters @tsed/ioredis ioredis
+pnpm add -D ioredis-mock
+```
+
+```sh [bun]
+bun add @tsed/redis-adapters @tsed/ioredis ioredis
+bun add -D ioredis-mock
+```
+
+:::
 
 Then create a new `RedisConnection.ts` for your new redis connection:
 
@@ -252,18 +290,13 @@ caddy reverse-proxy --from localhost:8443 --to localhost:8083
 oidc-provider requires an Account model to find an account during an interaction. The model can be used in conjunction
 with the adapter to fetch an account.
 
-<Tabs class="-code">
-  <Tab label="models/Account.ts">
+::: code-group
 
-<<< @/../packages/security/oidc-provider/test/app/models/Account.ts
+<<< @/../packages/security/oidc-provider/test/app/models/Account.ts [Account.ts]
 
-  </Tab>
-  <Tab label="services/Accounts.ts">
+<<< @/../packages/security/oidc-provider/test/app/services/Accounts.ts [Accounts.ts]
 
-<<< @/../packages/security/oidc-provider/test/app/services/Accounts.ts
-
-  </Tab>
-</Tabs>
+:::
 
 ::: tip
 Claims method is used by oidc-provider to expose this information in the userInfo endpoint.
@@ -315,23 +348,15 @@ Now that we have our interaction controller, we can create our first interaction
 
 Create a new directory `interactions`. We will store all custom interactions in this directory.
 
-<Tabs class="-code">
-  <Tab label="LoginInteraction.ts">
+::: code-group
 
 <<< @/../packages/security/oidc-provider/test/app/interactions/LoginInteraction.ts
 
-  </Tab>
-  <Tab label="ConsentInteraction.ts">
-
 <<< @/../packages/security/oidc-provider/test/app/interactions/ConsentInteraction.ts
-
-  </Tab>
-  <Tab label="AbortInteraction.ts">
 
 <<< @/../packages/security/oidc-provider/test/app/interactions/AbortInteraction.ts
 
-  </Tab>
-</Tabs>
+:::
 
 ::: tip
 `$prompt` is a special hook called by your Interactions controller.
@@ -349,33 +374,13 @@ Try also to open the link in your browser!
 Now, we need to add the Views to display our login page. Create a views directory on root level and create the following
 files:
 
-<Tabs class="-code">
-  <Tab label="login.ejs">
+::: code-group
 
 <<< @/../packages/security/oidc-provider/test/app/views/login.ejs
-
-  </Tab>
-  <Tab label="forms/login-form.ejs">
-
 <<< @/../packages/security/oidc-provider/test/app/views/forms/login-form.ejs
-
-  </Tab>
-  <Tab label="partials/header.ejs">
-
 <<< @/../packages/security/oidc-provider/test/app/views/partials/header.ejs
-
-  </Tab>
-  <Tab label="partials/footer.ejs">
-
 <<< @/../packages/security/oidc-provider/test/app/views/partials/footer.ejs
-
-  </Tab>
-  <Tab label="partials/login-help.ejs">
-
 <<< @/../packages/security/oidc-provider/test/app/views/partials/login-help.ejs
-
-  </Tab>
-</Tabs>
 
 The login page is ready to be displayed. To test it, open the following link:
 
@@ -384,7 +389,7 @@ http://localhost:8083/auth?client_id=client_id&response_type=id_token&scope=open
 
 ```
 
-<figure><img alt="Oidc login page" src="./../assets/oidc/signin-page.png" style="max-height: 400px"></figure>
+<figure><img alt="Oidc login page" src="./assets/oidc/signin-page.png" style="max-height: 400px"></figure>
 
 ## Create custom interaction
 
@@ -403,7 +408,7 @@ It's possible to do that by listening the `$alterOidcConfiguration` hook and inj
 configuration:
 
 ```typescript
-import {PlatformContext} from "@tsed/common";
+import {PlatformContext} from "@tsed/platform-http";
 import {InjectContext, Module} from "@tsed/di";
 import {AuthorizationCode, BackchannelAuthenticationRequest, DeviceCode, RefreshToken, Client, OidcSettings} from "@tsed/oidc-provider";
 import {KoaContextWithOIDC, Provider, ResourceServer} from "oidc-provider";
@@ -451,7 +456,8 @@ change the policy configuration
 by adding `$alterOidcPolicy` on InteractionsCtrl:
 
 ```typescript
-import {Get, PathParams} from "@tsed/common";
+import {Get} from "@tsed/schema";
+import {PathParams} from "@tsed/platform-params";
 import {Interactions, OidcCtx, DefaultPolicy} from "@tsed/oidc-provider";
 import {LoginInteraction} from "../../interactions/LoginInteraction";
 

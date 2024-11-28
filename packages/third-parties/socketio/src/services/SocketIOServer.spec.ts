@@ -1,5 +1,6 @@
-import {PlatformTest} from "@tsed/common";
-import {SocketIOServer, Server} from "./SocketIOServer.js";
+import {PlatformTest} from "@tsed/platform-http/testing";
+
+import {Server, SocketIOServer} from "./SocketIOServer.js";
 
 describe("SocketIOServer", () => {
   describe("when there is configuration", () => {

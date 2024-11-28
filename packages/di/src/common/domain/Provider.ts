@@ -1,6 +1,9 @@
-import {classOf, getClassOrSymbol, isClass, methodsOf, nameOf, Store, Type} from "@tsed/core";
+import {type AbstractType, classOf, getClassOrSymbol, isClass, nameOf, Store, Type} from "@tsed/core";
+
+import {DI_USE_PARAM_OPTIONS} from "../constants/constants.js";
 import type {ProviderOpts} from "../interfaces/ProviderOpts.js";
 import type {TokenProvider} from "../interfaces/TokenProvider.js";
+import {discoverHooks} from "../utils/discoverHooks.js";
 import {ProviderScope} from "./ProviderScope.js";
 import {ProviderType} from "./ProviderType.js";
 
@@ -10,65 +13,74 @@ export class Provider<T = any> implements ProviderOpts<T> {
   /**
    * Token group provider to retrieve all provider from the same type
    */
-  public type: TokenProvider | ProviderType = ProviderType.PROVIDER;
+  public type: ProviderType | TokenProvider = ProviderType.PROVIDER;
   public deps: TokenProvider[];
   public imports: (TokenProvider | [TokenProvider])[];
-  public alias?: string;
+  public alias: string;
+  public priority: number;
   public useFactory?: Function;
   public useAsyncFactory?: Function;
   public useValue?: unknown;
-  public hooks?: Record<string, ProviderHookCallback<T>>;
-  private _useClass: Type<T>;
-  private _provide: TokenProvider;
-  private _store: Store;
-  private _tokenStore: Store;
+  public hooks: Record<string, ProviderHookCallback<T>> = {};
+  #useClass: Type<T>;
+  #token: TokenProvider;
+  #store: Store;
+  #tokenStore: Store;
 
   [key: string]: any;
 
-  constructor(token: TokenProvider, options: Partial<Provider> = {}) {
-    this.provide = token;
-    this.useClass = token;
+  constructor(token: TokenProvider<T>, options: Partial<Provider> = {}) {
+    this.token = token;
+    this.useClass = token as Type<T>;
 
     Object.assign(this, options);
-  }
 
-  get token() {
-    return this._provide;
-  }
-
-  get provide(): TokenProvider {
-    return this._provide;
-  }
-
-  set provide(value: TokenProvider) {
-    if (value) {
-      this._provide = getClassOrSymbol(value);
-      this._tokenStore = this._store = Store.from(value);
+    if (options instanceof Provider) {
+      this.#useClass = options.#useClass;
+      this.#store = options.#store;
+      this.#tokenStore = options.#tokenStore;
     }
   }
 
-  get useClass(): Type<T> {
-    return this._useClass;
+  get token() {
+    return this.#token;
+  }
+
+  set token(value: TokenProvider) {
+    if (value) {
+      this.#token = getClassOrSymbol(value);
+      this.#tokenStore = this.#store = Store.from(value);
+    }
   }
 
   /**
-   * Create a new store if the given value is a class. Otherwise the value is ignored.
+   * @deprecated
+   */
+  get provide(): TokenProvider {
+    return this.token;
+  }
+
+  /**
+   * @deprecated
    * @param value
    */
-  set useClass(value: Type<T>) {
-    if (isClass(value)) {
-      this._useClass = classOf(value);
-      this._store = Store.from(value);
+  set provide(value: TokenProvider) {
+    this.token = value;
+  }
 
-      this.hooks = methodsOf(this._useClass).reduce((hooks, {propertyKey}) => {
-        if (String(propertyKey).startsWith("$")) {
-          return {
-            ...hooks,
-            [propertyKey]: (instance: any, ...args: any[]) => instance[propertyKey](...args)
-          };
-        }
-        return hooks;
-      }, {} as any);
+  get useClass(): Type<T> {
+    return this.#useClass;
+  }
+
+  /**
+   * Create a new store if the given value is a class. Otherwise, the value is ignored.
+   * @param value
+   */
+  set useClass(value: Type<T> | AbstractType<T>) {
+    if (isClass(value)) {
+      this.#useClass = classOf(value);
+      this.#store = Store.from(value);
+      this.hooks = discoverHooks(this.#useClass);
     }
   }
 
@@ -77,11 +89,11 @@ export class Provider<T = any> implements ProviderOpts<T> {
   }
 
   get name() {
-    return nameOf(this.provide);
+    return nameOf(this.token);
   }
 
   get store(): Store {
-    return this._store;
+    return this.#store;
   }
 
   get path() {
@@ -106,7 +118,7 @@ export class Provider<T = any> implements ProviderOpts<T> {
       return ProviderScope.SINGLETON;
     }
 
-    return this.get("scope");
+    return this.get<ProviderScope>("scope", ProviderScope.SINGLETON);
   }
 
   /**
@@ -118,7 +130,7 @@ export class Provider<T = any> implements ProviderOpts<T> {
   }
 
   get configuration(): Partial<TsED.Configuration> {
-    return this.get("configuration");
+    return this.get("configuration")!;
   }
 
   set configuration(configuration: Partial<TsED.Configuration>) {
@@ -129,8 +141,29 @@ export class Provider<T = any> implements ProviderOpts<T> {
     return this.store.get("childrenControllers", []);
   }
 
-  get(key: string) {
-    return this.store.get(key) || this._tokenStore.get(key);
+  set children(children: TokenProvider[]) {
+    this.store.set("childrenControllers", children);
+  }
+
+  getArgOpts(index: number) {
+    return this.store.get(`${DI_USE_PARAM_OPTIONS}:${index}`);
+  }
+
+  /**
+   * Retrieves a value from the provider's store.
+   * @param key The key to look up
+   * @returns The value if found, undefined otherwise
+   */
+  get<Type = unknown>(key: string): Type | undefined;
+  /**
+   * Retrieves a value from the provider's store with a default fallback.
+   * @param key The key to look up
+   * @param defaultValue The value to return if key is not found
+   * @returns The found value or defaultValue
+   */
+  get<Type = unknown>(key: string, defaultValue: Type): Type;
+  get<Type = unknown>(key: string, defaultValue?: Type): Type | undefined {
+    return this.store.get(key) || this.#tokenStore.get(key) || defaultValue;
   }
 
   isAsync(): boolean {
@@ -138,7 +171,7 @@ export class Provider<T = any> implements ProviderOpts<T> {
   }
 
   clone(): Provider {
-    return new (classOf(this))(this._provide, this);
+    return new (classOf(this))(this.token, this);
   }
 
   /**

@@ -1,8 +1,11 @@
-import {Controller, Get, PathParams, PlatformTest} from "@tsed/common";
+import {Controller} from "@tsed/di";
 import {ObjectID} from "@tsed/mongoose";
 import {PlatformExpress} from "@tsed/platform-express";
-import {AnyOf, Required, Returns} from "@tsed/schema";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {PathParams} from "@tsed/platform-params";
+import {AnyOf, Get, Required, Returns} from "@tsed/schema";
 import SuperTest from "supertest";
+
 import {Server} from "./app/Server.js";
 
 export class ListAbandonTask {
@@ -37,7 +40,7 @@ describe("Swagger AnyOf()", () => {
     let request: SuperTest.Agent;
     beforeEach(
       PlatformTest.bootstrap(Server, {
-        platform: PlatformExpress,
+        adapter: PlatformExpress,
         mount: {
           "/rest": [ListTasksController]
         }

@@ -1,7 +1,8 @@
-import {Req} from "@tsed/common";
 import {Inject} from "@tsed/di";
 import {Args, OnInstall, OnVerify, Protocol} from "@tsed/passport";
+import {Req} from "@tsed/platform-http";
 import {Strategy, StrategyOptions} from "passport-facebook";
+
 import {AuthService} from "../services/auth/AuthService";
 
 @Protocol<StrategyOptions>({

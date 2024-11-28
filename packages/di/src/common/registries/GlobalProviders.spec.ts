@@ -45,7 +45,7 @@ describe("GlobalProviderRegistry", () => {
       const provider = new Provider("token");
       provider.type = ProviderType.PROVIDER;
       // WHEN
-      const settings = providers.getRegistrySettings(provider);
+      const settings = providers.getRegistrySettings(provider as never);
 
       // THEN
       expect(settings).toEqual({
@@ -85,28 +85,10 @@ describe("GlobalProviderRegistry", () => {
       }
 
       const provider = registerProvider({
-        provide: MyService
+        token: MyService
       });
 
       expect(Object.keys(provider.hooks || {})).toEqual(["$onInit", "$onReady"]);
-    });
-  });
-  describe("onInvoke()", () => {
-    it("should call the onInvoke hook", () => {
-      const opts = {
-        onInvoke: vi.fn()
-      };
-      const provider = new Provider(class {}, {type: "type:test"});
-      const locals = new LocalsContainer();
-      const resolvedOptions = {
-        token: provider.token,
-        injector: new InjectorService()
-      } as any;
-
-      GlobalProviders.createRegistry("type:test", Provider, opts);
-      GlobalProviders.onInvoke(provider, locals, resolvedOptions);
-
-      expect(opts.onInvoke).toHaveBeenCalledWith(provider, locals, resolvedOptions);
     });
   });
 });

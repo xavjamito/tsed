@@ -1,6 +1,7 @@
-import {MultipartFile, PlatformMulterFile} from "@tsed/common";
 import {Controller} from "@tsed/di";
+import {MultipartFile, PlatformMulterFile} from "@tsed/platform-http";
 import {BodyParams} from "@tsed/platform-params";
+
 import {Any, CollectionOf, getSpec, Integer, Post, Property} from "../../src/index.js";
 
 class MyModel {

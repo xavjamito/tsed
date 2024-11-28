@@ -1,12 +1,17 @@
-import {BodyParams, Controller, MulterOptions, MultipartFile, PlatformMulterFile, PlatformTest} from "@tsed/common";
+import {Controller} from "@tsed/di";
+import {MulterOptions, MultipartFile, PlatformMulterFile} from "@tsed/platform-http";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {BodyParams} from "@tsed/platform-params";
 import {CollectionOf, Post, Property, Required, Status} from "@tsed/schema";
 import multer, {FileFilterCallback} from "multer";
 import {dirname, join} from "path";
 import readPkgUp from "read-pkg-up";
 import SuperTest from "supertest";
+import {afterAll, beforeAll, describe, expect, it, vi} from "vitest";
+
 import {PlatformTestingSdkOpts} from "../interfaces/index.js";
 
-const rootDir = __dirname; // automatically replaced by import.meta.dirname on build
+const rootDir = import.meta.dirname; // automatically replaced by import.meta.dirname on build
 
 export class Task {
   @Property()
@@ -78,7 +83,7 @@ export function testMulter(options: PlatformTestingSdkOpts) {
   const buffer = Buffer.from("test content");
 
   const pkg = readPkgUp.sync({
-    cwd: __dirname
+    cwd: import.meta.dirname
   });
   const rootDir = join(dirname(pkg?.path || ""), "src");
 

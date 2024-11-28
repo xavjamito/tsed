@@ -1,5 +1,6 @@
 import {Controller} from "@tsed/di";
 import {BodyParams, PathParams} from "@tsed/platform-params";
+
 import {
   DiscriminatorKey,
   DiscriminatorValue,
@@ -347,7 +348,7 @@ describe("Discriminator", () => {
       @Controller("/")
       class MyTest {
         @Post("/")
-        @Returns(200, Array).OneOf(Event)
+        @(Returns(200, Array).OneOf(Event))
         post(@BodyParams() @OneOf(Event) events: OneOfEvents[]) {
           return [];
         }
@@ -445,7 +446,7 @@ describe("Discriminator", () => {
       @Controller("/")
       class MyTest {
         @Patch("/")
-        @Returns(200, Array).OneOf(Event)
+        @(Returns(200, Array).OneOf(Event))
         patch(@BodyParams() @OneOf(Event) @Partial() event: OneOfEvents) {
           return [];
         }
@@ -539,7 +540,7 @@ describe("Discriminator", () => {
       @Controller("/")
       class MyTest {
         @Post("/")
-        @Returns(200, Array).OneOf(Event)
+        @(Returns(200, Array).OneOf(Event))
         post(@BodyParams() @OneOf(Event) @Partial() events: OneOfEvents[]) {
           return [];
         }
@@ -553,7 +554,7 @@ describe("Discriminator", () => {
       @Controller("/")
       class MyTest {
         @Put("/:id")
-        @Returns(200).OneOf(Event)
+        @(Returns(200).OneOf(Event))
         put(@PathParams(":id") id: string, @BodyParams() @OneOf(Event) event: OneOfEvents) {
           return [];
         }
@@ -594,9 +595,7 @@ describe("Discriminator", () => {
                 },
                 type: {
                   example: "custom_action",
-                  enum: [
-                    "custom_action"
-                  ],
+                  enum: ["custom_action"],
                   type: "string"
                 },
                 value: {
@@ -610,9 +609,7 @@ describe("Discriminator", () => {
               properties: {
                 type: {
                   example: "page_view",
-                  enum: [
-                    "page_view"
-                  ],
+                  enum: ["page_view"],
                   type: "string"
                 },
                 meta: {
@@ -722,7 +719,7 @@ describe("Discriminator", () => {
       @Controller("/")
       class MyTest {
         @Put("/:id")
-        @Returns(200).OneOf(Event)
+        @(Returns(200).OneOf(Event))
         put(@PathParams(":id") id: string, @BodyParams() @Partial() @OneOf(Event) event: OneOfEvents) {
           return [];
         }
@@ -783,9 +780,7 @@ describe("Discriminator", () => {
                 },
                 type: {
                   example: "custom_action",
-                  enum: [
-                    "custom_action"
-                  ],
+                  enum: ["custom_action"],
                   type: "string"
                 },
                 value: {
@@ -806,9 +801,7 @@ describe("Discriminator", () => {
                 },
                 type: {
                   example: "custom_action",
-                  enum: [
-                    "custom_action"
-                  ],
+                  enum: ["custom_action"],
                   type: "string"
                 },
                 value: {
@@ -824,9 +817,7 @@ describe("Discriminator", () => {
                 },
                 type: {
                   example: "page_view",
-                  enum: [
-                    "page_view"
-                  ],
+                  enum: ["page_view"],
                   type: "string"
                 },
                 url: {
@@ -847,9 +838,7 @@ describe("Discriminator", () => {
                 },
                 type: {
                   example: "page_view",
-                  enum: [
-                    "page_view"
-                  ],
+                  enum: ["page_view"],
                   type: "string"
                 },
                 url: {
@@ -955,7 +944,7 @@ describe("Discriminator", () => {
       @Controller("/")
       class MyTest {
         @Get("/:id")
-        @Returns(200).OneOf(Event)
+        @(Returns(200).OneOf(Event))
         get(@PathParams(":id") id: string) {
           return [];
         }
@@ -996,9 +985,7 @@ describe("Discriminator", () => {
                 },
                 type: {
                   example: "custom_action",
-                  enum: [
-                    "custom_action"
-                  ],
+                  enum: ["custom_action"],
                   type: "string"
                 },
                 value: {
@@ -1012,9 +999,7 @@ describe("Discriminator", () => {
               properties: {
                 type: {
                   example: "page_view",
-                  enum: [
-                    "page_view"
-                  ],
+                  enum: ["page_view"],
                   type: "string"
                 },
                 meta: {
@@ -1102,7 +1087,7 @@ describe("Discriminator", () => {
       @Controller("/")
       class MyTest {
         @Get("/:id")
-        @Returns(200).OneOf(Base)
+        @(Returns(200).OneOf(Base))
         get(@PathParams(":id") id: string) {
           return [];
         }
@@ -1208,7 +1193,7 @@ describe("Discriminator", () => {
       @Name("Test")
       class TestController {
         @Get()
-        @Returns(200, Array).Of(ParentModel)
+        @(Returns(200, Array).Of(ParentModel))
         public get(): Promise<ParentModel> {
           return null as any;
         }

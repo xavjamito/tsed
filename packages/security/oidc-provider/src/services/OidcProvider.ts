@@ -1,17 +1,15 @@
-import {InjectContext, PlatformApplication, PlatformContext} from "@tsed/common";
 import {Env, setValue} from "@tsed/core";
-import {Constant, Inject, Injectable, InjectorService} from "@tsed/di";
-// @ts-ignore
-import type {Configuration, default as OIDCProvider, KoaContextWithOIDC} from "oidc-provider";
+import {constant, context, inject, Injectable, InjectorService} from "@tsed/di";
+import {PlatformApplication, PlatformContext} from "@tsed/platform-http";
+import Provider, {type Configuration, type KoaContextWithOIDC} from "oidc-provider";
+
 import {INTERACTIONS} from "../constants/constants.js";
 import {OidcAccountsMethods} from "../domain/OidcAccountsMethods.js";
 import {OidcSettings} from "../domain/OidcSettings.js";
 import {OIDC_ERROR_EVENTS} from "../utils/events.js";
 import {OidcAdapters} from "./OidcAdapters.js";
-import {OidcInteractions} from "./OidcInteractions.js";
 import {OidcJwks} from "./OidcJwks.js";
 import {OidcPolicy} from "./OidcPolicy.js";
-import {OIDC_PROVIDER_NODE_MODULE, Provider} from "./OidcProviderNodeModule.js";
 
 function mapError(error: any) {
   return Object.getOwnPropertyNames(error).reduce((obj: any, key) => {
@@ -26,49 +24,24 @@ function mapError(error: any) {
 export class OidcProvider {
   raw: Provider;
 
-  @Constant("env")
-  protected env: Env;
-
-  @Constant("httpPort")
-  protected httpPort: number | string;
-
-  @Constant("httpsPort")
-  protected httpsPort: number | string;
-
-  @Constant("oidc.issuer", "")
-  protected issuer: string;
-
-  @Constant("oidc")
-  protected oidc: OidcSettings;
-
-  @Constant("PLATFORM_NAME")
-  protected platformName: string;
-
-  @Inject()
-  protected oidcJwks: OidcJwks;
-
-  @Inject()
-  protected oidcInteractions: OidcInteractions;
-
-  @Inject()
-  protected oidcPolicy: OidcPolicy;
-
-  @Inject()
-  protected adapters: OidcAdapters;
-
-  @Inject()
-  protected injector: InjectorService;
-
-  @Inject()
-  protected app: PlatformApplication;
-
-  @InjectContext()
-  protected $ctx?: PlatformContext;
-
-  constructor(@Inject(OIDC_PROVIDER_NODE_MODULE) protected module: OIDC_PROVIDER_NODE_MODULE) {}
+  protected env = constant<Env>("env");
+  protected httpPort = constant<number | string>("httpPort");
+  protected httpsPort = constant<number | string>("httpsPort");
+  protected issuer = constant<string>("oidc.issuer", "");
+  protected oidc = constant<OidcSettings>("oidc")!;
+  protected platformName = constant<string>("PLATFORM_NAME");
+  protected oidcJwks = inject(OidcJwks);
+  protected oidcPolicy = inject(OidcPolicy);
+  protected adapters = inject(OidcAdapters);
+  protected injector = inject(InjectorService);
+  protected app = inject(PlatformApplication);
 
   get logger() {
-    return this.$ctx?.logger || this.injector.logger;
+    return this.$ctx.logger;
+  }
+
+  protected get $ctx() {
+    return context<PlatformContext>();
   }
 
   hasConfiguration() {
@@ -149,7 +122,7 @@ export class OidcProvider {
 
     await this.injector.alterAsync("$alterOidcConfiguration", configuration);
 
-    const oidcProvider = new this.module.Provider(this.getIssuer(), configuration);
+    const oidcProvider = new Provider(this.getIssuer(), configuration);
 
     if (proxy) {
       // istanbul ignore next
@@ -205,7 +178,6 @@ export class OidcProvider {
 
     if (provider) {
       return (ctx: any, interaction: any) => {
-        // eslint-disable-line no-unused-vars
         return provider.path.replace(/:uid/, interaction.uid);
       };
     }

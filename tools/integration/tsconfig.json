@@ -7,7 +7,7 @@
   "include": [],
   "references": [
     {
-      "path": "../../packages/platform/common/tsconfig.json"
+      "path": "../../packages/platform/platform-http/tsconfig.json"
     },
     {
       "path": "../../packages/di/tsconfig.json"
@@ -32,9 +32,6 @@
     },
     {
       "path": "../../packages/specs/swagger/tsconfig.json"
-    },
-    {
-      "path": "./tsconfig.cjs.json"
     },
     {
       "path": "./tsconfig.esm.json"

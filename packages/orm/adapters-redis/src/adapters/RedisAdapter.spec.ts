@@ -2,12 +2,13 @@ import {AdapterModel, Adapters, Indexed} from "@tsed/adapters";
 import {IORedisTest, registerConnectionProvider} from "@tsed/ioredis";
 import {deserialize} from "@tsed/json-mapper";
 import {Property, Required} from "@tsed/schema";
+
 import {RedisAdapter} from "./RedisAdapter.js";
 
 const REDIS_CONNECTION = Symbol.for("redis_connection");
 
 registerConnectionProvider({
-  provide: REDIS_CONNECTION
+  token: REDIS_CONNECTION
 });
 
 class Client {

@@ -1,4 +1,5 @@
 import {Env} from "@tsed/core";
+
 import {DIConfiguration} from "./DIConfiguration.js";
 
 describe("DIConfiguration", () => {
@@ -43,22 +44,10 @@ describe("DIConfiguration", () => {
       expect(obj).toEqual({
         imports: [],
         logger: {},
-        resolvers: [],
-        routes: [],
-        scopes: {}
+        routes: []
       });
     });
   });
-  describe("scopes()", () => {
-    it("should get scopes", () => {
-      // GIVEN
-      const configuration = new DIConfiguration();
-
-      configuration.scopes = {};
-      expect(configuration.scopes).toEqual({});
-    });
-  });
-
   describe("imports()", () => {
     it("should get imports", () => {
       // GIVEN
@@ -66,24 +55,6 @@ describe("DIConfiguration", () => {
 
       configuration.imports = [];
       expect(configuration.imports).toEqual([]);
-    });
-  });
-
-  describe("resolvers()", () => {
-    it("should get resolvers", () => {
-      // GIVEN
-      const configuration = new DIConfiguration();
-
-      configuration.resolvers = [];
-      expect(configuration.resolvers).toEqual([]);
-    });
-  });
-
-  describe("rootDir()", () => {
-    it("should replace rootDir", () => {
-      const configuration = new DIConfiguration();
-      configuration.set("rootDir", "/root");
-      expect(configuration.resolve("${rootDir}")).toEqual("/root");
     });
   });
 });

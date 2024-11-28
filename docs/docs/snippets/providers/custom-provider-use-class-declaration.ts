@@ -1,11 +1,22 @@
 import {EnvTypes} from "@tsed/core";
-import {registerProvider} from "@tsed/di";
+import {injectable} from "@tsed/di";
 
-export class ConfigService {}
+export interface ConfigService {
+  get(key: string): any;
+}
 
-export class DevConfigService {}
+export class ProdConfigService implements ConfigService {
+  get(key: string) {
+    return "VALUE PROD";
+  }
+}
 
-registerProvider({
-  provide: ConfigService,
-  useClass: process.env.NODE_ENV === EnvTypes.PROD ? ConfigService : DevConfigService
-});
+export class DevConfigService implements ConfigService {
+  get(key: string) {
+    return "VALUE DEV";
+  }
+}
+
+export const ConfigService = injectable<ConfigService>(Symbol.for("ConfigService"))
+  .class(process.env.NODE_ENV === EnvTypes.PROD ? ProdConfigService : DevConfigService)
+  .token();

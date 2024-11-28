@@ -10,10 +10,10 @@
       "path": "../core/tsconfig.json"
     },
     {
-      "path": "../specs/schema/tsconfig.json"
+      "path": "../hooks/tsconfig.json"
     },
     {
-      "path": "./tsconfig.cjs.json"
+      "path": "../specs/schema/tsconfig.json"
     },
     {
       "path": "./tsconfig.esm.json"

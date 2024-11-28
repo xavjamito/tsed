@@ -1,5 +1,6 @@
-import {PlatformTest} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import Mongoose from "mongoose";
+
 import {MongooseService} from "../../src/index.js";
 
 describe("Mongoose", () => {

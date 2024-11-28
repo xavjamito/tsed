@@ -1,5 +1,8 @@
-import {PlatformTest, Req} from "@tsed/common";
+import {runInContext} from "@tsed/di";
+import {Req} from "@tsed/platform-http";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import Passport from "passport";
+
 import {PassportMessage} from "../errors/PassportMessage.js";
 import {Protocol, ProtocolsService} from "../index.js";
 
@@ -94,7 +97,7 @@ describe("ProtocolsService", () => {
     const resultDone: any = await new Promise((resolve) => {
       const verify = Strategy.mock.calls[0][1];
 
-      return $ctx.runInContext(() => verify($ctx.getRequest(), "test", (...args: any[]) => resolve(args)));
+      return runInContext($ctx, () => verify($ctx.getRequest(), "test", (...args: any[]) => resolve(args)));
     });
 
     // THEN
@@ -116,7 +119,7 @@ describe("ProtocolsService", () => {
     const resultDone: any = await new Promise((resolve) => {
       const verify = Strategy.mock.calls[0][1];
 
-      return $ctx.runInContext(() => verify($ctx.getRequest(), "test", (...args: any[]) => resolve(args)));
+      return runInContext($ctx, () => verify($ctx.getRequest(), "test", (...args: any[]) => resolve(args)));
     });
 
     // THEN
@@ -138,7 +141,7 @@ describe("ProtocolsService", () => {
     const resultDone: any = await new Promise((resolve) => {
       const verify = Strategy.mock.calls[0][1];
 
-      return $ctx.runInContext(() => verify($ctx.getRequest(), "test", (...args: any[]) => resolve(args)));
+      return runInContext($ctx, () => verify($ctx.getRequest(), "test", (...args: any[]) => resolve(args)));
     });
 
     // THEN

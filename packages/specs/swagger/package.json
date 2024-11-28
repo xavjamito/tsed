@@ -1,18 +1,17 @@
 {
   "name": "@tsed/swagger",
   "description": "Swagger package for Ts.ED framework",
-  "type": "commonjs",
-  "version": "7.84.1",
+  "type": "module",
+  "version": "8.0.0-rc.6",
   "source": "./src/index.ts",
-  "main": "./lib/cjs/index.js",
+  "main": "./lib/esm/index.js",
   "module": "./lib/esm/index.js",
   "typings": "./lib/types/index.d.ts",
   "exports": {
     ".": {
       "types": "./lib/types/index.d.ts",
       "import": "./lib/esm/index.js",
-      "require": "./lib/cjs/index.js",
-      "default": "./lib/cjs/index.js"
+      "default": "./lib/esm/index.js"
     }
   },
   "scripts": {
@@ -30,27 +29,27 @@
     "@tsed/openspec": "workspace:*",
     "fs-extra": "11.2.0",
     "micromatch": "4.0.8",
-    "swagger-ui-dist": ">=5.17.1",
-    "tslib": "2.6.1"
+    "swagger-ui-dist": ">=5.17.14",
+    "tslib": "2.7.0"
   },
   "devDependencies": {
     "@tsed/barrels": "workspace:*",
-    "@tsed/common": "workspace:*",
     "@tsed/core": "workspace:*",
     "@tsed/di": "workspace:*",
     "@tsed/json-mapper": "workspace:*",
-    "@tsed/monorepo-utils": "2.3.5",
+    "@tsed/monorepo-utils": "2.3.9",
     "@tsed/openspec": "workspace:*",
+    "@tsed/platform-http": "workspace:*",
     "@tsed/schema": "workspace:*",
     "@tsed/typescript": "workspace:*",
-    "@types/swagger-ui-dist": "3.30.4",
-    "eslint": "^8.57.0",
+    "@types/swagger-ui-dist": "3.30.5",
+    "eslint": "9.12.0",
     "ts-node": "10.9.2",
-    "typescript": "4.9.5",
-    "vitest": "2.0.4"
+    "typescript": "5.4.5",
+    "vitest": "2.1.2"
   },
   "peerDependencies": {
-    "@tsed/common": "7.84.1"
+    "@tsed/platform-http": "8.0.0-rc.6"
   },
   "peerDependenciesMeta": {
     "@tsed/common": {

@@ -1,12 +1,12 @@
-import {Injectable} from "./injectable.js";
 import {GlobalProviders} from "../registries/GlobalProviders.js";
+import {Injectable} from "./injectable.js";
 
 describe("@Injectable()", () => {
   afterEach(() => {
     vi.resetAllMocks();
   });
 
-  it("should call `registerProvider` setting `provide` according to the target class", () => {
+  it("should call `registerProvider` setting `token` according to the target class", () => {
     // GIVEN
     class Test {}
 
@@ -29,13 +29,13 @@ describe("@Injectable()", () => {
     expect(GlobalProviders.get(Test)?.options).toEqual("options");
   });
 
-  it("should override `provide`", () => {
+  it("should override `token`", () => {
     // GIVEN
     class Test {}
-    const provide = "custom";
+    const token = "custom";
 
     // WHEN
-    Injectable({provide})(Test);
+    Injectable({token})(Test);
 
     // THEN
     expect(GlobalProviders.get("custom")?.useClass).toEqual(Test);

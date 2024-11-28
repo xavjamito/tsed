@@ -1,10 +1,11 @@
-import {PlatformTest} from "@tsed/common";
-import {Inject} from "@tsed/di";
 import type {Job} from "@pulsecron/pulse";
-import {PulseModule} from "./PulseModule";
-import {Pulse} from "./decorators/pulse";
+import {Inject} from "@tsed/di";
+import {PlatformTest} from "@tsed/platform-http/testing";
+
 import {Define} from "./decorators/define.js";
 import {Every} from "./decorators/every.js";
+import {Pulse} from "./decorators/pulse.js";
+import {PulseModule} from "./PulseModule.js";
 
 vi.mock("@pulsecron/pulse", () => {
   return {

@@ -25,15 +25,30 @@ and [json-schema](http://json-schema.org/latest/json-schema-validation.html) to 
 
 Before using the validation decorators, we need to install the [ajv](https://www.npmjs.com/package/ajv) module.
 
-```bash
-npm install --save ajv
-npm install --save @tsed/ajv
+::: code-group
+
+```sh [npm]
+npm install --save ajv @tsed/ajv
 ```
 
-Then import `@tsed/ajv` in your Server:
+```sh [yarn]
+yarn add ajv @tsed/ajv
+```
+
+```sh [pnpm]
+pnpm add ajv @tsed/ajv
+```
+
+```sh [bun]
+bun add ajv @tsed/ajv
+```
+
+:::
+
+Then import `@tsed/ajv` into your Server:
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 import "@tsed/ajv"; // import ajv ts.ed module
 
 @Configuration({
@@ -52,7 +67,7 @@ The AJV module allows a few settings to be added through the ServerSettings (all
 The error message could be changed like this:
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 import "@tsed/ajv"; // import ajv ts.ed module
 
 @Configuration({
@@ -74,13 +89,12 @@ Ts.ED gives some decorators to write your validation model:
 
 #### Model validation
 
-A model can be used on a method controller along with [BodyParams]() =>
-@@BodyParams@@
+A model can be used on a method controller along with @@BodyParams@@
 or other decorators, and will
 be validated by Ajv.
 
 ```typescript
-import {Required, MaxLength, MinLength, Minimum, Maximum, Format, Enum, Pattern, Email} from "@tsed/common";
+import {Required, MaxLength, MinLength, Minimum, Maximum, Format, Enum, Pattern, Email} from "@tsed/schema";
 
 export class CalendarModel {
   @MaxLength(20)
@@ -196,10 +210,10 @@ Finally, we can create a unit test to verify if our example works properly:
 
 ```typescript
 import "@tsed/ajv";
-import {PlatformTest} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import {getJsonSchema} from "@tsed/schema";
-import {Product} from "./Product";
-import "../keywords/RangeKeyword";
+import {Product} from "./Product.js";
+import "../keywords/RangeKeyword.js";
 
 describe("Product", () => {
   beforeEach(PlatformTest.create);
@@ -289,7 +303,7 @@ console.log(validate(3)) // false
   </Tab>
 </Tabs>
 
-## Formats <Badge text="v6.36.0+" />
+## Formats
 
 You can add and replace any format using @@Formats@@ decorator. For example, the current format validator for `uri` doesn't allow
 empty string. So, with this decorator you can create or override an existing [ajv-formats](https://github.com/ajv-validator/ajv-formats) validator.
@@ -313,7 +327,7 @@ export class UriFormat implements FormatsMethods<string> {
 Then, we can import this class to our server as follows:
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 import "@tsed/ajv"; // import ajv ts.ed module
 import "./formats/UriFormat"; // just import the class, then Ts.ED will mount automatically the new format
 
@@ -329,9 +343,9 @@ Now, this example will be valid:
 
 ```typescript
 import {Uri, getJsonSchema} from "@tsed/schema";
-import {PlatformTest} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import {AjvService} from "@tsed/ajv";
-import "./UriFormat";
+import "./UriFormat.js";
 
 describe("UriFormat", () => {
   beforeEach(() => PlatformTest.create());

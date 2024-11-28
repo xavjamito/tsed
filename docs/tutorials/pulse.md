@@ -24,17 +24,32 @@ For more information about Pulse look at the documentation [here](https://github
 
 To begin, install the Pulse module for Ts.ED:
 
-```bash
-npm install --save @tsed/pulse
-npm install --save @pulsecron/pulse
+::: code-group
+
+```sh [npm]
+npm install --save @tsed/pulse @pulsecron/pulse
 ```
+
+```sh [yarn]
+yarn add @tsed/pulse @pulsecron/pulse
+```
+
+```sh [pnpm]
+pnpm add @tsed/pulse @pulsecron/pulse
+```
+
+```sh [bun]
+bun add @tsed/pulse @pulsecron/pulse
+```
+
+:::
 
 ## Configure your server
 
 Import `@tsed/pulse` in your Server:
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 import "@tsed/pulse"; // import pulse ts.ed module
 
 const mongoConnectionString = "mongodb://127.0.0.1/pulse";
@@ -146,7 +161,8 @@ Inject the PulseService instance to interact with it directly, e.g. to schedule
 a job manually.
 
 ```typescript
-import {Service, AfterRoutesInit} from "@tsed/common";
+import {Service} from "@tsed/di";
+import {AfterRoutesInit} from "@tsed/platform-params";
 import {PulseModule} from "@tsed/pulse";
 
 @Service()

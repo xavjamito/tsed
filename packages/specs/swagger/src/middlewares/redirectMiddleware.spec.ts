@@ -1,4 +1,5 @@
-import {PlatformTest} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
+
 import {redirectMiddleware} from "./redirectMiddleware.js";
 
 describe("redirectMiddleware and redirect", () => {

@@ -1,7 +1,12 @@
 import "@tsed/ajv";
-import {Controller, Get, PlatformTest, QueryParams} from "@tsed/common";
-import {Maximum, Minimum, Required} from "@tsed/schema";
+
+import {Controller} from "@tsed/di";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {QueryParams} from "@tsed/platform-params";
+import {Get, Maximum, Minimum, Required} from "@tsed/schema";
 import SuperTest from "supertest";
+import {afterAll, beforeAll, describe, expect, it} from "vitest";
+
 import {PlatformTestingSdkOpts} from "../interfaces/index.js";
 
 export class RandomStringModel {

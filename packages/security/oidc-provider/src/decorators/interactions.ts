@@ -1,5 +1,7 @@
-import {Controller, UseBefore} from "@tsed/common";
 import {Type, useDecorators} from "@tsed/core";
+import {Controller} from "@tsed/di";
+import {UseBefore} from "@tsed/platform-middlewares";
+
 import {INTERACTIONS} from "../constants/constants.js";
 import {OidcInteractionMiddleware} from "../middlewares/OidcInteractionMiddleware.js";
 import {NoCache} from "./noCache.js";

@@ -1,9 +1,10 @@
 import {createTerminus} from "@godaddy/terminus";
-import type {PlatformRouteDetails} from "@tsed/common";
 import {Constant, Inject, InjectorService, Module, OnInit, Provider} from "@tsed/di";
+import type {PlatformRouteDetails} from "@tsed/platform-http";
 import {concatPath} from "@tsed/schema";
 import Http from "http";
 import Https from "https";
+
 import {TerminusSettings} from "./interfaces/TerminusSettings.js";
 
 @Module()

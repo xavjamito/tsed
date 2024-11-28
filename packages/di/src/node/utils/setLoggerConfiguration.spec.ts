@@ -1,28 +1,28 @@
 import {Logger} from "@tsed/logger";
-import {InjectorService} from "../../common/index.js";
+import {afterEach} from "vitest";
+
+import {destroyInjector, injector} from "../../common/index.js";
 import {setLoggerConfiguration} from "./setLoggerConfiguration.js";
 
 describe("setLoggerConfiguration", () => {
+  afterEach(() => destroyInjector());
   it("should change the logger level depending on the configuration", () => {
-    const injector = new InjectorService();
+    injector().settings.set("logger.level", "info");
 
-    injector.settings.set("logger.level", "info");
+    setLoggerConfiguration();
 
-    setLoggerConfiguration(injector);
-
-    expect(injector.logger.level).toEqual("info");
+    expect(injector().logger.level).toEqual("info");
   });
   it("should call $log.appenders.set()", () => {
-    const injector = new InjectorService();
-    injector.logger = new Logger();
+    injector().logger = new Logger();
 
-    vi.spyOn(injector.logger.appenders, "set").mockResolvedValue(undefined);
+    vi.spyOn(injector().logger.appenders, "set").mockResolvedValue(undefined);
 
-    injector.settings.set("logger.format", "format");
+    injector().settings.set("logger.format", "format");
 
-    setLoggerConfiguration(injector);
+    setLoggerConfiguration();
 
-    expect(injector.logger.appenders.set).toBeCalledWith("stdout", {
+    expect(injector().logger.appenders.set).toHaveBeenCalledWith("stdout", {
       type: "stdout",
       levels: ["info", "debug"],
       layout: {
@@ -31,7 +31,7 @@ describe("setLoggerConfiguration", () => {
       }
     });
 
-    expect(injector.logger.appenders.set).toBeCalledWith("stderr", {
+    expect(injector().logger.appenders.set).toHaveBeenCalledWith("stderr", {
       levels: ["trace", "fatal", "error", "warn"],
       type: "stderr",
       layout: {

@@ -1,8 +1,9 @@
-import {PlatformTest} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {JsonParameterStore} from "@tsed/schema";
+
 import {BodyParams} from "../decorators/bodyParams.js";
 import {QueryParams} from "../decorators/queryParams.js";
 import {DeserializerPipe} from "./DeserializerPipe.js";
-import {JsonParameterStore} from "@tsed/schema";
 
 describe("DeserializerPipe", () => {
   beforeEach(PlatformTest.create);

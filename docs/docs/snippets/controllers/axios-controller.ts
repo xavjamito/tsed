@@ -1,9 +1,8 @@
-import {Res} from "@tsed/common";
-import {QueryParams} from "@tsed/platform-params";
+import {IncomingMessage} from "node:http";
+import Axios from "axios";
+import {QueryParams, Context} from "@tsed/platform-params";
 import {Get} from "@tsed/schema";
 import {Controller} from "@tsed/di";
-import Axios from "axios";
-import {IncomingMessage} from "http";
 
 @Controller("/proxy")
 export class ProxyCtrl {
@@ -16,14 +15,11 @@ export class ProxyCtrl {
 
   // is equivalent to doing that
   @Get("/")
-  async proxy2(@Res() res: Res, @QueryParams("path") path: string): IncomingMessage {
+  async proxy2(@QueryParams("path") path: string, @Context() $ctx: Context): IncomingMessage {
     const response = await Axios.get(`https://cerevoice.s3.amazonaws.com/${path}`, {
       responseType: "stream"
     });
 
-    res.set(response.headers);
-    res.status(response.status);
-
-    return response.data;
+    return $ctx.response.setHeaders(response.headers).status(response.status).body(response.data);
   }
 }

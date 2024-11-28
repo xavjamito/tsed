@@ -24,7 +24,7 @@ standard [JsonSchema](http://json-schema.org/) model.
 Validation is only available when you import `@tsed/ajv` package in your server.
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 import "@tsed/ajv";
 
 @Configuration()
@@ -32,6 +32,8 @@ class Server {}
 ```
 
 Without this package, decorators like @@Email@@ won't have any effect.
+
+See [Validation](/docs/validation) for more information. By default, Ts.ED CLI install `@tsed/ajv` module.
 :::
 
 ## Example
@@ -64,60 +66,41 @@ use the model to convert the raw data to an instance of your model.
 Just use at least @@Property@@ decorator any other `schema` decorator (like @@Email@@), to create a new property on a
 model. Ts.ED will get the type from Typescript metadata and transform this type to a valid Json type.
 
-<Tabs class="-code">
-  <Tab label="Model">
+::: code-group
 
-<<< @/docs/snippets/model/primitives.ts
+<<< @/docs/snippets/model/primitives.ts [Model]
+<<< @/docs/snippets/model/primitives.json [JSON Schema]
 
-  </Tab>
-  <Tab label="Json schema">
-
-<<< @/docs/snippets/model/primitives.json
-
-  </Tab>
-</Tabs>
+:::
 
 ## Integer
 
 The @@Integer@@ decorator is used to set integer type for integral numbers.
 
-<Tabs class="-code">
-  <Tab label="Model">
+::: code-group
 
-<<< @/docs/snippets/model/integer.ts
+<<< @/docs/snippets/model/integer.ts [Model]
+<<< @/docs/snippets/model/integer.json [JSON Schema]
 
-  </Tab>
-  <Tab label="Json schema">
-
-<<< @/docs/snippets/model/integer.json
-
-  </Tab>
-</Tabs>
+:::
 
 ## Any types
 
 The @@Any@@, decorator is used to set one or more types on property. Use this method when you want to set explicitly the
 json type or when you use a mixed TypeScript types.
 
-<Tabs class="-code">
-  <Tab label="Model">
+::: code-group
 
-<<< @/docs/snippets/model/any-types.ts
+<<< @/docs/snippets/model/any-types.ts [Model]
+<<< @/docs/snippets/model/any-types.json [JSON Schema]
 
-  </Tab>
-  <Tab label="Json schema">
-
-<<< @/docs/snippets/model/any-types.json
-
-  </Tab>
-</Tabs>
+:::
 
 You can also use @@Any@@ decorator to allow all types:
 
-<Tabs class="-code">
-  <Tab label="Model">
+::: code-group
 
-```typescript
+```typescript [Model]
 import {Any} from "@tsed/schema";
 
 export class Model {
@@ -126,10 +109,7 @@ export class Model {
 }
 ```
 
-  </Tab>
-  <Tab label="Json schema">
-
-```json
+```json [Json schema]
 {
   "properties": {
     "prop": {
@@ -163,10 +143,7 @@ export class Model {
 }
 ```
 
-  </Tab>
-  <Tab label="OS3">
-
-```json
+```json [OS3]
 {
   "properties": {
     "prop": {
@@ -198,8 +175,7 @@ export class Model {
 }
 ```
 
-  </Tab>
-</Tabs>
+:::
 
 Since v7.75.0, when you use @@Any@@ decorator combined with other decorators like @@MinLength@@, @@Minimum@@, etc. metadata will be automatically assigned to the right
 type. For example, if you add a @@Minimum@@ decorator, it will be assigned to the number type.
@@ -241,18 +217,12 @@ Produce a json-schema as follows:
 
 The @@Nullable@@ decorator is used allow a null value on a field while preserving the original Typescript type.
 
-<Tabs class="-code">
-  <Tab label="Model">
+::: code-group
 
-<<< @/docs/snippets/model/nullable-properties.ts
+<<< @/docs/snippets/model/nullable-properties.ts [Model]
+<<< @/docs/snippets/model/nullable-properties.json [JSON Schema]
 
-  </Tab>
-  <Tab label="Json schema">
-
-<<< @/docs/snippets/model/nullable-properties.json
-
-  </Tab>
-</Tabs>
+:::
 
 ::: warning
 
@@ -374,18 +344,12 @@ specifically).
 See [Regular Expressions](https://json-schema.org/understanding-json-schema/reference/regular_expressions.html#regular-expressions)
 for more information.
 
-<Tabs class="-code">
-  <Tab label="Model">
+::: code-group
 
-<<< @/docs/snippets/model/pattern.ts
+<<< @/docs/snippets/model/pattern.ts [Model]
+<<< @/docs/snippets/model/pattern.json [JSON Schema]
 
-  </Tab>
-  <Tab label="Json schema">
-
-<<< @/docs/snippets/model/pattern.json
-
-  </Tab>
-</Tabs>
+:::
 
 ## Format
 
@@ -394,18 +358,12 @@ allows values to be constrained beyond what the other tools in JSON Schema,
 including [Regular Expressions](https://json-schema.org/understanding-json-schema/reference/regular_expressions.html#regular-expressions)
 can do.
 
-<Tabs class="-code">
-  <Tab label="Model">
+::: code-group
 
-<<< @/docs/snippets/model/format.ts
+<<< @/docs/snippets/model/format.ts [Model]
+<<< @/docs/snippets/model/format.json [JSON Schema]
 
-  </Tab>
-  <Tab label="Json schema">
-
-<<< @/docs/snippets/model/format.json
-
-  </Tab>
-</Tabs>
+:::
 
 The following formats are supported for string validation with `format` keyword by [AJV](https://ajv.js.org/):
 
@@ -430,18 +388,12 @@ positive number.
 See [json-schema documentation](https://json-schema.org/understanding-json-schema/reference/numeric.html#multiples) for
 more details.
 
-<Tabs class="-code">
-  <Tab label="Model">
+::: code-group
 
-<<< @/docs/snippets/model/multiple-of.ts
+<<< @/docs/snippets/model/multiple-of.ts [Model]
+<<< @/docs/snippets/model/multiple-of.json [JSON Schema]
 
-  </Tab>
-  <Tab label="Json schema">
-
-<<< @/docs/snippets/model/multiple-of.json
-
-  </Tab>
-</Tabs>
+:::
 
 ## Ranges
 
@@ -450,42 +402,31 @@ Ranges of numbers are specified using a combination of the @@Minimum@@ and @@Max
 See [json-schema documentation](https://json-schema.org/understanding-json-schema/reference/numeric.html#multiples) for
 more details.
 
-<Tabs class="-code">
-  <Tab label="Model">
+::: code-group
 
-<<< @/docs/snippets/model/ranges.ts
+<<< @/docs/snippets/model/ranges.ts [Model]
+<<< @/docs/snippets/model/ranges.json [JSON Schema]
 
-  </Tab>
-  <Tab label="Json schema">
-
-<<< @/docs/snippets/model/ranges.json
-
-  </Tab>
-</Tabs>
+:::
 
 ## Enumerated values
 
 The @@Enum@@ decorator is used to restrict a value to a fixed set of values. It must be an array with at least one
 element, where each element is unique or a TypeScript enum.
 
-<Tabs class="-code">
-  <Tab label="Model">
+::: code-group
 
-<<< @/docs/snippets/model/enumerated-values.ts
+<<< @/docs/snippets/model/enumerated-values.ts [Model]
+<<< @/docs/snippets/model/enumerated-values.json [JSON Schema]
 
-  </Tab>
-  <Tab label="Json schema">
-
-<<< @/docs/snippets/model/enumerated-values.json
-
-  </Tab>
-</Tabs>
+:::
 
 @@Enum@@ decorator can be also in combination with @@BodyParams@@ or @QueryParams@@:
 
 ```typescript
 import {Enum} from "@tsed/schema";
-import {QueryParams, Controller} from "@tsed/common";
+import {Controller} from "@tsed/di";
+import {QueryParams} from "@tsed/platform-params";
 
 @Controller("/")
 class MyController {
@@ -526,12 +467,13 @@ class Product {
 // in controller
 
 import {Enum} from "@tsed/schema";
-import {QueryParams, Controller} from "@tsed/common";
+import {Controller} from "@tsed/di";
+import {QueryParams} from "@tsed/platform-params";
 
 @Controller("/products")
 class ProductsController {
   @Get("/:type")
-  @Returns(200, Array).Of(Product)
+  @(Returns(200, Array).Of(Product))
   async get(@PathParams("type") @Enum(ProductTypes) type: ProductTypes): Promise<Product> {
     return [new Product()];
   }
@@ -543,18 +485,12 @@ class ProductsController {
 The @@Const@@ decorator is used to restrict a value to a single value. For example, if you only support shipping to the
 United States for export reasons:
 
-<Tabs class="-code">
-  <Tab label="Model">
+::: code-group
 
-<<< @/docs/snippets/model/constant-values.ts
+<<< @/docs/snippets/model/constant-values.ts [Model]
+<<< @/docs/snippets/model/constant-values.json [JSON Schema]
 
-  </Tab>
-  <Tab label="Json schema">
-
-<<< @/docs/snippets/model/constant-values.json
-
-  </Tab>
-</Tabs>
+:::
 
 ## Collections
 
@@ -564,18 +500,12 @@ the `Array`/`Set`/`Map` type when you declare the type of your property. The typ
 To tell Ts.ED (and other third party which uses JsonSchema) that a property uses a collection with a specific type, you
 must use @@CollectionOf@@ (before v5.62.0, use @@PropertyType@@) decorator as following:
 
-<Tabs class="-code">
-  <Tab label="Model">
+::: code-group
 
-<<< @/docs/snippets/model/collections.ts
+<<< @/docs/snippets/model/collections.ts [Model]
+<<< @/docs/snippets/model/collections.json [JSON Schema]
 
-  </Tab>
-  <Tab label="Json schema">
-
-<<< @/docs/snippets/model/collections.json
-
-  </Tab>
-</Tabs>
+:::
 
 Ts.ED provides others related collection decorators:
 
@@ -605,7 +535,7 @@ import {Required} from "@tsed/schema";
 class MyModel {
   id: string;
 
-  @Required().Error("custom message")
+  @(Required().Error("custom message"))
   prop1: string;
 }
 ```
@@ -621,7 +551,7 @@ This is a class decorator @@DefaultMsg@@ that is used to define a default messag
 ```typescript
 import {DefaultMsg} from "@tsed/schema";
 
-@DefaultMsg("an error occured")
+@DefaultMsg("an error occurred")
 class MyModel {
   id: string;
 
@@ -667,48 +597,30 @@ see [Properties json schema documentation](https://json-schema.org/understanding
 
 Use @@AdditionalProperties@@ on your model to allow this behavior:
 
-<Tabs class="-code">
-  <Tab label="Model">
+::: code-group
 
-<<< @/docs/snippets/model/additional-properties.ts
+<<< @/docs/snippets/model/additional-properties.ts [Model]
+<<< @/docs/snippets/model/additional-properties.json [JSON Schema]
 
-  </Tab>
-  <Tab label="Json schema">
+:::
 
-<<< @/docs/snippets/model/additional-properties.json
+It is also possible to add constraint on additional properties, by giving a raw Json schema:
 
-  </Tab>
-</Tabs>
+::: code-group
 
-It is also possible to add contraint on additional properties, by giving a raw Json schema:
+<<< @/docs/snippets/model/additional-properties-with-schema.ts [Model]
+<<< @/docs/snippets/model/additional-properties-with-schema.json [JSON Schema]
 
-<Tabs class="-code">
-  <Tab label="Model">
-
-<<< @/docs/snippets/model/additional-properties-with-schema.ts
-
-  </Tab>
-  <Tab label="Json schema">
-
-<<< @/docs/snippets/model/additional-properties-with-schema.json
-
-  </Tab>
-</Tabs>
+:::
 
 Or by using @@getJsonSchema@@ in combination with @@AdditionalProperty@@ as following:
 
-<Tabs class="-code">
-  <Tab label="Model">
+::: code-group
 
-<<< @/docs/snippets/model/additional-properties-with-model.ts
+<<< @/docs/snippets/model/additional-properties-with-model.ts [Model]
+<<< @/docs/snippets/model/additional-properties-with-model.json [JSON Schema]
 
-  </Tab>
-  <Tab label="Json schema">
-
-<<< @/docs/snippets/model/additional-properties-with-model.json
-
-  </Tab>
-</Tabs>
+:::
 
 ## Circular ref
 
@@ -745,10 +657,9 @@ class RangeKeyword implements KeywordMethods {
 
 Then we can declare a model using the standard decorators from `@tsed/schema`:
 
-<Tabs class="-code">
-  <Tab label="Product.ts">
+::: code-group
 
-```typescript
+```typescript [Product.ts]
 import {CustomKey} from "@tsed/schema";
 import {Range, ExclusiveRange} from "../decorators/Range"; // custom decorator
 
@@ -765,10 +676,7 @@ export class Product {
 }
 ```
 
-  </Tab>
-  <Tab label="Range.ts">
-
-```typescript
+```typescript [Range.ts]
 import {CustomKey} from "@tsed/schema";
 
 export function Range(min: number, max: number) {
@@ -780,14 +688,13 @@ export function ExclusiveRange(bool: boolean) {
 }
 ```
 
-  </Tab>
-</Tabs>
+:::
 
 Finally, we can create a unit test to verify if our example works properly:
 
 ```typescript
 import "@tsed/ajv";
-import {PlatformTest} from "@tsed/common";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import {getJsonSchema} from "@tsed/schema";
 import {Product} from "./Product";
 import "../keywords/RangeKeyword";
@@ -845,7 +752,7 @@ To retrieve the original Ignore decorator behavior, you can use the @@Groups@@ d
 
 @@Groups@@ decorator allows you to manage your serialized/deserialized fields by using group label. For example, with a
 CRUD controller, you can have many methods like `POST`, `PUT`, `GET` or `PATCH` to manage `creation`, `update`
-and `read` usecases for the exposed resource.
+and `read` use cases for the exposed resource.
 
 For the creation, you don't need to have the `id` field but for the update, you need to have it. With the previous
 version for Ts.ED, you had to create the model twice, one for the `creation` (without `id`) and another one for `update`
@@ -864,10 +771,9 @@ For example, we have a User model with the following properties:
 
 So by using the @@deserialize@@ function with the extra groups options, we can map data to the expected user instance:
 
-<Tabs class="-code">
-<Tab label="Creation">
+::: code-group
 
-```typescript
+```typescript [Creation]
 import {deserialize} from "@tsed/json-mapper";
 
 const result = deserialize<User>(
@@ -884,10 +790,7 @@ const result = deserialize<User>(
 console.log(result); // User {firstName, lastName, email, password}
 ```
 
-</Tab>
-<Tab label="With group">
-
-```typescript
+```typescript [With group]
 import {deserialize} from "@tsed/json-mapper";
 
 const result = deserialize<User>(
@@ -905,10 +808,7 @@ const result = deserialize<User>(
 console.log(result); // User {id, firstName, lastName, email, password}
 ```
 
-</Tab>
-<Tab label="With glob pattern">
-
-```typescript
+```typescript [With glob pattern]
 import {deserialize} from "@tsed/json-mapper";
 
 const result = deserialize<User>(
@@ -926,8 +826,7 @@ const result = deserialize<User>(
 console.log(result); // User {id, firstName, lastName, email, password, roles}
 ```
 
-</Tab>
-</Tabs>
+:::
 
 ::: tip Note
 
@@ -937,23 +836,13 @@ The same principle works with the @@serialize@@ and @@getJsonSchema@@ functions!
 
 Now let's see how groups work with controllers.
 
-<Tabs class="-code">
-<Tab label="UsersCtrl.ts">
+::: code-group
 
-<<< @/docs/snippets/model/group-users-ctrl.ts
+<<< @/docs/snippets/model/group-users-ctrl.ts [UsersCtrl.ts]
+<<< @/docs/snippets/model/group-user.ts [User.ts]
+<<< @/docs/snippets/model/group-users-openspec.json [OpenSpec]
 
-</Tab>
-<Tab label="User.ts">
-
-<<< @/docs/snippets/model/group-user.ts
-
-</Tab>
-<Tab label="OpenSpec">
-
-<<< @/docs/snippets/model/group-users-openspec.json
-
-</Tab>
-</Tabs>
+:::
 
 We can see that the @@Groups@@ decorator can be used on parameter level as well as on the method through the @@Returns@@
 decorator. The generated OpenSpec will create automatically the appropriate JsonSchema according to the `groups`
@@ -1059,11 +948,11 @@ import {User} from "../models/User";
 @Controller("/")
 export class UsersCtrl {
   @Get("/:id")
-  @Returns(200, User).Groups("group.*")
+  @(Returns(200, User).Groups("group.*"))
   async get(@PathParams("id") id: string) {}
 
   @Post("/")
-  @Returns(201, User).Groups("group.*")
+  @(Returns(201, User).Groups("group.*"))
   async post(@BodyParams() @Groups("creation", "summary") user: User) {}
 }
 ```
@@ -1091,11 +980,11 @@ import {User} from "../models/User";
 @Controller("/")
 export class UsersCtrl {
   @Get("/:id")
-  @Returns(200, User).Groups("Details", ["group.*"])
+  @(Returns(200, User).Groups("Details", ["group.*"]))
   async get(@PathParams("id") id: string) {}
 
   @Post("/")
-  @Returns(201, User).Groups("Details", ["group.*"])
+  @(Returns(201, User).Groups("Details", ["group.*"]))
   async post(@BodyParams() @Groups("Creation", ["creation", "summary"]) user: User) {}
 }
 ```
@@ -1107,33 +996,15 @@ Now, `@Groups("Creation", ["creation", "summary"]) user: User` will generate a `
 
 It's also possible to define all groups on class instead of declaring it on each property.
 
-<Tabs class="-code">
-<Tab label="UsersCtrl.ts">
+::: code-group
 
-<<< @/docs/snippets/model/group-users-ctrl-on-class.ts
+<<< @/docs/snippets/model/group-users-ctrl-on-class.ts [UsersCtrl.ts]
+<<< @/docs/snippets/model/group-user-on-class.ts [User.ts]
+<<< @/docs/snippets/model/group-user-creation.json [Creation]
+<<< @/docs/snippets/model/group-user-update.json [Update]
+<<< @/docs/snippets/model/group-user-change-password.json [ChangePassword]
 
-</Tab>
-<Tab label="User.ts">
-
-<<< @/docs/snippets/model/group-user-on-class.ts
-
-</Tab>
-<Tab label="Creation">
-
-<<< @/docs/snippets/model/group-user-creation.json
-
-</Tab>
-<Tab label="Update">
-
-<<< @/docs/snippets/model/group-user-update.json
-
-</Tab>
-<Tab label="ChangePassword">
-
-<<< @/docs/snippets/model/group-user-change-password.json
-
-</Tab>
-</Tabs>
+:::
 
 ## ForwardGroups
 
@@ -1226,7 +1097,7 @@ class MyModel {
 @Controller("/controllers")
 class MyController {
   @Get("/:id")
-  @Returns(200, MyModel).Groups("!admin").AllowedGroups("summary", "details")
+  @(Returns(200, MyModel).Groups("!admin").AllowedGroups("summary", "details"))
   get() {
     return {
       id: "id",
@@ -1241,93 +1112,110 @@ class MyController {
 
 The AllowedGroups is enabled while `includes` query params is given in the request. Here the different scenario with this parameter:
 
-<Tabs>
- <Tab label="Basic usage">
-
-Request:
-
-```
-GET http://host/rest/controllers/1?includes=summary
-```
-
-The response will be:
-
-```json
-{
-  "id": "id",
-  "description": "description",
-  "prop1": "prop1"
-}
-```
-
- </Tab>
- <Tab label="Multiple includes">
-
-Request:
-
-```
-GET http://host/rest/controllers/1?includes=summary&includes=details
-
-OR
-
-GET http://host/rest/controllers/1?includes=summary,details
-```
-
-Expected json:
-
-```json
-{
-  "id": "id",
-  "description": "description",
-  "prop1": "prop1",
-  "prop2": "prop2"
-}
-```
-
- </Tab>
- <Tab label="Without includes">
-
-Request:
-
-```
-GET http://host/rest/controllers/1
-```
-
-Expected json:
-
-```json
-{
-  "id": "id",
-  "description": "description",
-  "prop1": "prop1",
-  "prop2": "prop2"
-}
-```
-
- </Tab>
- <Tab label="Unexpected includes">
-
-If a given value isn't listed in the allowed groups, the value will be ignored!
-
-Request:
-
-```
-GET http://host/rest/controllers/1?includes=admin
-```
-
-Expected json:
-
-```json
-{
-  "id": "id",
-  "description": "description",
-  "prop1": "prop1",
-  "prop2": "prop2"
-}
-```
-
- </Tab>
-</Tabs>
+<div class="vp-code-group vp-adaptive-theme">
+  <div class="tabs">
+    <input type="radio" name="allowed-groups" id="tab-basic-usage" checked="checked">
+    <label for="tab-basic-usage">Basic usage</label>
+    <input type="radio" name="allowed-groups" id="tab-multiple-includes">
+    <label for="tab-multiple-includes">Multiple includes</label>
+    <input type="radio" name="allowed-groups" id="tab-without-includes">
+    <label for="tab-without-includes">Without includes</label>
+    <input type="radio" name="allowed-groups" id="tab-unexpected-includes">
+    <label for="tab-unexpected-includes">Unexpected includes</label>
+  </div>
+  <div class="blocks">
+    <div class="language-http vp-adaptive-theme active">
+      <p>Request:</p>
+        <pre>
+          <code>
+            <span class="line">GET http://host/rest/controllers/1?includes=summary</span>
+          </code>
+        </pre>
+      <p>The response will be:</p>
+      <blockquote>
+        <pre>
+          <code>
+          {
+            "id": "id",
+            "description": "description",
+            "prop1": "prop1"
+          }
+          </code>
+        </pre>
+      </blockquote>
+    </div>
+    <div class="language-json vp-adaptive-theme">
+      <p>Request:</p>
+      <pre>
+        <code>
+          GET http://host/rest/controllers/1?includes=summary&includes=details
+        </code>
+      </pre>
+      <p>OR</p>
+      <pre>
+        <code>
+          GET http://host/rest/controllers/1?includes=summary,details
+        </code>
+      </pre>
+      <p>Expected JSON:</p>
+      <blockquote>
+        <pre>
+          <code>
+          {
+            "id": "id",
+            "description": "description",
+            "prop1": "prop1",
+            "prop2": "prop2"
+          }
+          </code>
+        </pre>
+      </blockquote>
+    </div>
+    <div class="language-json vp-adaptive-theme">
+      <p>Request:</p>
+      <pre>
+        <code>
+          GET http://host/rest/controllers/1
+        </code>
+      </pre>
+      <p>Expected JSON:</p>
+      <blockquote>
+        <pre>
+          <code>
+          {
+            "id": "id",
+            "description": "description",
+            "prop1": "prop1",
+            "prop2": "prop2"
+          }
+          </code>
+        </pre>
+      </blockquote>
+    </div>
+    <div class="language-json vp-adaptive-theme">
+      <p>If a given value isn't listed in the allowed groups, the value will be ignored!</p>
+      <p>Request:</p>
+      <pre>
+        <code>
+          GET http://host/rest/controllers/1?includes=admin
+        </code>
+      </pre>
+      <p>Expected JSON:</p>
+      <blockquote>
+        <pre>
+          <code>
+          {
+            "id": "id",
+            "description": "description",
+            "prop1": "prop1",
+            "prop2": "prop2"
+          }
+          </code>
+        </pre>
+      </blockquote>
+    </div>
+  </div>
+</div>
 
 ## Partial
 
@@ -1335,13 +1223,13 @@ Partial allow you to create a Partial model on an endpoint:
 
 ```typescript
 import {Returns, Patch, Partial} from "@tsed/schema";
-import {Controller} from "@tsed/common";
+import {Controller} from "@tsed/di";
 import {BodyParams} from "./bodyParams";
 
 @Controller("/")
 class MyController {
   @Patch("/")
-  @Returns(200, MyModel).Groups("group.*")
+  @(Returns(200, MyModel).Groups("group.*"))
   async patch(@BodyParams() @Partial() payload: MyModel) {
     // ...
   }
@@ -1468,7 +1356,7 @@ export enum EventType {
 export class Event {
   @DiscriminatorKey() // declare this property as discriminator key
   type: string; // Note: Do not set EventType enum here. The @DiscriminatorKey decorator will automatically generate the correct values based on @DiscriminatorValue decorators in derived classes.
-  
+
   @Property()
   value: string;
 }
@@ -1563,7 +1451,7 @@ Discriminator model can be used also on controller:
 @Controller("/")
 class Test {
   @Put("/:id")
-  @Returns(200).OneOf(Event)
+  @(Returns(200).OneOf(Event))
   put(@PathParams(":id") id: string, @BodyParams() @OneOf(Event) event: EventsType) {
     return [];
   }
@@ -1590,106 +1478,51 @@ Now, we need a model to be used with the generic Pagination model:
 
 Finally, we can use our models on a method as following:
 
-<Tabs class="-code">
- <Tab label="MyController.ts">
-
-<<< @/docs/snippets/model/generics-controller1.ts
-
- </Tab>
- <Tab label="OpenSpec 2">
-
-<<< @/docs/snippets/model/generics-controller1-os2.json
-
- </Tab>
- <Tab label="OpenSpec 3">
-
-<<< @/docs/snippets/model/generics-controller1-os3.json
-
- </Tab>
-</Tabs>
+::: code-group
+<<< @/docs/snippets/model/generics-controller1.ts [MyController.ts]
+<<< @/docs/snippets/model/generics-controller1-os2.json [Swagger 2]
+<<< @/docs/snippets/model/generics-controller1-os3.json [OpenAPI 3]
+:::
 
 ### Declaring nested generic models
 
 It's also possible to declare nested generic models in order to have this type `Pagination<Submission<Product>>`:
 
-<Tabs class="-code">
-  <Tab label="MyController.ts">
+::: code-group
 
-```typescript
-import {Generics, Property, Returns} from "@tsed/schema";
-import {Post} from "@tsed/common";
+```typescript [MyController.ts]
+import {Post, Generics, Property, Returns} from "@tsed/schema";
 
 class MyController {
   @Post("/")
-  @Returns(200, Pagination).Of(Submission).Nested(Product).Description("description")
+  @(Returns(200, Pagination).Of(Submission).Nested(Product).Description("description"))
   async method(): Promise<Pagination<Submission<Product>> | null> {
     return null;
   }
 }
 ```
 
-  </Tab>
-  <Tab label="Submission.ts">
-
-<<< @/docs/snippets/model/generics-submission.ts
-
-  </Tab>
-  <Tab label="Pagination.ts">
-
-<<< @/docs/snippets/model/generics-pagination.ts
-
-  </Tab>
-  <Tab label="Product.ts">
-
-<<< @/docs/snippets/model/generics-product.ts
-
-  </Tab>
- <Tab label="OpenSpec 2">
-
-<<< @/docs/snippets/model/generics-controller2-os2.json
-
- </Tab>
- <Tab label="OpenSpec 3">
-
-<<< @/docs/snippets/model/generics-controller2-os3.json
-
- </Tab>  
-</Tabs>
+<<< @/docs/snippets/model/generics-submission.ts [Submission.ts]
+<<< @/docs/snippets/model/generics-pagination.ts [Pagination.ts]
+<<< @/docs/snippets/model/generics-product.ts [Product.ts]
+<<< @/docs/snippets/model/generics-controller2-os2.json [OpenSpec 2]
+<<< @/docs/snippets/model/generics-controller2-os3.json [OpenSpec 3]
+:::
 
 ### Generics with Types
 
-<Tabs class="-code">
- <Tab label="String">
-
-<<< @/docs/snippets/model/generic-string.ts
-
- </Tab>
- <Tab label="Date">
-
-<<< @/docs/snippets/model/generic-date.ts
-
- </Tab>
- <Tab label="Date">
-
-<<< @/docs/snippets/model/generic-enum.ts
-
- </Tab>
-</Tabs>
+::: code-group
+<<< @/docs/snippets/model/generic-string.ts [String]
+<<< @/docs/snippets/model/generic-date.ts [Date]
+<<< @/docs/snippets/model/generic-enum.ts [Enum]
+:::
 
 ### Generics with Functional API
 
-<Tabs class="-code">
- <Tab label="String">
-
-<<< @/docs/snippets/model/generic-string-api.ts
-
- </Tab>
- <Tab label="Date">
-
-<<< @/docs/snippets/model/generic-date-api.ts
-
- </Tab>
-</Tabs>
+::: code-group
+<<< @/docs/snippets/model/generic-string-api.ts [String]
+<<< @/docs/snippets/model/generic-date-api.ts [Date]
+:::
 
 ## Pagination
 
@@ -1701,38 +1534,14 @@ The used features are the following:
 - @@For@@ decorator to declare a custom model for JsonSchema, OS2 or OS3.
 - [Response Filter](/docs/response-filter.md) to manage paginated response.
 
-<Tabs class="-code">
-  <Tab label="ProductsCtrl.ts">
-
-<<< @/docs/snippets/model/pagination-ctrl.ts
-
-  </Tab>  
-  <Tab label="Pageable.ts">
-
-<<< @/docs/snippets/model/pageable-model.ts
-
-  </Tab>  
-  <Tab label="Pagination.ts">
-
-<<< @/docs/snippets/model/pagination-model.ts
-
-  </Tab>
-  <Tab label="Product.ts">
-
-<<< @/docs/snippets/model/pageable-product-model.ts
-
-  </Tab>
-  <Tab label="PaginationFilter.ts">
-
-<<< @/docs/snippets/model/pagination-filter.ts
-
-  </Tab>
-  <Tab label="ProductsCtrl.spec.ts">
-
-<<< @/docs/snippets/model/pageable-product-model.ts
-
-  </Tab>
-</Tabs>
+::: code-group
+<<< @/docs/snippets/model/pagination-ctrl.ts [ProductsCtrl.ts]
+<<< @/docs/snippets/model/pageable-model.ts [Pageable.ts]
+<<< @/docs/snippets/model/pagination-model.ts [Pagination.ts]
+<<< @/docs/snippets/model/pageable-product-model.ts [Product.ts]
+<<< @/docs/snippets/model/pagination-filter.ts [PaginationFilter.ts]
+<<< @/docs/snippets/model/pageable-product-model.ts [ProductsCtrl.spec.ts]
+:::
 
 ## Deep object on query
 
@@ -1864,18 +1673,10 @@ schema.
 None of these `annotation` keywords are required, but they are encouraged for good practice, and can make your
 schema `self-documenting`.
 
-<Tabs class="-code">
-  <Tab label="Model">
-
-<<< @/docs/snippets/model/annotations.ts
-
-  </Tab>
-  <Tab label="Json schema">
-
-<<< @/docs/snippets/model/annotations.json
-
-  </Tab>
-</Tabs>
+::: code-group
+<<< @/docs/snippets/model/annotations.ts [Model]
+<<< @/docs/snippets/model/annotations.json [JSON schema]
+:::
 
 ## Alias
 
@@ -1889,7 +1690,7 @@ the database, it's better to rename the property to `id`.
 ## Set Schema
 
 If Ts.ED doesn't provide the expected decorator to describe your json schema, you can use the @@Schema@@ decorator
-from `@tsed/common` to set a custom schema.
+from `@tsed/schema` to set a custom schema.
 
 ### Using JsonSchemaObject
 
@@ -1912,36 +1713,20 @@ Here is the list of available functions:
 The @@RecordOf@@ decorator constructs a json schema object type which property keys are set by a given set of keys
 and which property values are of a given type.
 
-<Tabs class="-code">
-  <Tab label="Model">
-
-<<< @/docs/snippets/model/record-of.ts
-
-  </Tab>
-  <Tab label="Json schema">
-
-<<< @/docs/snippets/model/record-of.json
-
-  </Tab>
-</Tabs>
+::: code-group
+<<< @/docs/snippets/model/record-of.ts [Model]
+<<< @/docs/snippets/model/record-of.json [JSON Schema]
+:::
 
 ## Get Json schema
 
 In some cases, it may be useful to retrieve the JSON Schema from a Model to use with another library. This is possible
 by using @@getJsonSchema@@. Here is a small example:
 
-<Tabs class="-code">
-  <Tab label="Model">
-
-<<< @/docs/snippets/model/jsonschema.ts
-
-  </Tab>
-  <Tab label="Json schema">
-
-<<< @/docs/snippets/model/jsonschema.json
-
-  </Tab>
-</Tabs>
+::: code-group
+<<< @/docs/snippets/model/jsonschema.ts [Model]
+<<< @/docs/snippets/model/jsonschema.json [JSON Schema]
+:::
 
 ## Expose a JsonSchema
 
@@ -1949,8 +1734,8 @@ You can create a controller, or an endpoint to expose a specific schema with the
 consumers to retrieve a validation template so that they can use it to validate a form.
 
 ```typescript
-import {Controller, Get} from "@tsed/common";
-import {getJsonSchema} from "@tsed/schema";
+import {Controller} from "@tsed/di";
+import {Get, getJsonSchema} from "@tsed/schema";
 import {Product} from "../models/Product";
 
 @Controller("/products")
@@ -1967,19 +1752,12 @@ export class ProductsCtrl {
 In some cases, it may be useful to retrieve the OpenSpec from a Controller to generate the Swagger OpenSpec. This is
 possible by using @@getSpec@@. Here is a small example:
 
-<Tabs class="-code">
-  <Tab label="MyController">
-
-<<< @/docs/snippets/model/get-spec-generics-controller1.ts
-
-  </Tab>
-  <Tab label="OpenSpec">
-
-<<< @/docs/snippets/model/generics-controller1-os3.json
-
-  </Tab>
-</Tabs>
+::: code-group
+<<< @/docs/snippets/model/get-spec-generics-controller1.ts [MyController]
+<<< @/docs/snippets/model/generics-controller1-os3.json [OpenSpec]
+:::
 
 ## Decorators
 
 <ApiList query="status.includes('decorator') && status.includes('schema')" />
+````

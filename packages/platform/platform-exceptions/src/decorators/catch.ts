@@ -1,5 +1,6 @@
 import {Type} from "@tsed/core";
-import {registerProvider} from "@tsed/di";
+import {injectable, registerProvider} from "@tsed/di";
+
 import {registerExceptionType} from "../domain/ExceptionFiltersContainer.js";
 
 /**
@@ -12,9 +13,6 @@ export function Catch(...types: (Type<Error | any> | string)[]) {
     types.forEach((type) => {
       registerExceptionType(type, target as any);
     });
-    registerProvider({
-      provide: target,
-      useClass: target
-    });
+    injectable(target).class(target);
   };
 }

@@ -1,12 +1,15 @@
-import faker from "@faker-js/faker";
-import {BodyParams, Controller, Get, Inject, Injectable, PathParams, PlatformTest, Post} from "@tsed/common";
+import {faker} from "@faker-js/faker";
 import {isArray} from "@tsed/core";
+import {Controller, Inject, Injectable} from "@tsed/di";
 import {deserialize} from "@tsed/json-mapper";
-import {MongooseModel} from "@tsed/mongoose";
 import {PlatformExpress} from "@tsed/platform-express";
-import {Groups, Returns} from "@tsed/schema";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {BodyParams, PathParams} from "@tsed/platform-params";
+import {Get, Groups, Post, Returns} from "@tsed/schema";
 import {TestContainersMongo} from "@tsed/testcontainers-mongo";
 import SuperTest from "supertest";
+
+import {MongooseModel} from "../src/index.js";
 import {TestRole, TestUser, TestUserNew} from "./helpers/models/User.js";
 import {Server} from "./helpers/Server.js";
 
@@ -42,25 +45,25 @@ class ResourcesCtrl {
   TestRole: MongooseModel<TestRole>;
 
   @Get("/without/:id")
-  @Returns(200, TestUser).Groups("!creation")
+  @(Returns(200, TestUser).Groups("!creation"))
   getWithoutType(@PathParams("id") id: string) {
     return this.repository.findById(id);
   }
 
   @Get("/:id")
-  @Returns(200, TestUser).Groups("!creation")
+  @(Returns(200, TestUser).Groups("!creation"))
   get(@PathParams("id") id: string) {
     return this.repository.findById(id);
   }
 
   @Get("/")
-  @Returns(200, Array).Of(TestUser).Groups("!creation")
+  @(Returns(200, Array).Of(TestUser).Groups("!creation"))
   getAll() {
     return this.repository.findAll();
   }
 
   @Post("/")
-  @Returns(201, TestUser).Groups("!creation")
+  @(Returns(201, TestUser).Groups("!creation"))
   create(@BodyParams() @Groups("creation") user: TestUser) {
     return this.repository.create(user);
   }
@@ -74,7 +77,7 @@ class ResourcesCtrl {
 
     await role.save();
 
-    user.name = faker.name.firstName();
+    user.name = faker.person.firstName();
 
     user.roles = [role._id];
 
@@ -92,12 +95,12 @@ async function getServiceFixture() {
 
   const baseUser = {
     email: faker.internet.email(),
-    password: faker.internet.password(12)
+    password: faker.internet.password({length: 12})
   };
 
   const baseUser2 = {
     email: faker.internet.email(),
-    password: faker.internet.password(12)
+    password: faker.internet.password({length: 12})
   };
 
   const currentUser2 = await repository.create(baseUser2);
@@ -118,7 +121,7 @@ async function getServiceFixture() {
 describe("Mongoose", () => {
   beforeEach(
     TestContainersMongo.bootstrap(Server, {
-      platform: PlatformExpress,
+      adapter: PlatformExpress,
       mount: {
         "/rest": [ResourcesCtrl]
       }

@@ -1,12 +1,16 @@
-import {Controller, Get, PathParams, PlatformTest} from "@tsed/common";
-import {PlatformExpress} from "../src/index.js";
+import {Controller} from "@tsed/di";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {PathParams} from "@tsed/platform-params";
 import {PlatformTestSdk} from "@tsed/platform-test-sdk";
+import {Get} from "@tsed/schema";
 import SuperTest from "supertest";
+
+import {PlatformExpress} from "../src/index.js";
 import {rootDir, Server} from "./app/Server.js";
 
 const utils = PlatformTestSdk.create({
   rootDir,
-  platform: PlatformExpress,
+  adapter: PlatformExpress,
   server: Server
 });
 
@@ -31,7 +35,7 @@ describe("MergeParams", () => {
       }
     })
   );
-  afterAll(utils.reset);
+  afterAll(() => utils.reset());
 
   beforeAll(() => {
     request = SuperTest(PlatformTest.callback());

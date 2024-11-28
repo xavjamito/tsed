@@ -10,7 +10,7 @@ meta:
 
 The `@tsed/json-mapper` package is responsible to map a plain object to a model and a model to a plain object.
 
-It provides two functions @@serialize@@ and @@deserialize@@ to transform object depending on which operation you want to perform.
+It provides two functions @@function:serialize@@ and @@function:deserialize@@ to transform object depending on which operation you want to perform.
 It uses all decorators from `@tsed/schema` package and TypeScript metadata to work.
 
 Ts.ED use this package to transform any input parameters sent by your consumer to a class and transform returned value by your endpoint
@@ -30,7 +30,11 @@ to a plain javascript object to your consumer.
 
 ### jsonMapper.additionalProperties
 
-Enable additional properties on model. By default, `false`. Enable this option is dangerous and may be a potential security issue.
+Enable additional properties on model. By default, `false`.
+
+::: warning
+Enable this option is dangerous and may be a potential security issue.
+:::
 
 ### jsonMapper.disableUnsecureConstructor
 
@@ -48,7 +52,7 @@ class MyModel {
 
 ### jsonMapper.strictGroups
 
-Enable strict mode for `@Groups` decorator. By default, `false`. See [Groups](/docs/models#groups-strict-mode) for more information.
+Enable strict mode for `@Groups` decorator. By default, `false`. See [Groups](/docs/model.md#groups-strict-mode) for more information.
 
 ::: warning
 The `strictGroups` option is enabled by default in the next major version of Ts.ED.
@@ -58,26 +62,14 @@ The `strictGroups` option is enabled by default in the next major version of Ts.
 
 JsonMapper works with a class and decorators. Use decorators on properties to describe a model and use this model as an input parameter or return value by your endpoint. Here is a model example:
 
-<Tabs class="-code">
-  <Tab label="Person.ts">
-
-<<< @/docs/snippets/converters/model-usage.ts
-
-  </Tab>
-  <Tab label="Jest">
-  
-<<< @/docs/snippets/converters/model-usage.jest.ts
-  
-  </Tab>
-  <Tab label="Mocha">
-
-<<< @/docs/snippets/converters/model-usage.mocha.ts
-
-  </Tab>
-</Tabs>
+::: code-group
+<<< @/docs/snippets/converters/model-usage.ts [Person.ts]
+<<< @/docs/snippets/converters/model-usage.jest.ts [Jest]
+<<< @/docs/snippets/converters/model-usage.jest.ts [Vitest]
+:::
 
 ::: tip Note
-Take a look on Jest/Mocha tabs to see @@serialize@@ and @@deserialize@@ functions usage.
+Take a look on Jest/Mocha tabs to see @@function:serialize@@ and @@function:deserialize@@ functions usage.
 :::
 
 Now we can use the `Person` model on a controller:
@@ -96,26 +88,13 @@ When a model is provided, JsonMapper will follow exactly the JsonSchema generate
 
 It means, if you missed decorating one or more properties on your model, these properties won't be appear after the transformation.
 
-<Tabs class="-code">
-  <Tab label="User.ts">
-
-<<< @/docs/snippets/converters/model-missing-properties.ts
-</Tab>
-<Tab label="Jest">
-
-<<< @/docs/snippets/converters/model-missing-properties.jest.ts
-
-  </Tab>
-  <Tab label="Mocha">
-
-<<< @/docs/snippets/converters/model-missing-properties.mocha.ts
-
-  </Tab>
-</Tabs>
+::: code-group
+<<< @/docs/snippets/converters/model-missing-properties.ts [User.ts]
+<<< @/docs/snippets/converters/model-missing-properties.jest.ts [Jest]
+<<< @/docs/snippets/converters/model-missing-properties.mocha.ts [Mocha]
+:::
 
 > Note: Result is displayed in Jest/Mocha tabs.
-
-:::
 
 ## Ignore properties (deprecated)
 
@@ -130,23 +109,11 @@ This decorator is deprecated. Use @@Groups@@ decorator instead of.
 For example, you have a base model to create a User named `UserCreation` where the `password` is required, but
 you don't want to expose this field in other cases. One of the solution is to use class inheritance to solve this problem.
 
-<Tabs class="-code">
-  <Tab label="User.ts">
-
-<<< @/docs/snippets/converters/model-ignore-props.ts
-
-  </Tab>
-  <Tab label="Jest">
-  
-<<< @/docs/snippets/converters/model-ignore-props.jest.ts
-  
-  </Tab>
-  <Tab label="Mocha">
-
-<<< @/docs/snippets/converters/model-ignore-props.mocha.ts
-
-  </Tab>
-</Tabs>
+::: code-group
+<<< @/docs/snippets/converters/model-ignore-props.ts [User.ts]
+<<< @/docs/snippets/converters/model-ignore-props.jest.ts [Jest]
+<<< @/docs/snippets/converters/model-ignore-props.jest.ts [Vitest]
+:::
 
 ### With a callback
 
@@ -186,23 +153,11 @@ Here is the available options on ctx:
 
 @@AdditionalProperties@@ decorator can be used to accept any additional properties on a specific model.
 
-<Tabs class="-code">
-  <Tab label="Person.ts">
-
-<<< @/docs/snippets/converters/model-additional-props.ts
-
-  </Tab>
-  <Tab label="Jest">
-  
-<<< @/docs/snippets/converters/model-additional-props.jest.ts
-  
-  </Tab>
-  <Tab label="Mocha">
-
-<<< @/docs/snippets/converters/model-additional-props.mocha.ts
-
-  </Tab>
-</Tabs>
+::: code-group
+<<< @/docs/snippets/converters/model-additional-props.ts [Person.ts]
+<<< @/docs/snippets/converters/model-additional-props.jest.ts [Jest]
+<<< @/docs/snippets/converters/model-additional-props.jest.ts [Vitest]
+:::
 
 ## Alias
 
@@ -256,19 +211,11 @@ and import the mapper in your application.
 
 @@PrimitiveMapper@@ is responsible to map the primitive value like `Boolean`, `Number` or `String`.
 
-<Tabs class="-code">
-  <Tab label="PrimitiveMapper">
-  
-<<< @/../packages/specs/json-mapper/src/components/PrimitiveMapper.ts
-  
-  </Tab>
-
-  <Tab label="Spec">
- 
-<<< @/../packages/specs/json-mapper/src/components/PrimitiveMapper.spec.ts
-  
-  </Tab>
-</Tabs>
+::: code-group
+<<< @/../packages/specs/json-mapper/src/components/PrimitiveMapper.ts [PrimitiveMapper]
+<<< @/../packages/specs/json-mapper/src/components/PrimitiveMapper.spec.ts [Jest]
+<<< @/../packages/specs/json-mapper/src/components/PrimitiveMapper.spec.ts [Vitest]
+:::
 
 #### Cheat sheet
 
@@ -297,38 +244,23 @@ and import the mapper in your application.
 
 @@SymbolMapper@@ is responsible to map a `String` to `Symbol` or a `Symbol` to a `String`.
 
-<Tabs class="-code">
-  <Tab label="SymbolMapper">
-  
-<<< @/../packages/specs/json-mapper/src/components/SymbolMapper.ts
-
-  </Tab>
-  <Tab label="Spec">
- 
-<<< @/../packages/specs/json-mapper/src/components/SymbolMapper.spec.ts
-  
-  </Tab>
-</Tabs>
+::: code-group
+<<< @/../packages/specs/json-mapper/src/components/SymbolMapper.ts [SymbolMapper]
+<<< @/../packages/specs/json-mapper/src/components/SymbolMapper.spec.ts [Jest]
+<<< @/../packages/specs/json-mapper/src/components/SymbolMapper.spec.ts [Vitest]
+:::
 
 ### Date
 
 @@DateMapper@@ is responsible to map a `Number`, `String` to a `Date` or a `Date` to a `String`.
 
-<Tabs class="-code">
-  <Tab label="DateMapper">
+::: code-group
+<<< @/../packages/specs/json-mapper/src/components/DateMapper.ts [DateMapper]
+<<< @/../packages/specs/json-mapper/src/components/DateMapper.spec.ts [Jest]
+<<< @/../packages/specs/json-mapper/src/components/DateMapper.spec.ts [Vitest]
+:::
 
-<<< @/../packages/specs/json-mapper/src/components/DateMapper.ts
-
-  </Tab>
-  <Tab label="Spec">
-
-<<< @/../packages/specs/json-mapper/src/components/DateMapper.spec.ts
-
-  </Tab>
-</Tabs>
-
-::: warning
-
+::: warn
 Ts.ED doesn't transform Date to date format or hours format because it depends on each project guidelines.
 
 But you can easily implement a Date mapper for each format with the Date API or moment:
@@ -414,21 +346,11 @@ export class Server {}
 [Moment.js](https://momentjs.com) is a powerful library to transform any formatted date string to a Moment instance.
 
 You can change the Date mapper behavior to transform string to a Moment instance.
+::: code-group
+<<< @/docs/snippets/converters/moment-mapper.ts [MomentMapper]
+<<< @/docs/snippets/converters/server-moment-mapper-import.ts [Configuration]
 
-<Tabs class="-code">
-  <Tab label="MomentMapper">
-  
-<<< @/docs/snippets/converters/moment-mapper.ts
-
-  </Tab>
-  <Tab label="Configuration">
-
-<<< @/docs/snippets/converters/server-moment-mapper-import.ts
-
-  </Tab>
-  <Tab label="Example">
-
-```typescript
+```typescript [Example]
 import {Moment} from "moment";
 import {Property} from "@tsed/schema";
 
@@ -438,9 +360,4 @@ export class Person {
 }
 ```
 
-  </Tab>
-</Tabs>
-
-```
-
-```
+:::

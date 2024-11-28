@@ -1,11 +1,12 @@
-import {PlatformHandlerMetadata, PlatformParamsScope, PlatformTest} from "@tsed/common";
-import {Controller, DIContext, InjectorService} from "@tsed/di";
+import {Controller, DIContext, inject, injector} from "@tsed/di";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import {UseBefore} from "@tsed/platform-middlewares";
-import {Context, PlatformParams} from "@tsed/platform-params";
+import {Context, PlatformParams, PlatformParamsScope} from "@tsed/platform-params";
 import {EndpointMetadata, Get, JsonOperationRoute} from "@tsed/schema";
+
 import {PlatformRouter} from "../src/domain/PlatformRouter.js";
 import {AlterEndpointHandlersArg, PlatformRouters} from "../src/domain/PlatformRouters.js";
-import {useContextHandler} from "../src/index.js";
+import {PlatformHandlerMetadata, useContextHandler} from "../src/index.js";
 
 @Controller("/controller")
 @UseBefore(function useBefore() {})
@@ -17,12 +18,13 @@ class MyController {
 }
 
 function createAppRouterFixture() {
-  const injector = new InjectorService();
-  const platformRouters = injector.invoke<PlatformRouters>(PlatformRouters);
-  const platformParams = injector.invoke<PlatformParams>(PlatformParams);
-  const appRouter = injector.invoke<PlatformRouter>(PlatformRouter);
+  const platformRouters = inject(PlatformRouters);
+  const platformParams = inject(PlatformParams);
+  const appRouter = inject(PlatformRouter);
 
-  injector.addProvider(MyController, {});
+  platformRouters.hooks.destroy();
+
+  injector().addProvider(MyController, {});
 
   platformRouters.hooks.on("alterHandler", (handlerMetadata: PlatformHandlerMetadata) => {
     if (handlerMetadata.isRawFn() || handlerMetadata.isResponseFn()) {
@@ -34,7 +36,7 @@ function createAppRouterFixture() {
       : platformParams.compileHandler(handlerMetadata);
   });
 
-  return {injector, appRouter, platformRouters, platformParams};
+  return {appRouter, platformRouters, platformParams};
 }
 
 describe("routers with alter handlers", () => {

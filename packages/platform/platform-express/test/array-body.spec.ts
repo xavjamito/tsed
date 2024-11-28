@@ -1,14 +1,18 @@
 import "@tsed/ajv";
-import {BodyParams, Controller, PlatformTest, Post} from "@tsed/common";
+
+import {Controller} from "@tsed/di";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {BodyParams} from "@tsed/platform-params";
 import {PlatformTestSdk} from "@tsed/platform-test-sdk";
-import {CollectionOf, Property, Any} from "@tsed/schema";
+import {Any, CollectionOf, Post, Property} from "@tsed/schema";
 import SuperTest from "supertest";
+
 import {PlatformExpress} from "../src/index.js";
 import {rootDir, Server} from "./app/Server.js";
 
 const utils = PlatformTestSdk.create({
   rootDir,
-  platform: PlatformExpress,
+  adapter: PlatformExpress,
   server: Server
 });
 
@@ -66,7 +70,7 @@ describe("Array Body", () => {
       ]
     })
   );
-  afterAll(utils.reset);
+  afterAll(() => utils.reset());
 
   beforeAll(() => {
     request = SuperTest(PlatformTest.callback());

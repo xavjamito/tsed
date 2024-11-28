@@ -11,36 +11,25 @@ code. Follow the steps below to integrate Vitest into your project.
 Open your project's terminal where you usually run npm commands.
 Run the following npm command to install Vitest and its required dependencies:
 
-<Tabs class="-code">
-  <Tab label="Npm">
+::: code-group
 
-```bash
+```bash [npm]
 $ npm i --save-dev vitest unplugin-swc @swc/core @vitest/coverage-v8
 ```
 
-  </Tab>
-  <Tab label="Yarn">
-
-```bash
+```bash [yarn]
 $ yarn add -D vitest unplugin-swc @swc/core @vitest/coverage-v8
 ```
 
-  </Tab>
-  <Tab label="PNPM">
-
-```bash
+```bash [pnpm]
 $ pnpm add -D vitest unplugin-swc @swc/core @vitest/coverage-v8
 ```
 
-  </Tab>
-  <Tab label="Bun">
-
-```bash
+```bash [bun]
 $ bun add -D vitest unplugin-swc @swc/core @vitest/coverage-v8
 ```
 
-  </Tab>
-</Tabs>
+:::
 
 This command installs Vitest, the SWC plugin for Vite, and the V8 coverage tool for Vitest.
 
@@ -62,8 +51,33 @@ export default defineConfig({
   plugins: [
     // This is required to build the test files with SWC
     swc.vite({
-      // Explicitly set the module type to avoid inheriting this value from a `.swcrc` config file
-      module: {type: "es6"}
+      sourceMaps: "inline",
+
+      jsc: {
+        target: "es2022",
+        externalHelpers: true,
+        keepClassNames: true,
+        parser: {
+          syntax: "typescript",
+          tsx: true,
+          decorators: true,
+          dynamicImport: true,
+          importMeta: true,
+          preserveAllComments: true
+        },
+        transform: {
+          useDefineForClassFields: false,
+          legacyDecorator: true,
+          decoratorMetadata: true
+        }
+      },
+      module: {
+        type: "es6",
+        strictMode: true,
+        lazy: false,
+        noInterop: false
+      },
+      isModule: true
     })
   ]
 });

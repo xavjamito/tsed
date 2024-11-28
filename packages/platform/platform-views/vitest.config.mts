@@ -9,11 +9,15 @@ export default defineConfig(
       ...presets.test,
       coverage: {
         ...presets.test.coverage,
+        exclude:[
+          ...presets.test.coverage.exclude,
+          "src/decorators/view.ts",
+        ],
         thresholds: {
-          statements: 0,
-          branches: 0,
-          functions: 0,
-          lines: 0
+          statements: 91.3,
+          branches: 94.73,
+          functions: 76.92,
+          lines: 91.3
         }
       }
     }

@@ -1,7 +1,10 @@
-import {BodyParams, Controller, PlatformTest, Post} from "@tsed/common";
+import {Controller} from "@tsed/di";
 import {PlatformExpress} from "@tsed/platform-express";
-import {MaxLength, MinLength} from "@tsed/schema";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {BodyParams} from "@tsed/platform-params";
+import {MaxLength, MinLength, Post} from "@tsed/schema";
 import SuperTest from "supertest";
+
 import {Server} from "./app/Server.js";
 
 @Controller({
@@ -21,7 +24,7 @@ describe("Swagger BodyParams()", () => {
   let request: SuperTest.Agent;
   beforeEach(
     PlatformTest.bootstrap(Server, {
-      platform: PlatformExpress,
+      adapter: PlatformExpress,
       mount: {
         "/rest": [CustomerController]
       }

@@ -1,5 +1,5 @@
-import {Type} from "@tsed/core";
-import {registerProvider} from "@tsed/di";
+import {injectable} from "@tsed/di";
+
 import {registerResponseFilter, ResponseFilterKey} from "../domain/ResponseFiltersContainer.js";
 
 /**
@@ -8,13 +8,10 @@ import {registerResponseFilter, ResponseFilterKey} from "../domain/ResponseFilte
  * @decorator
  */
 export function ResponseFilter(...contentTypes: ResponseFilterKey[]): ClassDecorator {
-  return <T = any>(target: T): void | T => {
+  return (target: any) => {
     contentTypes.forEach((contentType) => {
       registerResponseFilter(contentType, target as any);
     });
-    registerProvider({
-      provide: target,
-      useClass: target as unknown as Type<any>
-    });
+    injectable(target).class(target);
   };
 }

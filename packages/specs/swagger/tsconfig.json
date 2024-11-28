@@ -7,7 +7,7 @@
   "include": [],
   "references": [
     {
-      "path": "../../platform/common/tsconfig.json"
+      "path": "../../platform/platform-http/tsconfig.json"
     },
     {
       "path": "../../core/tsconfig.json"
@@ -25,10 +25,7 @@
       "path": "../schema/tsconfig.json"
     },
     {
-      "path": "../../utils/normalize-path/tsconfig.json"
-    },
-    {
-      "path": "./tsconfig.cjs.json"
+      "path": "../../third-parties/normalize-path/tsconfig.json"
     },
     {
       "path": "./tsconfig.esm.json"

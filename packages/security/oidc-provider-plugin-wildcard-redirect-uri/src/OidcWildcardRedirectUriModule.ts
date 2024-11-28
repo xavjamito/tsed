@@ -1,10 +1,9 @@
-import {Constant, Inject, Module} from "@tsed/di";
-import {Logger} from "@tsed/logger";
-import {OIDC_PROVIDER_NODE_MODULE, OidcSettings} from "@tsed/oidc-provider";
-// @ts-ignore
-import type {default as Provider, KoaContextWithOIDC} from "oidc-provider";
+import {constant, logger, Module} from "@tsed/di";
+import {OidcSettings} from "@tsed/oidc-provider";
+import Provider, {errors, type KoaContextWithOIDC} from "oidc-provider";
 // @ts-ignore
 import psl from "psl";
+
 import {wildcardRedirectUriAllowed} from "./utils/wildcardRedirectUriAllowed.js";
 
 declare global {
@@ -19,13 +18,7 @@ declare global {
 
 @Module()
 export class OidcWildcardRedirectUriModule {
-  @Constant("oidc.plugins.wildcard.enabled", false)
-  readonly enabled: boolean;
-
-  @Inject(Logger)
-  protected logger: Logger;
-
-  constructor(@Inject(OIDC_PROVIDER_NODE_MODULE) protected module: OIDC_PROVIDER_NODE_MODULE) {}
+  readonly enabled = constant<boolean>("oidc.plugins.wildcard.enabled", false);
 
   $onCreateOIDC(provider: Provider) {
     if (this.enabled) {
@@ -36,7 +29,7 @@ export class OidcWildcardRedirectUriModule {
         "postLogoutRedirectUris"
       );
 
-      this.logger.warn("⚠️⚠️⚠️ OIDC Wildcard Uris plugin is ENABLED ⚠️⚠️⚠️");
+      logger().warn("⚠️⚠️⚠️ OIDC Wildcard Uris plugin is ENABLED ⚠️⚠️⚠️");
     }
   }
 
@@ -60,15 +53,15 @@ export class OidcWildcardRedirectUriModule {
           const {hostname, href} = new URL(redirectUri);
 
           if (href.split("*").length !== 2) {
-            throw new this.module.errors.InvalidClientMetadata("redirect_uris with a wildcard may only contain a single one");
+            throw new errors.InvalidClientMetadata("redirect_uris with a wildcard may only contain a single one");
           }
 
           if (!hostname.includes("*")) {
-            throw new this.module.errors.InvalidClientMetadata("redirect_uris may only have a wildcard in the hostname");
+            throw new errors.InvalidClientMetadata("redirect_uris may only have a wildcard in the hostname");
           }
 
           if (!psl.get(hostname.split("*.")[1])) {
-            throw new this.module.errors.InvalidClientMetadata(
+            throw new errors.InvalidClientMetadata(
               "redirect_uris with a wildcard must not match an eTLD+1 of a known public suffix domain"
             );
           }
@@ -80,15 +73,15 @@ export class OidcWildcardRedirectUriModule {
           const {hostname, href} = new URL(postLogoutRedirectUri);
 
           if (href.split("*").length !== 2) {
-            throw new this.module.errors.InvalidClientMetadata("post_logout_redirect_uris with a wildcard may only contain a single one");
+            throw new errors.InvalidClientMetadata("post_logout_redirect_uris with a wildcard may only contain a single one");
           }
 
           if (!hostname.includes("*")) {
-            throw new this.module.errors.InvalidClientMetadata("post_logout_redirect_uris may only have a wildcard in the hostname");
+            throw new errors.InvalidClientMetadata("post_logout_redirect_uris may only have a wildcard in the hostname");
           }
 
           if (!psl.get(hostname.split("*.")[1])) {
-            throw new this.module.errors.InvalidClientMetadata(
+            throw new errors.InvalidClientMetadata(
               "post_logout_redirect_uris with a wildcard must not match an eTLD+1 of a known public suffix domain"
             );
           }

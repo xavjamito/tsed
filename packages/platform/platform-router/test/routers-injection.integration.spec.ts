@@ -1,5 +1,6 @@
-import {Controller, ControllerProvider, InjectorService} from "@tsed/di";
+import {Controller, ControllerProvider, inject, injector} from "@tsed/di";
 import {PlatformParams} from "@tsed/platform-params";
+
 import {PlatformRouter} from "../src/domain/PlatformRouter.js";
 import {PlatformRouters} from "../src/domain/PlatformRouters.js";
 
@@ -13,19 +14,20 @@ class CustomStaticsCtrl {
 }
 
 function createAppRouterFixture() {
-  const injector = new InjectorService();
-  const platformRouters = injector.invoke<PlatformRouters>(PlatformRouters);
-  const platformParams = injector.invoke<PlatformParams>(PlatformParams);
-  const appRouter = injector.invoke<PlatformRouter>(PlatformRouter);
+  const platformRouters = inject(PlatformRouters);
+  const platformParams = inject(PlatformParams);
+  const appRouter = inject(PlatformRouter);
 
-  injector.addProvider(CustomStaticsCtrl, {});
+  platformRouters.hooks.destroy();
 
-  return {injector, appRouter, platformRouters, platformParams};
+  injector().addProvider(CustomStaticsCtrl, {});
+
+  return {appRouter, platformRouters, platformParams};
 }
 
 describe("Routers injection", () => {
   it("should load router and inject router to the given controller", () => {
-    const {injector, platformRouters} = createAppRouterFixture();
+    const {platformRouters} = createAppRouterFixture();
 
     // prebuild controllers to inject router in controller
     platformRouters.prebuild();
@@ -33,9 +35,9 @@ describe("Routers injection", () => {
     const router = platformRouters.from(CustomStaticsCtrl);
     const router1 = platformRouters.from(CustomStaticsCtrl);
 
-    const provider = injector.getProvider<ControllerProvider>(CustomStaticsCtrl)!;
-    const router2 = injector.get(provider.tokenRouter);
-    const controller = injector.invoke<CustomStaticsCtrl>(CustomStaticsCtrl)!;
+    const provider = injector().getProvider<ControllerProvider>(CustomStaticsCtrl)!;
+    const router2 = injector().get(provider.tokenRouter);
+    const controller = inject(CustomStaticsCtrl)!;
 
     expect(router).toEqual(router1);
     expect(router).toEqual(router2);

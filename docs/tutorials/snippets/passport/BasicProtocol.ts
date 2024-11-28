@@ -1,7 +1,8 @@
-import {Req} from "@tsed/common";
 import {Arg, OnInstall, OnVerify, Protocol} from "@tsed/passport";
+import {Req} from "@tsed/platform-http";
 import {Strategy} from "passport";
 import {BasicStrategy} from "passport-http";
+
 import {UsersService} from "../services/users/UsersService";
 import {checkEmail} from "../utils/checkEmail";
 

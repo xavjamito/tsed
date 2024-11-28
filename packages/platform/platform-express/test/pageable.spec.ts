@@ -1,6 +1,10 @@
-import {Controller, Get, PlatformContext, PlatformTest, QueryParams, ResponseFilter, ResponseFilterMethods} from "@tsed/common";
 import {isString} from "@tsed/core";
+import {Controller} from "@tsed/di";
 import {OnDeserialize} from "@tsed/json-mapper";
+import {PlatformContext} from "@tsed/platform-http";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {QueryParams} from "@tsed/platform-params";
+import {ResponseFilter, type ResponseFilterMethods} from "@tsed/platform-response-filter";
 import {PlatformTestSdk} from "@tsed/platform-test-sdk";
 import {
   array,
@@ -9,6 +13,7 @@ import {
   Description,
   For,
   Generics,
+  Get,
   getSpec,
   Integer,
   Min,
@@ -21,6 +26,7 @@ import {
 } from "@tsed/schema";
 import qs from "querystring";
 import SuperTest from "supertest";
+
 import {PlatformExpress} from "../src/index.js";
 import {rootDir, Server} from "./app/Server.js";
 
@@ -93,15 +99,15 @@ class Product {
 
 const utils = PlatformTestSdk.create({
   rootDir,
-  platform: PlatformExpress,
+  adapter: PlatformExpress,
   server: Server
 });
 
 @Controller("/pageable")
 class TestPageableCtrl {
   @Get("/")
-  @Returns(206, Pagination).Of(Product).Title("PaginatedProduct")
-  @Returns(200, Pagination).Of(Product).Title("PaginatedProduct")
+  @(Returns(206, Pagination).Of(Product).Title("PaginatedProduct"))
+  @(Returns(200, Pagination).Of(Product).Title("PaginatedProduct"))
   get(@QueryParams() pageableOptions: Pageable, @QueryParams("all") all: boolean) {
     return new Pagination<Product>({
       data: [
@@ -151,7 +157,7 @@ describe("Pageable", () => {
       ]
     })
   );
-  afterAll(utils.reset);
+  afterAll(() => utils.reset());
 
   beforeAll(() => {
     request = SuperTest(PlatformTest.callback());

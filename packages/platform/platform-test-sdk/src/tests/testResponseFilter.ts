@@ -1,6 +1,11 @@
-import {Controller, Get, PlatformContext, PlatformTest, ResponseFilter, ResponseFilterMethods} from "@tsed/common";
-import {Property, Returns} from "@tsed/schema";
+import {Controller} from "@tsed/di";
+import {PlatformContext} from "@tsed/platform-http";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {ResponseFilter} from "@tsed/platform-response-filter";
+import {Get, Property, Returns} from "@tsed/schema";
 import SuperTest from "supertest";
+import {afterAll, beforeAll, describe, expect, it} from "vitest";
+
 import {PlatformTestingSdkOpts} from "../interfaces/index.js";
 
 class ResponseFilterModel {
@@ -11,22 +16,22 @@ class ResponseFilterModel {
 @Controller("/response-filter")
 class TestResponseFilterCtrl {
   @Get("/scenario1/:id")
-  @Returns(200, ResponseFilterModel).Description("description")
-  @Returns(200, String).ContentType("text/xml")
+  @(Returns(200, ResponseFilterModel).Description("description"))
+  @(Returns(200, String).ContentType("text/xml"))
   public testScenario1() {
     return {id: "id"};
   }
 }
 
 @ResponseFilter("text/xml")
-class XmlResponseFilter implements ResponseFilterMethods {
+class XmlResponseFilter {
   transform(data: unknown, ctx: PlatformContext) {
     return "<xml>test</xml>";
   }
 }
 
 @ResponseFilter("*/*")
-class AnyResponseFilter implements ResponseFilterMethods {
+class AnyResponseFilter {
   transform(data: unknown, ctx: PlatformContext) {
     return {data, errors: []};
   }
@@ -41,7 +46,7 @@ export function testResponseFilter(options: PlatformTestingSdkOpts) {
       mount: {
         "/rest": [TestResponseFilterCtrl]
       },
-      responseFilters: [XmlResponseFilter, AnyResponseFilter]
+      responseFilters: [XmlResponseFilter, AnyResponseFilter] as never[]
     })
   );
   beforeAll(() => {

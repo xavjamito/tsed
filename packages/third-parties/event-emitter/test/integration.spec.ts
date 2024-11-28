@@ -1,4 +1,6 @@
-import {Injectable, PlatformTest} from "@tsed/common";
+import {Injectable} from "@tsed/di";
+import {PlatformTest} from "@tsed/platform-http/testing";
+
 import {OnAny} from "../src/decorators/onAny.js";
 import {OnEvent} from "../src/decorators/onEvent.js";
 import {EventEmitterModule} from "../src/EventEmitterModule.js";
@@ -35,7 +37,7 @@ describe("EventEmitter integration", () => {
   describe("enabled", () => {
     beforeEach(async () => {
       vi.spyOn(Test.prototype, "test").mockReturnValue();
-      vi.spyOn(Test.prototype, "test2").mockReturnValue();
+      vi.spyOn(Test.prototype, "test2").mockResolvedValue(23);
       vi.spyOn(TestTwo.prototype, "test3").mockReturnValue();
       vi.spyOn(TestTwo.prototype, "test4").mockReturnValue();
       vi.spyOn(EventEmitterModule.prototype, "printEvents").mockReturnValue();

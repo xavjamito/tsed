@@ -77,7 +77,6 @@ The goal of lambda isn't to expose static files. We do not plan to support this 
 ## Rule
 
 ::: warning
-
 By convention, try to not import something from `@tsed/common`. `@tsed/common` embed a lot of codes designed
 for the Full server platform which are not necessary in the Serverless context and aren't optimized for it.
 
@@ -96,13 +95,17 @@ import {Get} from "@tsed/schema";
 
 :::
 
+::: note
+With v8 `@tsed/common` are replaced by `@tsed/platform-http`, the same convention is available for `@tsed/platform-http`, but now `@tsed/platform-http` doesn't re-export `@tsed/schema`. So your IDE, won't try to import schema decorator from the unexpected package.
+:::
+
 ## Projects example
 
 <Projects type="projects" />
 
 ## Installation
 
-The best option is to checkout the full terraform project available
+The best option is to check out the full terraform project available
 on [GitHub](https://github.com/tsedio/tsed-aws-lambda).
 This quick start project provides:
 
@@ -132,40 +135,27 @@ tsed init .
 
 Or you can install the package manually:
 
-<Tabs class="-code">
-  <Tab label="npm">
-
-```bash
+```sh [npm]
 npm install --save @tsed/platform-serverless serverless serverless-offline
 npm install --save-dev @types/aws-lambda
 ```
 
-  </Tab>
-  <Tab label="yarn">
-
-```bash
+```sh [yarn]
 yarn add @tsed/platform-serverless serverless serverless-offline
 yarn add -D @types/aws-lambda
 ```
 
-  </Tab>
-  <Tab label="pnpm">
-
-```bash
+```sh [pnpm]
 pnpm add @tsed/platform-serverless serverless serverless-offline
 pnpm add -D @types/aws-lambda
 ```
 
-  </Tab>
-  <Tab label="bun.js">
-
-```bash
+```sh [bun]
 bun add @tsed/platform-serverless serverless serverless-offline
 bun add -D @types/aws-lambda
 ```
 
-  </Tab>
-</Tabs>
+:::
 
 ## Create your first Lambda
 
@@ -185,7 +175,7 @@ export class TimeslotsController {
 
   @Get("/")
   @Summary("Return a list of timeslots")
-  @Returns(200, Array).Of(TimeslotModel)
+  @(Returns(200, Array).Of(TimeslotModel))
   getAll(@QueryParams("date_start") dateStart: Date, @QueryParams("date_end") dateEnd: Date) {
     return this.timeslotsService.find({
       dateStart,
@@ -213,7 +203,7 @@ That's it! You can now deploy your lambda on AWS.
 
 ::: tip
 If you want to have mode details on how to deploy your lambda
-using the Serverless framework, please read the dedicated tutorial [here](/docs/tutorials/serverless.md).
+using the Serverless framework, please read the dedicated tutorial [here](/tutorials/serverless).
 :::
 
 ::: tip
@@ -244,7 +234,7 @@ export class TimeslotsController {
 
   @Get("/")
   @Summary("Return a list of timeslots")
-  @Returns(200, Array).Of(TimeslotModel)
+  @(Returns(200, Array).Of(TimeslotModel))
   getAll(@QueryParams("date_start") dateStart: Date, @QueryParams("date_end") dateEnd: Date) {
     return this.timeslotsService.find({
       dateStart,
@@ -492,7 +482,7 @@ import {ServerlessContext} from "@tsed/platform-serverless";
 @Controller()
 class StreamLambda {
   @Post("/scenario-1/:id")
-  @Returns(200, String).Binary()
+  @(Returns(200, String).Binary())
   scenario1(@BodyParams("id") id: string) {
     return Readable.from(
       Buffer.from(

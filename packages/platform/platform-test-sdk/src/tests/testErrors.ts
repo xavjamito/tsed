@@ -1,9 +1,16 @@
 import "@tsed/ajv";
-import {BodyParams, Controller, Err, Get, Middleware, PlatformTest, Post, UseAfter} from "@tsed/common";
+
 import {Env} from "@tsed/core";
+import {Controller} from "@tsed/di";
 import {BadRequest, InternalServerError} from "@tsed/exceptions";
-import {Description, Name, Required, Returns, Summary} from "@tsed/schema";
+import {Err} from "@tsed/platform-http";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {Middleware, UseAfter} from "@tsed/platform-middlewares";
+import {BodyParams} from "@tsed/platform-params";
+import {Description, Get, Name, Post, Required, Returns, Summary} from "@tsed/schema";
 import SuperTest from "supertest";
+import {afterAll, beforeAll, expect, it} from "vitest";
+
 import {CustomBadRequest} from "../errors/CustomBadRequest.js";
 import {CustomInternalError} from "../errors/CustomInternalError.js";
 import {PlatformTestingSdkOpts} from "../interfaces/index.js";
@@ -39,19 +46,19 @@ class FakeMiddleware {
 @Controller("/errors")
 export class ErrorsCtrl {
   @Get("/scenario-1")
-  @Returns(500, InternalServerError).Description("Custom Bad Request")
+  @(Returns(500, InternalServerError).Description("Custom Bad Request"))
   public scenario1() {
     throw new CustomBadRequest("Custom Bad Request");
   }
 
   @Get("/scenario-2")
-  @Returns(500).Description("Internal Server Error")
+  @(Returns(500).Description("Internal Server Error"))
   public scenario2() {
     throw new Error("My error");
   }
 
   @Get("/scenario-3")
-  @Returns(400, CustomInternalError).Description("Bad request")
+  @(Returns(400, CustomInternalError).Description("Bad request"))
   public scenario3() {
     throw new CustomInternalError("My custom error");
   }
@@ -63,7 +70,7 @@ export class ErrorsCtrl {
   }
 
   @Post("/scenario-5")
-  @Returns(400, BadRequest).Description("Bad request")
+  @(Returns(400, BadRequest).Description("Bad request"))
   public scenario5(
     @Required()
     @BodyParams()
@@ -75,7 +82,7 @@ export class ErrorsCtrl {
   @Post("/scenario-6")
   @Summary("Throw a Required prop if prop name is required")
   @Description(`Return a required error`)
-  @Returns(400).Description("Bad request")
+  @(Returns(400).Description("Bad request"))
   public scenario6(
     @Required()
     @BodyParams()
@@ -85,7 +92,7 @@ export class ErrorsCtrl {
   }
 
   @Get("/scenario-7")
-  @Returns(400).Description("Bad request")
+  @(Returns(400).Description("Bad request"))
   @UseAfter(FakeMiddleware)
   @UseAfter(ErrorMiddleware)
   public scenario7() {

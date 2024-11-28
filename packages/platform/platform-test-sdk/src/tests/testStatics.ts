@@ -1,9 +1,11 @@
-import {Controller, PlatformTest} from "@tsed/common";
 import {getValue} from "@tsed/core";
-import {Configuration} from "@tsed/di";
+import {Configuration, Controller} from "@tsed/di";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import {PlatformRouter} from "@tsed/platform-router";
 import {readFileSync} from "fs";
 import SuperTest from "supertest";
+import {afterEach, beforeEach, expect, it} from "vitest";
+
 import {PlatformTestingSdkOpts} from "../interfaces/index.js";
 
 @Controller("/statics")

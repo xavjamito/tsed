@@ -23,10 +23,29 @@ Currently, `@tsed/ioredis` allows you to:
 
 ## Installation
 
-```shell
+::: code-group
+
+```sh [npm]
 npm install --save @tsed/ioredis ioredis
 npm install --save-dev ioredis-mock
 ```
+
+```sh [yarn]
+yarn add @tsed/ioredis ioredis
+yarn add -D ioredis-mock
+```
+
+```sh [pnpm]
+pnpm add @tsed/ioredis ioredis
+pnpm add -D ioredis-mock
+```
+
+```sh [bun]
+bun add @tsed/ioredis ioredis
+bun add -D ioredis-mock
+```
+
+:::
 
 ::: tip Note
 

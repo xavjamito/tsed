@@ -1,19 +1,18 @@
 {
   "name": "@tsed/terminus",
   "description": "Adds graceful shutdown and Kubernetes readiness / liveness checks for any HTTP applications.",
-  "type": "commonjs",
-  "version": "7.84.1",
+  "type": "module",
+  "version": "8.0.0-rc.6",
   "author": "Emilien Leroy <emilien1005@hotmail.fr>",
   "source": "./src/index.ts",
-  "main": "./lib/cjs/index.js",
+  "main": "./lib/esm/index.js",
   "module": "./lib/esm/index.js",
   "typings": "./lib/types/index.d.ts",
   "exports": {
     ".": {
       "types": "./lib/types/index.d.ts",
       "import": "./lib/esm/index.js",
-      "require": "./lib/cjs/index.js",
-      "default": "./lib/cjs/index.js"
+      "default": "./lib/esm/index.js"
     }
   },
   "scripts": {
@@ -25,26 +24,26 @@
     "test:ci": "vitest run --coverage.thresholds.autoUpdate=true"
   },
   "dependencies": {
-    "tslib": "2.6.1"
+    "tslib": "2.7.0"
   },
   "devDependencies": {
     "@godaddy/terminus": "^4.12.1",
     "@tsed/barrels": "workspace:*",
-    "@tsed/common": "workspace:*",
     "@tsed/core": "workspace:*",
     "@tsed/di": "workspace:*",
+    "@tsed/platform-http": "workspace:*",
     "@tsed/schema": "workspace:*",
     "@tsed/typescript": "workspace:*",
-    "eslint": "^8.57.0",
-    "typescript": "4.9.5",
-    "vitest": "2.0.4"
+    "eslint": "9.12.0",
+    "typescript": "5.4.5",
+    "vitest": "2.1.2"
   },
   "peerDependencies": {
     "@godaddy/terminus": "^4.7.1",
-    "@tsed/common": "7.84.1",
-    "@tsed/core": "7.84.1",
-    "@tsed/di": "7.84.1",
-    "@tsed/schema": "7.84.1"
+    "@tsed/core": "8.0.0-rc.6",
+    "@tsed/di": "8.0.0-rc.6",
+    "@tsed/platform-http": "8.0.0-rc.6",
+    "@tsed/schema": "8.0.0-rc.6"
   },
   "peerDependenciesMeta": {
     "@godaddy/terminus": {

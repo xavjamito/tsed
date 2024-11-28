@@ -1,12 +1,12 @@
 import {GeneratorOptions} from "@prisma/generator-helper";
-import {parseEnvValue} from "@prisma/internals";
+import internals from "@prisma/internals";
 import fs from "fs-extra";
 import path, {join} from "path";
+
 import {generateCode} from "../generator/generateCode.js";
 import removeDir from "../generator/utils/removeDir.js";
-import {isCommonjs} from "../generator/utils/sourceType";
 
-function parseStringBoolean(stringBoolean: string | undefined) {
+function parseStringBoolean(stringBoolean: string | string[] | undefined) {
   return Boolean(stringBoolean ? stringBoolean === "true" : undefined);
 }
 
@@ -21,13 +21,13 @@ export interface GenerateOptions {
 
 export function generate({defaultOutput, packageDir}: GenerateOptions) {
   return async (options: GeneratorOptions) => {
-    const outputDir = parseEnvValue(options.generator.output!);
+    const outputDir = internals.parseEnvValue(options.generator.output!);
     await fs.mkdir(outputDir, {recursive: true});
     await removeDir(outputDir, true);
 
     const generatorConfig = options.generator.config;
-    const prismaClientProvider = options.otherGenerators.find((it) => parseEnvValue(it.provider) === "prisma-client-js")!;
-    const prismaClientPath = parseEnvValue(prismaClientProvider.output!);
+    const prismaClientProvider = options.otherGenerators.find((it) => internals.parseEnvValue(it.provider) === "prisma-client-js")!;
+    const prismaClientPath = internals.parseEnvValue(prismaClientProvider.output!);
 
     await generateCode(options.dmmf, {
       emitTranspiledCode: parseStringBoolean(generatorConfig.emitTranspiledCode),
@@ -38,17 +38,11 @@ export function generate({defaultOutput, packageDir}: GenerateOptions) {
     });
 
     if (outputDir === defaultOutput) {
-      await fs.copy(join(packageDir, "scripts", "backup-index.cjs.js"), join(packageDir, "lib", "cjs", "index.js"));
       await fs.copy(join(packageDir, "scripts", "backup-index.esm.js"), join(packageDir, "lib", "esm", "index.js"));
-
-      if (isCommonjs()) {
-        await fs.copy(join(packageDir, "scripts", "backup-index.d.cts"), join(packageDir, "lib", "types", "index.d.ts"));
-      } else {
-        await fs.copy(join(packageDir, "scripts", "backup-index.d.mts"), join(packageDir, "lib", "types", "index.d.ts"));
-        await fs.writeJson(`${outputDir}/package.json`, {
-          type: "module"
-        });
-      }
+      await fs.copy(join(packageDir, "scripts", "backup-index.d.mts"), join(packageDir, "lib", "types", "index.d.ts"));
+      await fs.writeJson(`${outputDir}/package.json`, {
+        type: "module"
+      });
     }
 
     return "";

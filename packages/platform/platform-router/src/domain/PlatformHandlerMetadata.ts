@@ -1,7 +1,8 @@
 import {nameOf} from "@tsed/core";
-import {DIContext, InjectorService, Provider, ProviderScope, TokenProvider} from "@tsed/di";
+import {DIContext, injector, Provider, ProviderScope, TokenProvider} from "@tsed/di";
 import {ParamTypes} from "@tsed/platform-params";
 import {EndpointMetadata, JsonEntityStore, JsonParameterStore} from "@tsed/schema";
+
 import {PlatformHandlerType} from "./PlatformHandlerType.js";
 import {SinglePathType} from "./SinglePathType.js";
 
@@ -76,13 +77,13 @@ export class PlatformHandlerMetadata {
     return JsonEntityStore.fromMethod(this.provider!.useClass, this.propertyKey!);
   }
 
-  static from(injector: InjectorService, input: any, opts: PlatformHandlerMetadataOpts = {}): PlatformHandlerMetadata {
+  static from(input: any, opts: PlatformHandlerMetadataOpts = {}): PlatformHandlerMetadata {
     if (input instanceof PlatformHandlerMetadata) {
       return input;
     }
 
     if (input instanceof EndpointMetadata) {
-      const provider = injector.getProvider(opts.token)!;
+      const provider = injector().getProvider(opts.token)!;
 
       return new PlatformHandlerMetadata({
         provider,
@@ -92,7 +93,7 @@ export class PlatformHandlerMetadata {
       });
     }
 
-    const provider = injector.getProvider(input);
+    const provider = injector().getProvider(input);
 
     if (provider) {
       return new PlatformHandlerMetadata({

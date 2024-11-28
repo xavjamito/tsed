@@ -1,6 +1,6 @@
-import {Configuration, registerProvider} from "@tsed/di";
 import {Client, Connection} from "@temporalio/client";
-import {Logger} from "@tsed/common";
+import {Configuration, registerProvider} from "@tsed/di";
+import {Logger} from "@tsed/logger";
 
 export const TemporalConnection = Connection;
 export type TemporalConnection = Connection;
@@ -9,10 +9,11 @@ export const TemporalClient = Client;
 export type TemporalClient = Client;
 
 registerProvider({
-  provide: TemporalConnection,
+  token: TemporalConnection,
   deps: [Configuration, Logger],
   async useAsyncFactory(settings: Configuration, logger: Logger) {
-    const {temporal} = settings;
+    const temporal = settings.get("temporal");
+
     if (!temporal?.enabled) {
       return null;
     }
@@ -30,10 +31,10 @@ registerProvider({
 });
 
 registerProvider({
-  provide: TemporalClient,
+  token: TemporalClient,
   deps: [Configuration, TemporalConnection],
   useFactory(settings: Configuration, connection: TemporalConnection) {
-    const {temporal} = settings;
+    const temporal = settings.get("temporal");
     if (!temporal?.enabled) {
       return null;
     }

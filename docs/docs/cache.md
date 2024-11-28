@@ -9,9 +9,9 @@ meta:
 # Cache
 
 Caching is a great and simple technique that helps improve your app's performance.
-It acts as a temporary data store providing high performance data access.
+It acts as a temporary data store providing high-performance data access.
 
-Ts.ED provides a unified system caching by using the
+Ts.ED provides a unified system for caching by using the
 popular [`cache-manager`](https://www.npmjs.com/package/cache-manager) Node.js module.
 Cache-manager provides various storage to cache content like Redis, MongoDB, etc... and multi caching!
 
@@ -19,13 +19,34 @@ By using the @@UseCache@@ on endpoint methods or on service methods, you'll be a
 the Ts.ED server
 or the result returned by a Service.
 
+## Installation
+
+::: code-group
+
+```sh [npm]
+npm install @tsed/platform-cache
+```
+
+```sh [yarn]
+yarn add @tsed/platform-cache
+```
+
+```sh [pnpm]
+pnpm add @tsed/platform-cache
+```
+
+```sh [bun]
+bun add @tsed/platform-cache
+```
+
+:::
+
 ## Configuration
 
-Cache-manager module is already installed with the `@tsed/common` package (since v6.30.0). You just have
-to configure cache options and use the decorator to enable cache.
+You just to configure cache options and use the decorator to enable cache.
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 
 @Configuration({
   cache: {
@@ -58,7 +79,7 @@ export class Server {}
 ### Example with mongoose
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 import mongoose from "mongoose";
 
 const mongooseStore = require("cache-manager-mongoose");
@@ -120,7 +141,7 @@ registerProvider({
 Then:
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 import redisStore from "cache-manager-ioredis";
 
 @Configuration({
@@ -139,7 +160,10 @@ export class Server {}
 
 This example works for a single redis connection. If you look for a complete example with Redis Cluster and Redis single
 connection, go to this example:
+
+```sh
 https://gist.github.com/Romakita/432b1a8afaa726b41d0baf2456b205aa
+```
 
 :::
 
@@ -198,7 +222,10 @@ await this.cache.reset();
 To enable cache on endpoint, use @@UseCache@@ decorator on a method as follows:
 
 ```typescript
-import {Controller, UseCache, Get, PathParams} from "@tsed/common";
+import {UseCache} from "@tsed/platform-cache";
+import {Controller} from "@tsed/di";
+import {PathParams} from "@tsed/platform-params";
+import {Get} from "@tsed/schema";
 
 @Controller("/my-path")
 export class MyController {
@@ -282,7 +309,7 @@ There are two ways to do that. The first one is to configure it globally on the 
 
 ```typescript
 import {Configuration} from "@tsed/di";
-import {PlatformContext} from "@tsed/common";
+import {PlatformContext} from "@tsed/platform-http";
 
 @Configuration({
   cache: {
@@ -297,7 +324,10 @@ import {PlatformContext} from "@tsed/common";
 The second way is to use the `key` option with @@UseCache@@ decorator:
 
 ```typescript
-import {Controller, UseCache, Get, PathParams, PlatformContext} from "@tsed/common";
+import {PlatformContext} from "@tsed/platform-http";
+import {PathParams} from "@tsed/platform-params";
+import {Get} from "@tsed/schema";
+import {Controller} from "@tsed/di";
 
 @Controller("/my-path")
 export class MyController {
@@ -320,7 +350,10 @@ export class MyController {
 TTL can be defined per endpoint with @@UseCache@@:
 
 ```typescript
-import {Controller, UseCache, Get, PathParams, PlatformContext} from "@tsed/common";
+import {PlatformContext} from "@tsed/platform-http";
+import {PathParams} from "@tsed/platform-params";
+import {Get} from "@tsed/schema";
+import {Controller} from "@tsed/di";
 
 @Controller("/my-path")
 export class MyController {
@@ -338,7 +371,10 @@ Sometimes, you don't want to store in cache a value because isn't consistant to 
 For example, you can avoid caching data when the result is nullish:
 
 ```typescript
-import {Controller, UseCache, Get, PathParams, PlatformContext} from "@tsed/common";
+import {PlatformContext} from "@tsed/platform-http";
+import {PathParams} from "@tsed/platform-params";
+import {Get} from "@tsed/schema";
+import {Controller} from "@tsed/di";
 
 @Controller("/my-path")
 export class MyController {
@@ -355,7 +391,10 @@ In this case, the UseCache interceptor will ignore result that `undefined` or `n
 You can also provide a custom function to ignore result:
 
 ```typescript
-import {Controller, UseCache, Get, PathParams, PlatformContext} from "@tsed/common";
+import {PlatformContext} from "@tsed/platform-http";
+import {PathParams} from "@tsed/platform-params";
+import {Get} from "@tsed/schema";
+import {Controller} from "@tsed/di";
 
 @Controller("/my-path")
 export class MyController {
@@ -386,10 +425,14 @@ if (currentTTL < ttl - refreshThreshold) {
 }
 ```
 
+Meanwhile, the system will return the old value until expiration.
 In the meantime, the system will return the old value until expiration.
 
 ```typescript
-import {Controller, UseCache, PathParams, PlatformContext} from "@tsed/common";
+import {PlatformContext} from "@tsed/platform-http";
+import {PathParams} from "@tsed/platform-params";
+import {Get} from "@tsed/schema";
+import {Controller} from "@tsed/di";
 
 @Injectable()
 export class MyService {
@@ -405,16 +448,18 @@ background if current `ttl` is under 45 minutes.
 
 ## Refresh cached value <Badge text="7.9.0+" />
 
-A service method response can be cached by using the `@UseCache` decorator. Sometimes, we need to explicitly refresh the cached data,
+A service method response can be cached by using the `@UseCache` decorator. Sometimes, we need to explicitly refresh the cached data because the consumed data backend state has changed.
 because the consumed data backend state has changed. By implementing a notifications service, the backend data can trigger an event to tell your API that
 the data has changed.
 
 Here is short example:
 
 ```typescript
-import {Injectable} from "@tsed/di";
+import {Controller, Injectable} from "@tsed/di";
 import {PlatformCache, UseCache} from "@tsed/platform-cache";
-import {Controller, Get, PathParams, PlatformContext} from "@tsed/common";
+import {PlatformContext} from "@tsed/platform-http";
+import {PathParams} from "@tsed/platform-params";
+import {Get} from "@tsed/schema";
 
 @Injectable()
 export class ProductsService {
@@ -452,7 +497,7 @@ If you have several cached method calls, then the refresh will also be done on a
 Cache-manager provides a way to use multiple caches. To use it, remove `store` option and use `caches` instead:
 
 ```typescript
-import {Configuration} from "@tsed/common";
+import {Configuration} from "@tsed/di";
 
 @Configuration({
   cache: {

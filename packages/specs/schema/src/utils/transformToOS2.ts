@@ -104,15 +104,18 @@ export function transformSecurity(securitySchemes: any) {
     }
   }
 
-  return Object.entries(securitySchemes).reduce((securityDefinitions, [key, security]) => {
-    const securityDefinition = map(security);
+  return Object.entries(securitySchemes).reduce(
+    (securityDefinitions, [key, security]) => {
+      const securityDefinition = map(security);
 
-    if (securityDefinition) {
-      securityDefinitions[key] = securityDefinition;
-    }
+      if (securityDefinition) {
+        securityDefinitions[key] = securityDefinition;
+      }
 
-    return securityDefinitions;
-  }, {} as Record<string, OS2Security>);
+      return securityDefinitions;
+    },
+    {} as Record<string, OS2Security>
+  );
 }
 
 export function transformInformation(server: any) {

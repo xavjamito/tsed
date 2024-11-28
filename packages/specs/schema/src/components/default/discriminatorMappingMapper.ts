@@ -1,4 +1,5 @@
 import {isString} from "@tsed/core";
+
 import {JsonSchema} from "../../domain/JsonSchema.js";
 import {SpecTypes} from "../../domain/SpecTypes.js";
 import type {JsonSchemaOptions} from "../../interfaces/JsonSchemaOptions.js";
@@ -32,6 +33,4 @@ function defaultDiscriminatorMappingMapper(obj: SchemaWithDiscriminator) {
   return obj;
 }
 
-
 registerJsonSchemaMapper("discriminatorMapping", defaultDiscriminatorMappingMapper);
-

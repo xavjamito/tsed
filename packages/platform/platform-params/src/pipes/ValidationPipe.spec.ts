@@ -1,6 +1,7 @@
-import {PlatformTest, Post} from "@tsed/common";
 import {catchAsyncError} from "@tsed/core";
-import {AllOf, AnyOf, CollectionOf, getSpec, JsonParameterStore, OneOf, Property, Required, SpecTypes} from "@tsed/schema";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {AllOf, AnyOf, CollectionOf, getSpec, JsonParameterStore, OneOf, Post, Property, Required, SpecTypes} from "@tsed/schema";
+
 import {BodyParams} from "../decorators/bodyParams.js";
 import {PathParams} from "../decorators/pathParams.js";
 import {QueryParams} from "../decorators/queryParams.js";
@@ -523,11 +524,13 @@ describe("ValidationPipe", () => {
     expect(result.message).toEqual("It should have required parameter 'test'");
   });
   it("should cast data if it's possible", async () => {
-    const validator = await PlatformTest.invoke<ValidationPipe>(ValidationPipe);
-    // @ts-ignore
-    validator.validator = {
+    const defaultValidator = {
       validate: vi.fn().mockResolvedValue("1")
     };
+
+    const validator = await PlatformTest.invoke<ValidationPipe>(ValidationPipe);
+
+    (validator as any).validators.set("default", defaultValidator);
 
     class Test {
       @Post("/")
@@ -541,19 +544,20 @@ describe("ValidationPipe", () => {
 
     // THEN
     expect(result).toEqual("1");
-    // @ts-ignore
-    expect(validator.validator.validate).toHaveBeenCalledWith("1", {
+    expect(defaultValidator.validate).toHaveBeenCalledWith("1", {
       collectionType: undefined,
       schema: {type: "string", minLength: 1},
       type: undefined
     });
   });
   it("should cast string to array", async () => {
-    const validator = await PlatformTest.invoke<ValidationPipe>(ValidationPipe);
-    // @ts-ignore
-    validator.validator = {
+    const defaultValidator = {
       validate: vi.fn().mockImplementation((o) => o)
     };
+
+    const validator = await PlatformTest.invoke<ValidationPipe>(ValidationPipe);
+
+    (validator as any).validators.set("default", defaultValidator);
 
     class Test {
       @Post("/")
@@ -567,15 +571,16 @@ describe("ValidationPipe", () => {
 
     // THEN
     expect(result).toEqual([1]);
-    // @ts-ignore
-    expect(validator.validator.validate).toHaveBeenCalledWith([1], expect.any(Object));
+    expect(defaultValidator.validate).toHaveBeenCalledWith([1], expect.any(Object));
   });
   it("shouldn't cast object", async () => {
-    const validator = await PlatformTest.invoke<ValidationPipe>(ValidationPipe);
-    // @ts-ignore
-    validator.validator = {
+    const defaultValidator = {
       validate: vi.fn().mockImplementation((o) => o)
     };
+
+    const validator = await PlatformTest.invoke<ValidationPipe>(ValidationPipe);
+
+    (validator as any).validators.set("default", defaultValidator);
 
     class Test {
       @Post("/")
@@ -589,15 +594,16 @@ describe("ValidationPipe", () => {
 
     // THEN
     expect(result).toEqual({});
-    // @ts-ignore
-    expect(validator.validator.validate).toHaveBeenCalledWith({}, expect.any(Object));
+    expect(defaultValidator.validate).toHaveBeenCalledWith({}, expect.any(Object));
   });
   it("should cast null string to null", async () => {
-    const validator = await PlatformTest.invoke<ValidationPipe>(ValidationPipe);
-    // @ts-ignore
-    validator.validator = {
+    const defaultValidator = {
       validate: vi.fn().mockImplementation((o) => o)
     };
+
+    const validator = await PlatformTest.invoke<ValidationPipe>(ValidationPipe);
+
+    (validator as any).validators.set("default", defaultValidator);
 
     class Test {
       @Post("/")
@@ -611,15 +617,16 @@ describe("ValidationPipe", () => {
 
     // THEN
     expect(result).toEqual(null);
-    // @ts-ignore
-    expect(validator.validator.validate).toHaveBeenCalledWith(null, expect.any(Object));
+    expect(defaultValidator.validate).toHaveBeenCalledWith(null, expect.any(Object));
   });
   it("should not process undefined value", async () => {
-    const validator = await PlatformTest.invoke<ValidationPipe>(ValidationPipe);
-    // @ts-ignore
-    validator.validator = {
-      validate: vi.fn().mockResolvedValue("1")
+    const defaultValidator = {
+      validate: vi.fn().mockImplementation((o) => o)
     };
+
+    const validator = await PlatformTest.invoke<ValidationPipe>(ValidationPipe);
+
+    (validator as any).validators.set("default", defaultValidator);
 
     class Test {
       @Post("/")
@@ -633,7 +640,6 @@ describe("ValidationPipe", () => {
 
     // THEN
     expect(result).toEqual(undefined);
-    // @ts-ignore
-    expect(validator.validator.validate).not.toHaveBeenCalled();
+    expect(defaultValidator.validate).not.toHaveBeenCalled();
   });
 });

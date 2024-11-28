@@ -1,5 +1,6 @@
-import {Configuration, registerProvider} from "@tsed/di";
 import {isArray} from "@tsed/core";
+import {Configuration, registerProvider} from "@tsed/di";
+
 import {MongooseConnectionOptions} from "../interfaces/MongooseConnectionOptions.js";
 import {MongooseService} from "../services/MongooseService.js";
 
@@ -39,7 +40,7 @@ function mapOptions(options: Omit<MongooseConnectionOptions, "id"> | MongooseCon
 }
 
 registerProvider({
-  provide: MONGOOSE_CONNECTIONS,
+  token: MONGOOSE_CONNECTIONS,
   injectable: false,
   deps: [Configuration, MongooseService],
   async useAsyncFactory(configuration: Configuration, mongooseService: MongooseService) {

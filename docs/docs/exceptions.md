@@ -17,28 +17,36 @@ This module can be used in standalone with a pure Express/Node.js application.
 
 ## Installation
 
-```bash
-npm install @tsed/exceptions
-// or
+::: code-group
+
+```bash [npm]
+npm install --save @tsed/exceptions
+```
+
+```bash [yarn]
 yarn add @tsed/exceptions
 ```
+
+```bash [pnpm]
+pnpm add @tsed/exceptions
+```
+
+```sh [bun]
+bun add @tsed/exceptions
+```
+
+:::
 
 ## Throwing standard exceptions
 
 Here is two examples to throw exceptions based on this package in Ts.ED context or Express.js context:
 
-<Tabs class="-code">
-  <Tab label="Ts.ED">
-  
-<<< @/docs/snippets/exceptions/usage-controller.ts
+::: code-group
 
-  </Tab>
-  <Tab label="Express.js">
-  
-<<< @/docs/snippets/exceptions/usage-express-route.ts
+<<< @/docs/snippets/exceptions/usage-controller.ts [Ts.ED]
+<<< @/docs/snippets/exceptions/usage-express-route.ts [Express.js]
 
-  </Tab>
-</Tabs>
+:::
 
 ## Custom exception
 
@@ -88,8 +96,8 @@ We'll use the Response object to take direct control of the response that is sen
 
 <<< @/docs/snippets/exceptions/http-exception-filter.ts
 
-::: tip note
-All exception filters should implement the generic `ExceptionFilterMethods<T>` interface. This requires you to provide the catch(exception: T, ctx: Context) method with its indicated signature. `T` indicates the type of the exception.
+::: tip Note
+All exception filters should implement the generic `ExceptionFilterMethods<T>` interface. This requires you to provide the `catch(exception: T, ctx: Context)` method with its indicated signature. `T` indicates the type of the exception.
 :::
 
 The `@Catch(Exception)` decorator binds the required metadata to the exception filter, telling Ts.ED that this particular filter is looking for exceptions of type @@Exception@@ and nothing else.
@@ -110,14 +118,13 @@ Create a new ResourceNotFoundFilter in the filters directories and copy/paste th
 <<< @/docs/snippets/exceptions/resource-not-found-filter.ts
 
 ::: warning
-`response.render()` requires to configure the template engine before. See our page over [Templating engine](/tutorials/templating.html#installation) installation for more details.
+`response.render()` requires to configure the template engine before. See our page over [Templating engine](/docs/templating#installation) installation for more details.
 :::
 
 Then import the custom filter in your server:
 
 ```typescript
-import {Inject} from "@tsed/di";
-import {Configuration, PlatformApplication} from "@tsed/common";
+import {Inject, Configuration} from "@tsed/di";
 import "./filters/ResourceNotFoundFilter"; // Importing filter with ES6 import is enough
 
 @Configuration({

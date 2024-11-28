@@ -1,6 +1,7 @@
 import {isString} from "@tsed/core";
-import {Injectable, InjectorService, Provider, ProviderScope, Scope} from "@tsed/di";
+import {injectable, Provider, ProviderScope} from "@tsed/di";
 import {concatPath} from "@tsed/schema";
+
 import {formatMethod} from "../utils/formatMethod.js";
 import {PlatformHandlerMetadata} from "./PlatformHandlerMetadata.js";
 import {PlatformLayer, PlatformLayerOptions} from "./PlatformLayer.js";
@@ -10,14 +11,10 @@ function printHandler(handler: any) {
   return handler.toString().split("{")[0].trim();
 }
 
-@Injectable()
-@Scope(ProviderScope.INSTANCE)
 export class PlatformRouter {
   readonly layers: PlatformLayer[] = [];
   provider: Provider;
   #isBuilt = false;
-
-  constructor(protected readonly injector: InjectorService) {}
 
   use(...handlers: any[]) {
     const layer = handlers.reduce(
@@ -36,7 +33,7 @@ export class PlatformRouter {
               layer.path = layer.path || item.provider.path;
             }
           } else {
-            item = PlatformHandlerMetadata.from(this.injector, item);
+            item = PlatformHandlerMetadata.from(item);
           }
 
           layer.handlers.push(item);
@@ -62,7 +59,7 @@ export class PlatformRouter {
       method: formatMethod(method),
       path,
       handlers: handlers.map((input) => {
-        return PlatformHandlerMetadata.from(this.injector, input, opts);
+        return PlatformHandlerMetadata.from(input, opts);
       }),
       opts
     });
@@ -130,3 +127,5 @@ export class PlatformRouter {
     return false;
   }
 }
+
+injectable(PlatformRouter).scope(ProviderScope.INSTANCE);

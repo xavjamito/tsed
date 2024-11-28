@@ -1,10 +1,12 @@
 import "@tsed/ajv";
-import {PlatformApplication} from "@tsed/common";
+import "@tsed/swagger";
+
 import {Configuration, Inject} from "@tsed/di";
+import {PlatformApplication} from "@tsed/platform-http";
 import Application from "koa";
 import session from "koa-session";
 
-const rootDir = __dirname; // automatically replaced by import.meta.dirname on build
+const rootDir = import.meta.dirname; // automatically replaced by import.meta.dirname on build
 export {rootDir};
 
 @Configuration({
@@ -30,7 +32,7 @@ export class Server {
       session(
         {
           key: "connect.sid" /** (string) cookie key (default is koa.sess) */,
-          /** (number || 'session') maxAge in ms (default is 1 days) */
+          /** (number || 'session') maxAge in ms (default is 1 day) */
           /** 'session' will result in a cookie that expires when session/browser is closed */
           /** Warning: If a session cookie is stolen, this cookie will never expire */
           maxAge: 86400000,

@@ -1,6 +1,7 @@
-import {Inject, InjectorService, PlatformApplication} from "@tsed/common";
-import {Constant, Module} from "@tsed/di";
+import {constant, inject, injector, Module} from "@tsed/di";
+import {PlatformApplication} from "@tsed/platform-http";
 import koaMount from "koa-mount";
+
 import {OidcAdapters} from "./services/OidcAdapters.js";
 import {OidcJwks} from "./services/OidcJwks.js";
 import {OidcProvider} from "./services/OidcProvider.js";
@@ -9,20 +10,10 @@ import {OidcProvider} from "./services/OidcProvider.js";
   imports: [OidcProvider, OidcAdapters, OidcJwks]
 })
 export class OidcModule {
-  @Inject()
-  protected app: PlatformApplication;
-
-  @Constant("PLATFORM_NAME")
-  protected platformName: string;
-
-  @Constant("oidc.path", "/oidc")
-  protected basePath: string;
-
-  @Inject()
-  protected oidcProvider: OidcProvider;
-
-  @Inject()
-  protected injector: InjectorService;
+  protected app: PlatformApplication = inject(PlatformApplication);
+  protected platformName = constant<string>("PLATFORM_NAME");
+  protected basePath = constant("oidc.path", "/oidc");
+  protected oidcProvider = inject(OidcProvider);
 
   async $onInit() {
     if (this.oidcProvider.hasConfiguration()) {
@@ -53,13 +44,14 @@ export class OidcModule {
   }
 
   $onReady() {
-    if (this.oidcProvider.hasConfiguration() && "getBestHost" in this.injector.settings) {
-      const {injector} = this;
+    const inj = injector();
+
+    if (this.oidcProvider.hasConfiguration() && "getBestHost" in inj.settings) {
       // @ts-ignore
-      const host = injector.settings.getBestHost();
+      const host = inj.settings.getBestHost();
       const url = host.toString();
 
-      injector.logger.info(`WellKnown is available on ${url}/.well-known/openid-configuration`);
+      inj.logger.info(`WellKnown is available on ${url}/.well-known/openid-configuration`);
     }
   }
 

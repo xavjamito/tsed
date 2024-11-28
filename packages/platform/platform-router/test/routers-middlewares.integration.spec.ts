@@ -1,8 +1,9 @@
-import {PlatformTest, UseBeforeEach} from "@tsed/common";
-import {Controller, InjectorService} from "@tsed/di";
-import {Middleware} from "@tsed/platform-middlewares";
+import {Controller, inject, injector} from "@tsed/di";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {Middleware, UseBeforeEach} from "@tsed/platform-middlewares";
 import {Context, PlatformParams} from "@tsed/platform-params";
 import {Get} from "@tsed/schema";
+
 import {PlatformRouter} from "../src/domain/PlatformRouter.js";
 import {PlatformRouters} from "../src/domain/PlatformRouters.js";
 
@@ -21,15 +22,16 @@ class MyController {
 }
 
 function createAppRouterFixture() {
-  const injector = new InjectorService();
-  const platformRouters = injector.invoke<PlatformRouters>(PlatformRouters);
-  const platformParams = injector.invoke<PlatformParams>(PlatformParams);
-  const appRouter = injector.invoke<PlatformRouter>(PlatformRouter);
+  const platformRouters = inject(PlatformRouters);
+  const platformParams = inject(PlatformParams);
+  const appRouter = inject(PlatformRouter);
 
-  injector.addProvider(MyMiddleware);
-  injector.addProvider(MyController, {});
+  platformRouters.hooks.destroy();
 
-  return {injector, appRouter, platformRouters, platformParams};
+  injector().addProvider(MyMiddleware);
+  injector().addProvider(MyController, {});
+
+  return {appRouter, platformRouters, platformParams};
 }
 
 describe("routers with middlewares", () => {

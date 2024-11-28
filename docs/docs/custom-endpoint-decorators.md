@@ -20,7 +20,7 @@ Many other decorators are implemented and can be taken as an example to build yo
 
 One of the use cases already implemented by Ts.ED is the @@PlatformAcceptMimesMiddleware@@:
 
-<<< @/../packages/platform/common/src/middlewares/PlatformAcceptMimesMiddleware.ts
+<<< @/docs/snippets/middlewares/platform-accept-mimes-middleware.ts
 
 You can see in this example the usage of `endpoint.get` from @@EndpointInfo@@. This method contains all options
 which can be passed to the decorator associated to PlatformAcceptMimesMiddleware.
@@ -37,7 +37,7 @@ Ts.ED provides API to create your own decorator like @@AcceptMime@@ which regist
 with these decorators and utils:
 
 - @@Use@@, @@UseBeforeEach@@, @@UseBefore@@, or @@UseAfter@@ for middleware registration,
-- @@applyDecorator@@ if you want to combine different decorators,
+- @@useDecorators@@ if you want to combine different decorators,
 - @@StoreMerge@@ or @@StoreGet@@ to register options.
 
 For example, we can take the @@AcceptMime@@ decorator as an example and see how it works. Here is its code:

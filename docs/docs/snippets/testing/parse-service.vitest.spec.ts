@@ -1,6 +1,6 @@
 import {it, expect, describe, beforeEach, afterEach} from "vitest";
-import {PlatformTest} from "@tsed/common";
-import {ParseService} from "./ParseService";
+import {PlatformTest} from "@tsed/platform-http/testing";
+import {ParseService} from "./ParseService.js";
 
 describe("ParseService", () => {
   beforeEach(PlatformTest.create);

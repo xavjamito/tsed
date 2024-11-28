@@ -7,7 +7,7 @@ import {Person} from "../models/Person";
 export class PersonsCtrl {
   @Post("/")
   @Returns(200, Person)
-  async save1(@BodyParams() person: Person): Promise<Person> {
+  save1(@BodyParams() person: Person): Promise<Person> {
     console.log(person instanceof Person); // true
 
     return person; // will be serialized according to your annotation on Person class.
@@ -16,7 +16,7 @@ export class PersonsCtrl {
   // OR
   @Post("/")
   @Returns(200, Person)
-  async save2(@BodyParams("person") person: Person): Promise<Person> {
+  save2(@BodyParams("person") person: Person): Promise<Person> {
     console.log(person instanceof Person); // true
 
     return person; // will be serialized according to your annotation on Person class.
@@ -24,7 +24,7 @@ export class PersonsCtrl {
 
   @Get("/")
   @Returns(200, Array).Of(Person) // Add the correct json schema for swagger essentially.
-  async getPersons(): Promise<Person[]> {
-    return [new Person()];
+  getPersons(): Promise<Person[]> {
+    return Promise.resolve([new Person()]);
   }
 }

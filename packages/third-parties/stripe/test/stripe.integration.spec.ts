@@ -1,14 +1,15 @@
-import {PlatformTest} from "@tsed/common";
 import {PlatformExpress} from "@tsed/platform-express";
+import {PlatformTest} from "@tsed/platform-http/testing";
 import {PlatformTestSdk} from "@tsed/platform-test-sdk";
 import {Stripe} from "stripe";
 import SuperTest from "supertest";
+
 import {StripeWebhooksCtrl} from "./app/controllers/rest/StripeWebhooksCtrl.js";
 import {rootDir, Server} from "./app/Server.js";
 
 const utils = PlatformTestSdk.create({
   rootDir,
-  platform: PlatformExpress,
+  adapter: PlatformExpress,
   server: Server,
   logger: {
     level: "off"

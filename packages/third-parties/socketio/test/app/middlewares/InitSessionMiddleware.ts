@@ -1,4 +1,5 @@
-import {Middleware, Request} from "@tsed/common";
+import {Middleware, Request} from "@tsed/platform-http";
+
 import {IUser} from "../models/User.js";
 
 declare global {

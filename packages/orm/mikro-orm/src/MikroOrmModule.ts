@@ -1,4 +1,7 @@
-import "./services/MikroOrmFactory";
+import "./services/MikroOrmFactory.js";
+
+import {EventSubscriber, Options} from "@mikro-orm/core";
+import {classOf, isFunction, Store} from "@tsed/core";
 import {
   AlterRunInContext,
   Constant,
@@ -11,16 +14,14 @@ import {
   ProviderScope,
   registerProvider
 } from "@tsed/di";
-import {EventSubscriber, Options} from "@mikro-orm/core";
-import {MikroOrmRegistry} from "./services/MikroOrmRegistry.js";
-import {RetryStrategy} from "./interfaces/RetryStrategy.js";
-import {OptimisticLockErrorFilter} from "./filters/OptimisticLockErrorFilter.js";
-import {MikroOrmContext} from "./services/MikroOrmContext.js";
-import {classOf, isFunction, Store} from "@tsed/core";
+
 import {DEFAULT_CONTEXT_NAME, SUBSCRIBER_INJECTION_TYPE} from "./constants.js";
+import {OptimisticLockErrorFilter} from "./filters/OptimisticLockErrorFilter.js";
+import {RetryStrategy} from "./interfaces/RetryStrategy.js";
+import {MikroOrmContext} from "./services/MikroOrmContext.js";
+import {MikroOrmRegistry} from "./services/MikroOrmRegistry.js";
 
 declare global {
-  // eslint-disable-next-line @typescript-eslint/no-namespace
   namespace TsED {
     interface Configuration {
       /**
@@ -53,7 +54,14 @@ export class MikroOrmModule implements OnDestroy, OnInit, AlterRunInContext {
   public async $onInit(): Promise<void> {
     const container = new LocalsContainer();
 
-    await Promise.all(this.settings.map((opts) => this.registry.register({...opts, subscribers: this.getSubscribers(opts, container)})));
+    await Promise.all(
+      this.settings.map((opts) =>
+        this.registry.register({
+          ...opts,
+          subscribers: this.getSubscribers(opts, container)
+        })
+      )
+    );
   }
 
   public $onDestroy(): Promise<void> {
@@ -69,16 +77,12 @@ export class MikroOrmModule implements OnDestroy, OnInit, AlterRunInContext {
   }
 
   private getUnmanagedSubscribers(opts: Pick<Options, "subscribers">, container: LocalsContainer) {
-    const diOpts = {scope: ProviderScope.INSTANCE};
-
     return (opts.subscribers ?? []).map((subscriber) => {
       // Starting from https://github.com/mikro-orm/mikro-orm/issues/4231 mikro-orm
       // accept also accepts class reference, not just instances.
       if (isFunction(subscriber)) {
-        return this.injector.invoke(subscriber, container, diOpts);
+        return this.injector.invoke(subscriber, {locals: container});
       }
-
-      this.injector.bindInjectableProperties(subscriber, container, diOpts);
 
       return subscriber;
     });
@@ -97,4 +101,4 @@ export class MikroOrmModule implements OnDestroy, OnInit, AlterRunInContext {
 }
 
 // TODO: the IoC container should provide null or undefined by default until tsedio/tsed#1694 is closed
-registerProvider({provide: RetryStrategy, useValue: null});
+registerProvider({token: RetryStrategy, useValue: null});

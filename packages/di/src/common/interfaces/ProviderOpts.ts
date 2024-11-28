@@ -1,14 +1,14 @@
 import type {Type} from "@tsed/core";
-import type {ProviderType} from "../domain/ProviderType.js";
-import type {DIResolver} from "./DIResolver.js";
+
 import type {ProviderScope} from "../domain/ProviderScope.js";
+import type {ProviderType} from "../domain/ProviderType.js";
 import type {TokenProvider} from "./TokenProvider.js";
 
 export interface ProviderOpts<T = any> {
   /**
    * An injection token. (Typically an instance of `Type` or `InjectionToken`, but can be `any`).
    */
-  provide: TokenProvider;
+  token: TokenProvider<T>;
   /**
    * Create alias token to retrieve the instance provider.
    */
@@ -45,10 +45,6 @@ export interface ProviderOpts<T = any> {
    * Scope used by the injector to build the provider.
    */
   scope?: ProviderScope;
-  /**
-   * A list of resolvers which will be used to resolve missing Symbol/Class when injector invoke a Class. This property allow external DI usage.
-   */
-  resolvers?: DIResolver[];
 
   /**
    * hooks to intercept custom events

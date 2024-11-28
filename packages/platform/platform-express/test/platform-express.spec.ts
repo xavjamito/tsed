@@ -1,10 +1,11 @@
 import {PlatformTestSdk} from "@tsed/platform-test-sdk";
+
 import {PlatformExpress} from "../src/components/PlatformExpress.js";
 import {rootDir, Server} from "./app/Server.js";
 
 const utils = PlatformTestSdk.create({
   rootDir,
-  platform: PlatformExpress,
+  adapter: PlatformExpress,
   server: Server,
   logger: {
     level: "off"
