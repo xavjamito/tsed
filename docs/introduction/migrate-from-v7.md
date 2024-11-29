@@ -10,7 +10,7 @@ meta:
 
 ## What's new ?
 
-The latest releases for Ts.ED on GitHub focus on improved dependency injection that let you access the
+The latest releases for Ts.ED focus on improved dependency injection that let you access the
 [injector instance everywhere](#injector-instance-everywhere) in your code. Notable features in recent pre-releases
 include support for [Apollo 4](/tutorials/graphql.html#apollo), the removal of CommonJS support in favor of
 [ECMAScript Modules](#switch-your-code-base-on-esm), enhanced [request logging](#request-logger-doesn-t-work), and additional [optimizations](#optimization)
